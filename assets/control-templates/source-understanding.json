@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "source.example",
+      "path": "replace-with-source-path-or-url",
+      "role": "canonical | supporting | existing-corpus | internal-standard",
+      "authority": "primary | secondary | internal | unknown",
+      "summary": "用自己的话说明这份资料试图解决什么问题以及它的核心立场。",
+      "coreClaims": [
+        {
+          "id": "claim.example",
+          "statement": "可核对的核心主张。",
+          "evidence": "资料中的依据、案例或可定位位置。",
+          "confidence": "high | medium | low"
+        }
+      ],
+      "mechanisms": [
+        {
+          "id": "mechanism.example",
+          "description": "主张为何成立、通过什么关系或过程发生。"
+        }
+      ],
+      "boundaries": ["适用条件、例外或容易被误用的边界。"],
+      "conflicts": [],
+      "unknowns": []
+    }
+  ]
+}

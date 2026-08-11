@@ -1,0 +1,32 @@
+{
+  "distributionMode": "static_site",
+  "audienceScope": "internal",
+  "entrypoint": "index.html",
+  "requiredFiles": [],
+  "expectedMarkdownFiles": null,
+  "licensePolicy": "internal_only",
+  "licenseFiles": [],
+  "forbiddenPaths": [
+    "_kb-control",
+    "_task-control",
+    "_meta",
+    "_archive",
+    "_archive-v1",
+    ".git",
+    "node_modules",
+    "__pycache__",
+    "test-results",
+    "playwright-report"
+  ],
+  "forbiddenMarkers": [
+    "/Users/",
+    "C:\\Users\\",
+    "/private/var/folders/",
+    "_kb-control",
+    "_task-control"
+  ],
+  "markerScanExcludes": [
+    "scripts/check-release.mjs",
+    "scripts/kb_release_check.py"
+  ]
+}

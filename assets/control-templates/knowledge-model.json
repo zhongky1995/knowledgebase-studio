@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "units": [
+    {
+      "id": "unit.example",
+      "question": "读者真正需要回答的问题是什么？",
+      "answer": "最短但完整的核心答案。",
+      "readerChange": "读完后，读者的理解、判断、行动或检索能力发生什么变化？",
+      "mechanism": "为了避免死记结论，必须理解的机制。",
+      "boundaries": ["适用条件、反例或停止条件。"],
+      "sourceRefs": ["source.example#claim.example"],
+      "dependencies": [],
+      "canonicalOwner": "target/page.md",
+      "role": "main-path | reference | rule | tool | case"
+    }
+  ],
+  "progressions": [
+    {
+      "id": "progression.example",
+      "audience": "目标读者",
+      "unitIds": ["unit.example"],
+      "logic": "解释为什么按这个依赖或难度顺序出现。"
+    }
+  ]
+}

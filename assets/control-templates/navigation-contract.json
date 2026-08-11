@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "primaryPath": {
+    "from": "home",
+    "label": "开始",
+    "destination": "lesson.md",
+    "maxClicks": 1
+  },
+  "directEntries": [
+    {
+      "id": "route.example",
+      "label": "示例直达入口",
+      "destination": "lesson.md",
+      "maxClicks": 1
+    }
+  ],
+  "catalog": {
+    "defaultState": "collapsed",
+    "purpose": "exhaustive browsing"
+  }
+}

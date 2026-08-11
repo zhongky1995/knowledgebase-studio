@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "productPosture": "guided_learning",
+  "learnerVisibleUnitCount": 1,
+  "routes": [
+    {
+      "id": "core",
+      "title": "核心学习路线",
+      "role": "core",
+      "continuous": true,
+      "entryPath": "lesson.md",
+      "unitIds": ["unit.example"]
+    }
+  ],
+  "lessons": [
+    {
+      "unitId": "unit.example",
+      "startingState": "读者会遇到什么真实困境，当前通常怎样理解。",
+      "learningResult": "读完后能做出的一个可观察判断或行动。",
+      "prerequisiteUnitIds": [],
+      "newTerms": [],
+      "likelyMisconception": "最容易发生且会影响后续理解的误解。",
+      "workedExampleRequired": true,
+      "exampleContract": {
+        "kind": "fictional | composite | anonymized | real",
+        "input": "案例提供给读者和 AI 的实际输入。",
+        "judgment": "人为什么接受、拒绝或修改 AI 结果。",
+        "output": "修改后的可检查结果。",
+        "transfer": "换一个场景时读者应该怎样迁移。"
+      },
+      "practicePolicy": "optional_after_reading",
+      "transferEvidence": "怎样观察读者已经能迁移，而不只是复述定义。",
+      "estimatedReadingMinutes": 8
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase Learning Reviewer"
+  short_description: "审查课程坡度、案例深度、练习反馈和学习迁移"
+  default_prompt: "Use $knowledgebase-learning-reviewer to turn the approved knowledge model into a coherent learning path and challenge the pilot before scaling."
+
+policy:
+  allow_implicit_invocation: true

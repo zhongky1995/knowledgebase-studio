@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "publicCorpusCount": 1,
+  "items": [
+    {
+      "path": "README.md",
+      "visibility": "public",
+      "section": "root",
+      "pageType": "navigation",
+      "primaryJob": "帮助目标读者开始一次明确的阅读、学习、执行或检索动作。",
+      "canonicalStatus": "canonical",
+      "sourceStatus": "existing-corpus",
+      "representedKnowledgeUnits": [],
+      "readabilityIssues": [],
+      "usefulnessGaps": [],
+      "linkRouteStatus": "checked",
+      "recommendedAction": "keep",
+      "confidence": "high"
+    }
+  ]
+}

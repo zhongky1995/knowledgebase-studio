@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "releaseRoot": "output/release",
+  "releaseConfig": "_kb-control/knowledgebase-release.json",
+  "browser": {
+    "status": "pass",
+    "testedEntrypoints": ["output/release/index.html"],
+    "viewportWidths": [1440, 390]
+  },
+  "checksNotRun": [],
+  "externalPublicationPerformed": false,
+  "remainingRisks": []
+}

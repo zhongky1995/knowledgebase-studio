@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase Content Builder"
+  short_description: "按样板批量生成少废话、可读、可执行的知识内容"
+  default_prompt: "Use $knowledgebase-content-builder to build the approved pilot or full knowledge-base content with minimum sufficient explanation."
+
+policy:
+  allow_implicit_invocation: true

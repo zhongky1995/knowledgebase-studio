@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "overallClaim": "pass",
+  "dimensions": {
+    "corpusIntegrity": "pass",
+    "productArchitecture": "pass",
+    "contentQuality": "pass",
+    "learningTransfer": "pass",
+    "evidence": "pass",
+    "appExperience": "pass"
+  },
+  "evidence": {
+    "corpusIntegrity": ["_kb-control/qc-audit-metrics.json"],
+    "productArchitecture": ["_kb-control/architecture-decision.md"],
+    "contentQuality": ["_kb-control/content-integrity.json"],
+    "learningTransfer": ["_kb-control/pilot-verdict.json"],
+    "evidence": ["_kb-control/source-understanding.json"],
+    "appExperience": ["_kb-control/app-validation.json"]
+  },
+  "checksNotRun": [],
+  "criticalIssues": [],
+  "remainingRisks": []
+}

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "pages": [
+    {
+      "path": "target/page.md",
+      "pageType": "main-path | reference | rule | tool | case | navigation",
+      "primaryQuestion": "这一页只负责回答的核心问题。",
+      "readerChange": "这一页预期改变的理解、判断、行动或检索能力。",
+      "knowledgeUnitIds": ["unit.example"],
+      "essentialPoints": ["改写中不可丢失的含义。"],
+      "fidelityChecks": [
+        {
+          "point": "改写中不可丢失的含义。",
+          "status": "preserved | intentionally-changed | unresolved",
+          "location": "改写后正文中承载该含义的标题或段落。"
+        }
+      ],
+      "distinctiveValue": "为什么这一页不能被相邻页面替代。",
+      "workedExample": {
+        "required": true,
+        "kind": "fictional | composite | anonymized | real",
+        "inputLocation": "案例输入所在标题或段落。",
+        "judgmentLocation": "人工判断所在标题或段落。",
+        "outputLocation": "修改后结果所在标题或段落。",
+        "transferLocation": "迁移提示所在标题或段落。"
+      },
+      "practice": {
+        "policy": "optional_after_reading | guided | required | none",
+        "output": "练习留下的可观察结果，或说明无练习。",
+        "feedback": "读者如何获得结构反馈、案例对照或人工判断。"
+      },
+      "estimatedReadingMinutes": 8,
+      "preservedFrom": ["old/page.md"],
+      "evidenceStatus": "verified | internal-default | inference | unresolved"
+    }
+  ]
+}

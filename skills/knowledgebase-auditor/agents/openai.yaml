@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase Auditor"
+  short_description: "盘点知识库结构、密度、证据、断链和内容缺口"
+  default_prompt: "Use $knowledgebase-auditor to produce a read-only inventory and evidence-backed audit of this knowledge base."
+
+policy:
+  allow_implicit_invocation: true

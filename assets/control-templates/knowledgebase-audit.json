@@ -1,0 +1,33 @@
+{
+  "publicRoots": ["."],
+  "archiveRoots": [],
+  "internalRoots": ["_kb-control", "_task-control", "_meta"],
+  "generatedRoots": [],
+  "ignoreDirs": [],
+  "ignorePaths": [],
+  "includeGenerated": false,
+  "readingCharactersPerMinute": 350,
+  "learnerForbiddenMarkers": [
+    "KBV3:START",
+    "canonicalOwner:",
+    "progressEligible:",
+    "migrationAction:"
+  ],
+  "nearDuplicateMinimumCharacters": 600,
+  "nearDuplicateThreshold": 0.72,
+  "repeatedOutlineMinimumHeadings": 4,
+  "repeatedOutlineThreshold": 0.8,
+  "repeatedOutlineContainmentThreshold": 0.5,
+  "repeatedOutlineMinimumSharedHeadings": 4,
+  "severityByType": {
+    "placeholder": "error",
+    "long-prose-paragraph": "warning",
+    "high-process-narration-density": "warning",
+    "repeated-heading-pattern": "warning",
+    "repeated-content-block": "warning",
+    "near-duplicate-page": "warning",
+    "repeated-outline-pattern": "warning",
+    "internal-control-marker": "error",
+    "reading-time-mismatch": "warning"
+  }
+}

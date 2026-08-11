@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase QC And Release"
+  short_description: "验收知识库内容、路径、构建和最终发布包"
+  default_prompt: "Use $knowledgebase-qc-release to independently validate and package the completed knowledge base."
+
+policy:
+  allow_implicit_invocation: true

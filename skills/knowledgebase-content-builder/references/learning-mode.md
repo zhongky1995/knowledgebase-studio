@@ -1,0 +1,31 @@
+# Learning Mode
+
+Build the learning experience promised by the product posture, not a knowledge-point catalog and not an automatic training workbench.
+
+For each module define the starting state, reader question, target understanding/judgment/operation, smallest prerequisite set, necessary mechanism, likely misconception, boundary, and appropriate evidence of learning. A saved artifact and feedback route are required only for guided or practice-led learning, not for a reader-led manual.
+
+Sequence knowledge units by dependency and conceptual difficulty. A module label or old folder order is not a progression. Each new unit should rely on already introduced terms and add a controlled number of new relationships.
+
+## Reader-led Manual
+
+Use:
+
+`reader question → useful model → necessary mechanism → example or contrast → boundary → optional reflection`
+
+Make the article readable without first choosing a task, creating an artifact, understanding the whole curriculum, or committing to completion. Preserve the last reading position only as a convenience. Put optional practice after the explanation and label it as optional.
+
+## Guided Learning
+
+Use this progression across a module rather than on every page:
+
+`familiar problem → useful model → necessary mechanism → guided application → realistic output → feedback → transfer`
+
+Use examples when abstraction blocks understanding, mechanisms when memorized steps would cause misuse, contrasts when boundaries matter, diagrams when relationships are hard to hold, and practice when the ability needs active use.
+
+Give each lesson one primary learning result. Define abbreviations before use. Keep the main explanation visible and move secondary depth elsewhere.
+
+When a worked example is necessary, expose enough of the causal chain for a novice to follow the judgment: realistic input, first attempt, what the human accepted or rejected, revised output, and how the same model changes in a second case. A finished template, polished answer, or list of principles without that judgment chain is not sufficient.
+
+When practice is part of the promised posture, it should resemble real judgments or outputs and have an answer, rubric, or feedback path. A running case is optional and should not repeat stable setup. Never use practice state to imply mastery unless the contract explicitly defines that progress truth.
+
+Estimate reading time from visible prose, tables, diagrams, decisions, and any promised practice. Treat a character-count estimate as a baseline, not evidence that a novice can complete the page in the advertised time.

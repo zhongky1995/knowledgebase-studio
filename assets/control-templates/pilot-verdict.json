@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "scaleApproved": true,
+  "representativePaths": ["lesson.md"],
+  "assumptionsTested": [
+    {
+      "id": "hardest-assumption",
+      "result": "pass",
+      "evidence": "定位到样章、测试或人工观察的证据。"
+    }
+  ],
+  "dimensions": {
+    "posture": "pass",
+    "sourceFidelity": "pass",
+    "usefulness": "pass",
+    "distinctivePageJobs": "pass",
+    "exampleDepth": "pass",
+    "progression": "pass",
+    "transfer": "pass",
+    "navigation": "pass"
+  },
+  "counterReview": {
+    "status": "pass",
+    "reviewedRisks": ["案例是否仍然抽象", "术语是否越级", "练习是否改变产品压力"]
+  },
+  "criticalIssues": [],
+  "unresolvedRisks": []
+}

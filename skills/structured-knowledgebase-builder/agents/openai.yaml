@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase Studio Controller"
+  short_description: "先锁定产品姿态，再自动推进并断点续跑知识库建设"
+  default_prompt: "Use $structured-knowledgebase-builder to lock the product posture, reconcile stale evidence, and complete this knowledge base end to end."
+
+policy:
+  allow_implicit_invocation: true

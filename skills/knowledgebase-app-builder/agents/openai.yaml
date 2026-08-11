@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase App Builder"
+  short_description: "构建知识库首页、目录、搜索、阅读与移动端体验"
+  default_prompt: "Use $knowledgebase-app-builder to build or validate the local knowledge-base app against the approved architecture."
+
+policy:
+  allow_implicit_invocation: true
