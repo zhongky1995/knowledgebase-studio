@@ -1,5 +1,7 @@
 # Knowledgebase Studio
 
+**English** | [简体中文](README.zh-CN.md)
+
 Knowledgebase Studio is a source-grounded Codex plugin for turning raw material into a traceable, teachable, testable, and release-ready Markdown knowledge base.
 
 它不只检查“文件有没有”，而是把资料理解、知识建模、学习设计、内容生产、应用验收和发布质检串成一条可恢复的工作流，并用语义门禁阻止“报告写完但产品没做完”。
