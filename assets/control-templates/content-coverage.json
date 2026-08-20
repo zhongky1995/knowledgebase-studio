@@ -29,6 +29,7 @@
         "output": "练习留下的可观察结果，或说明无练习。",
         "feedback": "读者如何获得结构反馈、案例对照或人工判断。"
       },
+      "visualExplanationIds": ["visual.unit.example.mechanism"],
       "estimatedReadingMinutes": 8,
       "preservedFrom": ["old/page.md"],
       "evidenceStatus": "verified | internal-default | inference | unresolved"

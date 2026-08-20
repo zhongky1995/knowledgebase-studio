@@ -1,0 +1,7 @@
+interface:
+  display_name: "Knowledgebase Visual Explainer"
+  short_description: "把知识库中的复杂机制与状态变化做成可验证的静态图或解释动效"
+  default_prompt: "Use $knowledgebase-visual-explainer to turn one difficult mechanism into a faithful, embedded, and validated visual explanation."
+
+policy:
+  allow_implicit_invocation: true

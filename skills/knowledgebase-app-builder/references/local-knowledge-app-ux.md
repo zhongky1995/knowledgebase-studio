@@ -39,3 +39,5 @@ Put the article before large support navigation on mobile. Keep primary navigati
 ## Validation
 
 Run repository-specific syntax and build commands. Check desktop and mobile widths, page overflow, console errors, search context, route resolution, reader scroll behavior, image loading, table semantics, relative links, and template/download/copy actions. Also verify the default visible choice count, catalog collapsed/expanded states, primary and direct-entry click depth, pointer and keyboard actionability, article-first reading, optional-practice behavior, and that progress cannot contradict the contract. When a release package exists, repeat these checks against that package. Static DOM or source inspection cannot be reported as a passed browser check.
+
+When a visual-explanation manifest exists, validate each declared asset on its canonical page. Check real loading, label readability, aspect behavior, alternative text, representative poster/static fallback, and reduced-motion behavior. Do not count a source renderer, animation prompt, or hidden preload as a rendered explanation.

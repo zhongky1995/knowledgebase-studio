@@ -13,6 +13,7 @@ AUDIT = SCRIPT_DIR / "kb_audit.py"
 RELEASE_CHECK = SCRIPT_DIR / "kb_release_check.py"
 CONTENT_CHECK = SCRIPT_DIR / "kb_content_check.py"
 STAGE_CHECK = SCRIPT_DIR / "kb_stage_check.py"
+VISUAL_CHECK = SCRIPT_DIR / "kb_visual_check.py"
 
 
 def run(*args, expected=0):
@@ -146,7 +147,7 @@ def valid_inventory():
 
 def valid_learning_design():
     return {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "productPosture": "reading_manual",
         "learnerVisibleUnitCount": 1,
         "routes": [{
@@ -165,6 +166,11 @@ def valid_learning_design():
             "newTerms": [],
             "likelyMisconception": "The rule is universal.",
             "workedExampleRequired": False,
+            "visualExplanation": {
+                "required": False,
+                "reason": "The stable rule and boundary remain easy to hold in prose.",
+                "preferredMode": "not_applicable",
+            },
             "practicePolicy": "optional_after_reading",
             "transferEvidence": "Classifies a second case.",
             "estimatedReadingMinutes": 5,
@@ -196,10 +202,12 @@ def valid_pilot_verdict():
             "usefulness": "pass",
             "distinctivePageJobs": "pass",
             "exampleDepth": "pass",
+            "visualExplanation": "not_applicable",
             "progression": "pass",
             "transfer": "pass",
             "navigation": "pass",
         },
+        "visualExplanationIds": [],
         "counterReview": {"status": "pass", "reviewedRisks": ["abstract example"]},
         "criticalIssues": [],
         "unresolvedRisks": [],
@@ -232,6 +240,43 @@ def valid_content_coverage():
             "preservedFrom": ["lesson.md"],
             "evidenceStatus": "verified",
         }],
+    }
+
+
+def valid_visual_manifest():
+    return {
+        "schemaVersion": 1,
+        "status": "pass",
+        "items": [{
+            "id": "visual.unit.one.mechanism",
+            "unitId": "unit.one",
+            "pagePath": "lesson.md",
+            "purpose": "mechanism",
+            "learningJob": "Can explain how the rule and boundary relate.",
+            "misconception": "The rule is universal.",
+            "mode": "static",
+            "format": "svg",
+            "metaphor": "A guarded path with a visible stop condition.",
+            "essentialFacts": ["The rule applies only before the stop condition."],
+            "storyboard": [{"beat": 1, "job": "Show the rule and boundary.", "state": "The path stops at the boundary."}],
+            "assetPath": "assets/mechanism.svg",
+            "embedLocation": "mechanism.svg",
+            "altText": "A path reaches a boundary, showing that the rule stops there rather than applying universally.",
+            "sourceRefs": ["source.one#claim.one"],
+            "loopRequired": False,
+            "validation": {
+                "status": "pass",
+                "sourceFidelityChecked": True,
+                "readabilityChecked": True,
+                "embedChecked": True,
+                "fallbackChecked": "not_applicable",
+                "meaningfulStateChange": "not_applicable",
+                "loopChecked": "not_applicable",
+                "reducedMotionChecked": "not_applicable",
+            },
+        }],
+        "checksNotRun": [],
+        "remainingRisks": [],
     }
 
 
@@ -551,6 +596,50 @@ class StageGateTests(unittest.TestCase):
             report = run("python3", str(STAGE_CHECK), str(root), "--stage", "app", expected=1)
             self.assertTrue(any(item["kind"] == "browser-not-run" for item in report["errors"]))
 
+    def test_learning_design_v2_requires_visual_decision(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            control = root / "_kb-control"
+            control.mkdir()
+            write_locked_contract(root)
+            (root / "lesson.md").write_text("# Lesson\n\nUseful rule.\n", encoding="utf-8")
+            (control / "content-inventory.json").write_text(json.dumps(valid_inventory()), encoding="utf-8")
+            (control / "architecture-decision.md").write_text("# Architecture\n\n" + "Approved decision. " * 40, encoding="utf-8")
+            (control / "migration-map.yaml").write_text(
+                "migrations:\n  - id: one\n    old_path: lesson.md\n    action: keep\n    target_path: lesson.md\n    canonical_owner: lesson.md\n    preservation_status: preserved\n",
+                encoding="utf-8",
+            )
+            (control / "knowledge-model.json").write_text(json.dumps(valid_knowledge_model()), encoding="utf-8")
+            design = valid_learning_design()
+            design["lessons"][0].pop("visualExplanation")
+            (control / "learning-design.json").write_text(json.dumps(design), encoding="utf-8")
+            report = run("python3", str(STAGE_CHECK), str(root), "--stage", "architecture", expected=1)
+            self.assertTrue(any(item["kind"] == "learning-visual-decision" for item in report["errors"]))
+
+    def test_required_visual_cannot_pass_content_without_real_asset_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            control = root / "_kb-control"
+            control.mkdir()
+            (root / "lesson.md").write_text("# Lesson\n\nUseful explanation.\n", encoding="utf-8")
+            design = valid_learning_design()
+            design["lessons"][0]["visualExplanation"] = {
+                "required": True,
+                "id": "visual.unit.one.mechanism",
+                "reason": "The mechanism is spatial and easy to misread in prose.",
+                "preferredMode": "static",
+                "successEvidence": "The reader can locate the boundary.",
+            }
+            (control / "learning-design.json").write_text(json.dumps(design), encoding="utf-8")
+            coverage = valid_content_coverage()
+            coverage["pages"][0]["visualExplanationIds"] = ["visual.unit.one.mechanism"]
+            (control / "content-coverage.json").write_text(json.dumps(coverage), encoding="utf-8")
+            (control / "content-build-report.md").write_text("# Content\n\n" + "Build evidence. " * 50, encoding="utf-8")
+            (control / "content-integrity.json").write_text(json.dumps({"status": "pass", "stats": {}}), encoding="utf-8")
+            (control / "content-audit-metrics.json").write_text(json.dumps({"status": "pass"}), encoding="utf-8")
+            report = run("python3", str(STAGE_CHECK), str(root), "--stage", "content", expected=1)
+            self.assertTrue(any(item["kind"] == "missing-manifest" for item in report["errors"]))
+
     def test_content_mutation_makes_passed_pilot_and_content_stale(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -580,6 +669,96 @@ class StageGateTests(unittest.TestCase):
             self.assertEqual(checked["status"], "stale")
             self.assertTrue(any(item["stage"] == "pilot" for item in checked["stale"]))
             self.assertTrue(any(item["stage"] == "content" for item in checked["stale"]))
+
+
+class VisualCheckTests(unittest.TestCase):
+    def write_valid_visual_fixture(self, root):
+        (root / "assets").mkdir()
+        alt_text = "A path reaches a boundary, showing that the rule stops there rather than applying universally."
+        (root / "lesson.md").write_text(
+            f"# Lesson\n\n![{alt_text}](assets/mechanism.svg)\n",
+            encoding="utf-8",
+        )
+        (root / "assets" / "mechanism.svg").write_text(
+            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450"><path d="M20 225 H780"/></svg>\n',
+            encoding="utf-8",
+        )
+        control = root / "_kb-control"
+        control.mkdir()
+        (control / "visual-explanations.json").write_text(json.dumps(valid_visual_manifest()), encoding="utf-8")
+
+    def test_static_visual_manifest_and_real_asset_pass(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_valid_visual_fixture(root)
+            report = run("python3", str(VISUAL_CHECK), str(root))
+            self.assertEqual(report["status"], "pass")
+            self.assertEqual(report["stats"]["validated"], 1)
+            self.assertEqual(report["stats"]["media"]["visual.unit.one.mechanism"]["width"], 800.0)
+
+    def test_prompt_or_manifest_without_exported_asset_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.write_valid_visual_fixture(root)
+            (root / "assets" / "mechanism.svg").unlink()
+            report = run("python3", str(VISUAL_CHECK), str(root), expected=1)
+            self.assertTrue(any(item["kind"] == "missing-file" for item in report["errors"]))
+
+    def test_two_frame_looping_gif_with_fallback_passes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "assets").mkdir()
+            alt_text = "Information moves through the feedback path and returns to update the next state."
+            (root / "lesson.md").write_text(f"# Lesson\n\n![{alt_text}](assets/flow.gif)\n", encoding="utf-8")
+            gif = (
+                b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff"
+                b"\x21\xff\x0bNETSCAPE2.0\x03\x01\x00\x00\x00"
+                b"\x21\xf9\x04\x00\x0a\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00"
+                b"\x21\xf9\x04\x00\x0a\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b"
+            )
+            (root / "assets" / "flow.gif").write_bytes(gif)
+            (root / "assets" / "flow.png").write_bytes(b"fallback")
+            control = root / "_kb-control"
+            control.mkdir()
+            manifest = valid_visual_manifest()
+            item = manifest["items"][0]
+            item.update({
+                "id": "visual.unit.one.flow",
+                "purpose": "flow",
+                "mode": "animated",
+                "format": "gif",
+                "assetPath": "assets/flow.gif",
+                "fallbackPath": "assets/flow.png",
+                "embedLocation": "flow.gif",
+                "altText": alt_text,
+                "loopRequired": True,
+                "storyboard": [
+                    {"beat": index, "job": f"Explain step {index}.", "state": f"State {index}."}
+                    for index in range(1, 5)
+                ],
+            })
+            item["validation"].update({
+                "fallbackChecked": "pass",
+                "meaningfulStateChange": "pass",
+                "loopChecked": "pass",
+                "reducedMotionChecked": "pass",
+            })
+            (control / "visual-explanations.json").write_text(json.dumps(manifest), encoding="utf-8")
+            report = run("python3", str(VISUAL_CHECK), str(root))
+            self.assertEqual(report["status"], "pass")
+            media = report["stats"]["media"]["visual.unit.one.flow"]
+            self.assertEqual(media["frames"], 2)
+            self.assertEqual(media["loop"], 0)
+
+    def test_content_fingerprint_includes_manifest_asset_and_fallback(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            self.write_valid_visual_fixture(root)
+            from kb_workflow import stage_deliverable_digests
+
+            digests = stage_deliverable_digests(root, "content")
+            self.assertIn("_kb-control/visual-explanations.json", digests)
+            self.assertIn("assets/mechanism.svg", digests)
 
 
 class ReleaseCheckTests(unittest.TestCase):

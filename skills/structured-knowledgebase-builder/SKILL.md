@@ -94,11 +94,14 @@ Record a stop with `kb_workflow.py block`; never simulate progress past a blocke
 
 For `reading_manual`, `guided_learning`, `practice_workbench`, or learning-oriented `hybrid`, apply `knowledgebase-learning-reviewer` inside architecture and pilot. Architecture cannot pass without `_kb-control/learning-design.json`; pilot cannot pass without `_kb-control/pilot-verdict.json` and its counter-review.
 
+When `learning-design.json` marks a visual explanation as required, apply `knowledgebase-visual-explainer` inside pilot and content. The visual remains part of those stage deliverables rather than becoming a separate workflow stage. Content cannot pass until `_kb-control/visual-explanations.json` and the real embedded assets pass `kb_visual_check.py`.
+
 ## Gate And Correction Rules
 
 - Do not mark a stage passed unless its required artifacts exist.
 - Do not mark a stage passed from report existence alone. `kb_workflow.py complete` must generate and pass the corresponding `_kb-control/stage-check-<stage>.json`.
 - Content, app, QC, and release passes must fingerprint the actual learner-facing corpus, app deliverable, and release root. A changed deliverable makes downstream evidence stale even when narrative reports were not edited.
+- Required visual assets and their manifest are learner-facing deliverables. Editing an SVG, PNG, GIF, video, fallback, or declaration invalidates the affected content, app, and QC evidence.
 - Do not scale content before the pilot gate passes.
 - When the user changes scope or rejects the sample, invalidate from the earliest affected stage:
 

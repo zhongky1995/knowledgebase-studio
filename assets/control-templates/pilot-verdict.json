@@ -16,10 +16,12 @@
     "usefulness": "pass",
     "distinctivePageJobs": "pass",
     "exampleDepth": "pass",
+    "visualExplanation": "pass | not_applicable",
     "progression": "pass",
     "transfer": "pass",
     "navigation": "pass"
   },
+  "visualExplanationIds": ["visual.unit.example.mechanism"],
   "counterReview": {
     "status": "pass",
     "reviewedRisks": ["案例是否仍然抽象", "术语是否越级", "练习是否改变产品压力"]

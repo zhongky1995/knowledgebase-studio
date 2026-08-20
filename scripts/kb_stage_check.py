@@ -176,8 +176,11 @@ def validate_learning_design(root, errors, warnings, evidence):
     model = read_json(control / "knowledge-model.json", errors, "knowledge model")
     if not design or not model:
         return
-    if design.get("schemaVersion") != 1:
-        issue(errors, "learning-design-schema", design_path, "schemaVersion must be 1.")
+    schema_version = design.get("schemaVersion")
+    if schema_version not in {1, 2}:
+        issue(errors, "learning-design-schema", design_path, "schemaVersion must be 1 or 2.")
+    elif schema_version == 1:
+        issue(warnings, "legacy-learning-design-schema", design_path, "Schema version 1 does not carry lesson-level visual decisions; upgrade to version 2 when architecture is revised.")
 
     units = {item.get("id"): item for item in model.get("units") or [] if item.get("id")}
     main_ids = {unit_id for unit_id, item in units.items() if item.get("role") == "main-path"}
@@ -208,6 +211,23 @@ def validate_learning_design(root, errors, warnings, evidence):
             for field in ("input", "judgment", "output", "transfer"):
                 if not str(example.get(field, "")).strip():
                     issue(errors, "learning-example-field", label, f"Worked examples require {field}.")
+        if schema_version == 2:
+            visual = lesson.get("visualExplanation")
+            if not isinstance(visual, dict):
+                issue(errors, "learning-visual-decision", label, "Schema version 2 requires a visualExplanation decision.")
+            else:
+                if not isinstance(visual.get("required"), bool):
+                    issue(errors, "learning-visual-policy", label, "visualExplanation.required must be true or false.")
+                if not str(visual.get("reason", "")).strip():
+                    issue(errors, "learning-visual-field", label, "visualExplanation.reason is required.")
+                if visual.get("required"):
+                    for field in ("id", "successEvidence"):
+                        if not str(visual.get(field, "")).strip():
+                            issue(errors, "learning-visual-field", label, f"Required visuals need {field}.")
+                    if visual.get("preferredMode") not in {"static", "animated"}:
+                        issue(errors, "learning-visual-mode", label, str(visual.get("preferredMode")))
+                elif visual.get("preferredMode") not in {None, "", "not_applicable"}:
+                    issue(warnings, "unused-learning-visual-mode", label, "A non-required visual should normally use preferredMode: not_applicable.")
         for dependency in lesson.get("prerequisiteUnitIds") or []:
             if dependency not in units:
                 issue(errors, "unknown-learning-prerequisite", label, str(dependency))
@@ -249,6 +269,72 @@ def validate_learning_design(root, errors, warnings, evidence):
     if declared is not None and declared != len(visible_units):
         issue(errors, "learner-visible-count", design_path, f"Declared {declared}, mapped {len(visible_units)} unique units.")
     evidence.update({"learningLessons": len(lessons), "learningRoutes": len(routes), "learnerVisibleUnits": len(visible_units)})
+
+
+def visual_contracts(root):
+    design_path = root / "_kb-control" / "learning-design.json"
+    if not design_path.is_file():
+        return {}
+    try:
+        design = json.loads(design_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    result = {}
+    for lesson in design.get("lessons") or []:
+        visual = lesson.get("visualExplanation") or {}
+        visual_id = visual.get("id")
+        if visual.get("required") is True and isinstance(visual_id, str) and visual_id.strip():
+            result[visual_id] = {
+                "unitId": lesson.get("unitId"),
+                "preferredMode": visual.get("preferredMode"),
+            }
+    return result
+
+
+def visual_manifest_summary(root):
+    path = root / "_kb-control" / "visual-explanations.json"
+    if not path.is_file():
+        return {}, set(), set()
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}, set(), set()
+    ids = {item.get("id") for item in document.get("items") or [] if item.get("id")}
+    animated = {item.get("id") for item in document.get("items") or [] if item.get("id") and item.get("mode") == "animated"}
+    return document, ids, animated
+
+
+def run_visual_gate(root, errors, warnings, evidence, output_name, required_ids=None):
+    try:
+        from kb_visual_check import check_visuals
+    except ImportError as error:
+        issue(errors, "visual-validator-import", output_name, str(error))
+        return {}
+    report = check_visuals(root, required_ids=required_ids)
+    output = root / "_kb-control" / output_name
+    output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    errors.extend(report.get("errors") or [])
+    warnings.extend(report.get("warnings") or [])
+    evidence.update({
+        "visualManifest": str(output.relative_to(root)),
+        "visualsValidated": (report.get("stats") or {}).get("validated", 0),
+        "animatedVisuals": (report.get("stats") or {}).get("animated", 0),
+    })
+    return report
+
+
+def validate_visual_alignment(root, contracts, visual_ids, errors):
+    document, _, _ = visual_manifest_summary(root)
+    by_id = {item.get("id"): item for item in document.get("items") or [] if item.get("id")}
+    for visual_id in sorted(set(visual_ids)):
+        if visual_id not in by_id or visual_id not in contracts:
+            continue
+        item = by_id[visual_id]
+        expected = contracts[visual_id]
+        if item.get("unitId") != expected.get("unitId"):
+            issue(errors, "visual-unit-mismatch", visual_id, f"Expected {expected.get('unitId')}, got {item.get('unitId')}")
+        if item.get("mode") != expected.get("preferredMode"):
+            issue(errors, "visual-mode-mismatch", visual_id, f"Expected {expected.get('preferredMode')}, got {item.get('mode')}")
 
 
 def validate_architecture(root, errors, warnings, evidence):
@@ -338,8 +424,32 @@ def validate_pilot(root, errors, warnings, evidence):
         issue(errors, "pilot-counter-review", path, "A separate counter-review must challenge the pilot before scaling.")
     dimensions = verdict.get("dimensions") or {}
     required = ["posture", "sourceFidelity", "usefulness", "distinctivePageJobs", "exampleDepth", "progression", "transfer", "navigation"]
+    if contract(root).get("posture") in LEARNING_POSTURES:
+        required.append("visualExplanation")
     for key in required:
         require_dimension(verdict, dimensions, key, errors, path)
+    contracts = visual_contracts(root)
+    model = read_json(control / "knowledge-model.json", errors, "knowledge model", required=False)
+    representative_units = {
+        item.get("id")
+        for item in model.get("units") or []
+        if item.get("canonicalOwner") in representative and item.get("id")
+    }
+    required_visuals = {
+        visual_id
+        for visual_id, visual in contracts.items()
+        if visual.get("unitId") in representative_units
+    }
+    declared_visuals = set(verdict.get("visualExplanationIds") or [])
+    if required_visuals:
+        if dimensions.get("visualExplanation") != "pass":
+            issue(errors, "pilot-visual-dimension", path, "The representative pilot requires a passed visualExplanation dimension.")
+        missing = sorted(required_visuals - declared_visuals)
+        if missing:
+            issue(errors, "pilot-visual-coverage", path, f"Missing required pilot visual IDs: {', '.join(missing)}")
+    if declared_visuals:
+        run_visual_gate(root, errors, warnings, evidence, "pilot-visual-check.json", declared_visuals)
+        validate_visual_alignment(root, contracts, declared_visuals, errors)
     if verdict.get("criticalIssues"):
         issue(errors, "pilot-critical-issues", path, f"{len(verdict['criticalIssues'])} unresolved critical issue(s).")
     evidence.update({"representativePaths": len(representative), "assumptionsTested": len(assumptions)})
@@ -357,6 +467,23 @@ def validate_content(root, errors, warnings, evidence):
         issue(errors, "empty-content-coverage", control / "content-coverage.json", "Content coverage must account for every target page.")
     for index, page in enumerate(pages):
         checked_project_path(root, page.get("path"), errors, f"pages[{index}]", require_file=True)
+    required_visuals = set(visual_contracts(root))
+    covered_visuals = {
+        visual_id
+        for page in pages
+        for visual_id in (page.get("visualExplanationIds") or [])
+        if visual_id
+    }
+    missing_coverage = sorted(required_visuals - covered_visuals)
+    if missing_coverage:
+        issue(errors, "content-visual-coverage", control / "content-coverage.json", f"Required visual IDs are not assigned to pages: {', '.join(missing_coverage)}")
+    manifest, declared_visuals, _ = visual_manifest_summary(root)
+    if required_visuals or manifest:
+        report = run_visual_gate(root, errors, warnings, evidence, "visual-check.json")
+        missing_assets = sorted(required_visuals - set(report.get("declaredIds") or []))
+        if missing_assets:
+            issue(errors, "visual-coverage", control / "visual-explanations.json", f"Missing required visual IDs: {', '.join(missing_assets)}")
+        validate_visual_alignment(root, visual_contracts(root), required_visuals, errors)
     audit_metrics = read_json(control / "content-audit-metrics.json", errors, "post-content audit metrics")
     if audit_metrics and audit_metrics.get("status") not in {"ok", "pass"}:
         issue(errors, "post-content-audit-status", control / "content-audit-metrics.json", str(audit_metrics.get("status")))
@@ -417,6 +544,24 @@ def validate_app(root, errors, warnings, evidence):
             issue(errors, "direct-entry-destination-mismatch", entry_id, f"Expected {expected.get('destination')}, got {actual.get('destination')}")
     if result.get("checksNotRun"):
         issue(errors, "app-checks-not-run", path, ", ".join(map(str, result["checksNotRun"])))
+    manifest, declared_visuals, animated_visuals = visual_manifest_summary(root)
+    if declared_visuals:
+        visuals = result.get("visuals") or {}
+        if visuals.get("status") != "pass":
+            issue(errors, "app-visual-status", path, str(visuals.get("status")))
+        checked_visuals = set(visuals.get("checkedIds") or [])
+        missing_visuals = sorted(declared_visuals - checked_visuals)
+        if missing_visuals:
+            issue(errors, "app-visual-coverage", path, f"Visual IDs not checked in the real app: {', '.join(missing_visuals)}")
+        if animated_visuals:
+            checked_animated = set(visuals.get("animatedIds") or [])
+            missing_animated = sorted(animated_visuals - checked_animated)
+            if missing_animated:
+                issue(errors, "app-animation-coverage", path, f"Animated IDs not checked: {', '.join(missing_animated)}")
+            if visuals.get("fallback") != "pass":
+                issue(errors, "app-animation-fallback", path, "Animated explanations require a passed static fallback check.")
+            if visuals.get("reducedMotion") != "pass":
+                issue(errors, "app-reduced-motion", path, "Animated explanations require a passed reduced-motion check.")
     evidence.update({"appPaths": len(app_paths), "viewportWidths": viewports, "directEntries": len(navigation.get("directEntries") or [])})
 
 
@@ -436,6 +581,15 @@ def validate_qc(root, errors, warnings, evidence):
         required.append("learningTransfer")
     if current_contract.get("app_required") != "no":
         required.append("appExperience")
+    manifest, declared_visuals, _ = visual_manifest_summary(root)
+    required_visuals = set(visual_contracts(root))
+    if required_visuals or declared_visuals:
+        required.append("visualExplanation")
+        report = run_visual_gate(root, errors, warnings, evidence, "qc-visual-check.json")
+        missing_assets = sorted(required_visuals - set(report.get("declaredIds") or []))
+        if missing_assets:
+            issue(errors, "qc-visual-coverage", control / "visual-explanations.json", f"Missing required visual IDs: {', '.join(missing_assets)}")
+        validate_visual_alignment(root, visual_contracts(root), required_visuals, errors)
     evidence_map = verdict.get("evidence") or {}
     for key in required:
         require_dimension(verdict, dimensions, key, errors, path)

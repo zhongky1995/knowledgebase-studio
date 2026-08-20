@@ -19,6 +19,7 @@ Knowledgebase Studio 是一个面向 Codex 的知识库生产插件。它能把�
 - 审计来源资料，记录其中的主张、机制、适用边界、相互冲突和未知项。
 - 建立可追溯的知识单元，明确每个页面应该回答什么问题。
 - 面向课程型知识库，检查先修关系、案例、练习、反馈、阅读负荷和知识迁移证据。
+- 判断视觉解释是否真的必要；需要时验收已经嵌入页面的静态图或动效，以及来源一致性、替代文本和静态回退。
 - 验证读者真正看到的内容和应用，而不是只检查总结报告。
 - 为阶段证据和真实交付物生成指纹；内容一旦变化，下游的旧结论会自动失效。
 - 先生成隔离的本地发布包。除非用户另行授权，流程不会擅自上传、托管或公开发布。
@@ -31,11 +32,12 @@ Knowledgebase Studio 是一个面向 Codex 的知识库生产插件。它能把�
 | `knowledgebase-auditor` | 盘点现有知识库，审计资料和内容基础 |
 | `knowledgebase-architect` | 设计知识模型、信息架构和迁移方案 |
 | `knowledgebase-learning-reviewer` | 检查学习路径、练习反馈和迁移设计 |
+| `knowledgebase-visual-explainer` | 在文字不足时制作并验收忠于来源的图解或解释动效 |
 | `knowledgebase-content-builder` | 先做代表性样章，再生产忠于来源的完整内容 |
 | `knowledgebase-app-builder` | 构建或验收本地 Markdown 知识库应用 |
 | `knowledgebase-qc-release` | 执行最终质检，并验证隔离的发布包 |
 
-仓库还提供一组不依赖第三方库的 Python 工具，用于资料审计、内容一致性检查、阶段语义门禁、发布包检查和工作流状态管理。
+仓库还提供一组不依赖第三方库的 Python 工具，用于资料审计、内容一致性检查、视觉素材验收、阶段语义门禁、发布包检查和工作流状态管理。
 
 ## 运行要求
 
@@ -59,7 +61,7 @@ git clone https://github.com/zhongky1995/knowledgebase-studio.git ~/plugins/know
 codex plugin add knowledgebase-studio@personal
 ```
 
-如果你的插件市场不叫 `personal`，请替换成实际名称。安装完成后新建一个 Codex 任务，让七个技能重新加载。
+如果你的插件市场不叫 `personal`，请替换成实际名称。安装完成后新建一个 Codex 任务，让八个技能重新加载。
 
 ## 怎么使用
 
@@ -91,6 +93,7 @@ python3 scripts/kb_workflow.py check --root /path/to/knowledge-base
 ```bash
 python3 scripts/kb_audit.py /path/to/knowledge-base --strict
 python3 scripts/kb_content_check.py /path/to/knowledge-base --phase content
+python3 scripts/kb_visual_check.py /path/to/knowledge-base
 python3 scripts/kb_stage_check.py /path/to/knowledge-base --stage qc
 python3 scripts/kb_release_check.py /path/to/release-root
 ```
@@ -103,7 +106,8 @@ python3 scripts/kb_release_check.py /path/to/release-root
 2. **先确定产品形态，再打磨表现。** 页面做得漂亮，不代表它引导了正确的学习或使用行为。
 3. **先验证样章，再批量生产。** 用一个有代表性的内容切片验证方向，避免把错误放大到整个知识库。
 4. **用证据决定状态。** 阶段报告、当前证据和真实交付物必须同时通过，才能标记完成。
-5. **先达到本地发布标准，再决定是否公开。** 生成发布包不等于授权上传、托管或对外发送。
+5. **先解释，再装饰。** 只有当图解或动效确实让关系与变化更容易理解时才添加视觉素材。
+6. **先达到本地发布标准，再决定是否公开。** 生成发布包不等于授权上传、托管或对外发送。
 
 ## 参与开发
 

@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "productPosture": "guided_learning",
   "learnerVisibleUnitCount": 1,
   "routes": [
@@ -27,6 +27,13 @@
         "judgment": "人为什么接受、拒绝或修改 AI 结果。",
         "output": "修改后的可检查结果。",
         "transfer": "换一个场景时读者应该怎样迁移。"
+      },
+      "visualExplanation": {
+        "required": true,
+        "id": "visual.unit.example.mechanism",
+        "reason": "说明为什么文字或表格不足，以及图解要降低哪一种认知负荷。",
+        "preferredMode": "static | animated",
+        "successEvidence": "读者看完后能够复述、判断或迁移的关系或变化。"
       },
       "practicePolicy": "optional_after_reading",
       "transferEvidence": "怎样观察读者已经能迁移，而不只是复述定义。",

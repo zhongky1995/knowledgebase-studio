@@ -7,6 +7,7 @@
     "productArchitecture": "pass",
     "contentQuality": "pass",
     "learningTransfer": "pass",
+    "visualExplanation": "pass | not_applicable",
     "evidence": "pass",
     "appExperience": "pass"
   },
@@ -15,6 +16,7 @@
     "productArchitecture": ["_kb-control/architecture-decision.md"],
     "contentQuality": ["_kb-control/content-integrity.json"],
     "learningTransfer": ["_kb-control/pilot-verdict.json"],
+    "visualExplanation": ["_kb-control/qc-visual-check.json"],
     "evidence": ["_kb-control/source-understanding.json"],
     "appExperience": ["_kb-control/app-validation.json"]
   },

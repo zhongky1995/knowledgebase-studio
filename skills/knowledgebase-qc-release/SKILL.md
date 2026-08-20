@@ -13,6 +13,7 @@ Keep QC logically separate from implementation. Read `references/qc-checklist.md
 2. Inspect representative pages of every major page type.
 3. Test the primary reading, learning transfer, work task, or lookup scenario using only published material, according to the product posture.
 4. Check intent invariants, first-screen orientation, pressure policy, catalog visibility, exercise/progress boundaries, evidence labels, source presentation/freshness, internal defaults, terminology, canonical links, navigation, and app/build behavior.
+   - If visual explanations are required or declared, run `kb_visual_check.py`, inspect the actual embedded assets, and verify learning job, misconception correction, source fidelity, readability, alternative text, and animated fallback/reduced-motion behavior as a separate QC dimension.
 5. Reconcile the migration map and public file tree.
 6. Write `_kb-control/qc-report.md` with pass/fail evidence and required repairs.
 7. Write `_kb-control/qc-verdict.json` from the plugin template. Report corpus integrity, product architecture, content quality, evidence, learning transfer when applicable, and app experience when applicable as separate dimensions with evidence. `checksNotRun` and critical issues must be empty for a pass.
@@ -40,4 +41,4 @@ Release readiness ends at the validated local package or entrypoint by default. 
 
 ## Gate
 
-QC passes only with evidence bound to the current contract and learner-facing deliverable fingerprints. A link/build-only pass is not a content-quality or learning-transfer pass. Release passes only when the local package or entrypoint is usable and clean, not merely when source files or a Markdown report exist. A successful external upload cannot substitute for local release checks. Any newer contract, architecture, content, app, or validation artifact makes QC and release stale.
+QC passes only with evidence bound to the current contract and learner-facing deliverable fingerprints. A link/build-only pass is not a content-quality, learning-transfer, or visual-explanation pass. Required visuals must be real, embedded, source-faithful, accessible assets. Release passes only when the local package or entrypoint is usable and clean, not merely when source files or a Markdown report exist. A successful external upload cannot substitute for local release checks. Any newer contract, architecture, content, app, visual, or validation artifact makes QC and release stale.

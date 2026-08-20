@@ -33,6 +33,8 @@
 - Key abilities have realistic practice and feedback.
 - A representative reader can transfer the model to a new case.
 - Required worked examples expose input, first attempt, human judgment, revised output, and transfer; a template alone does not satisfy this check.
+- Every lesson has an explicit visual decision. Required visuals perform one declared learning job, correct one misconception, and preserve source mechanisms and boundaries.
+- Static visuals are legible and embedded. Animated visuals show a meaningful state change, retain an accessible static fallback, and work with reduced motion.
 - Advertised reading time is plausible for the prose, tables, decisions, and practice actually shown.
 
 ## Novice Experience
@@ -65,6 +67,7 @@
 - Share form, audience scope, release root, external-publication authorization, and license policy match the contract.
 - Public-ready packages are built in an isolated root; the full workspace is never the release artifact.
 - Markdown tables are semantic tables, images load, relative article links resolve, and a label such as “全库搜索” really searches the full default scope.
+- Declared visual assets, previews, posters, fallbacks, and alternative text survive packaging and work at desktop and mobile widths.
 - Desktop and mobile checks run against the packaged result, not only the source app.
 - Learner-facing output contains no internal paths, source ledgers, migration metadata, test reports, or maintenance-only fields.
 - A public package has a user-approved license policy; QC never invents CC, MIT, or another license.

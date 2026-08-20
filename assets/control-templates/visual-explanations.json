@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "status": "pass",
+  "items": [
+    {
+      "id": "visual.unit.example.mechanism",
+      "unitId": "unit.example",
+      "pagePath": "target/page.md",
+      "purpose": "mechanism | relationship | flow | hierarchy | state-change | comparison",
+      "learningJob": "读者看完后能够说清或判断什么。",
+      "misconception": "这张图要纠正的一个关键误解。",
+      "mode": "static | animated",
+      "format": "svg | png | gif | mp4 | webm",
+      "metaphor": "贯穿整张图或整段动画的单一空间或物理隐喻。",
+      "essentialFacts": ["画面必须保留且可追溯的一到五个事实。"],
+      "storyboard": [
+        {
+          "beat": 1,
+          "job": "这一拍只负责什么。",
+          "state": "读者在这一拍看到的状态。"
+        }
+      ],
+      "assetPath": "assets/visuals/example.svg",
+      "fallbackPath": "assets/visuals/example.png",
+      "embedLocation": "example.svg",
+      "altText": "不用看图也能理解其关系、变化和结论的替代说明。",
+      "sourceRefs": ["source.example#claim.example"],
+      "loopRequired": false,
+      "validation": {
+        "status": "pass",
+        "sourceFidelityChecked": true,
+        "readabilityChecked": true,
+        "embedChecked": true,
+        "fallbackChecked": "not_applicable",
+        "meaningfulStateChange": "not_applicable",
+        "loopChecked": "not_applicable",
+        "reducedMotionChecked": "not_applicable"
+      }
+    }
+  ],
+  "checksNotRun": [],
+  "remainingRisks": []
+}

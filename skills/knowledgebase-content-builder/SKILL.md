@@ -15,6 +15,7 @@ Read `references/readability-density.md` for every rewrite. Also read `reference
 2. Include every page type needed to expose risk, not merely the easiest article.
 3. Trace the pilot from source claim → knowledge unit → page section. Compare essential points before and after rewriting; record preserved, intentionally changed, and unresolved meanings.
 4. Validate first-screen value, explanation budget, terminology, default action, pressure level, catalog exposure, task/ability output when applicable, navigation context, evidence treatment, and whether the page has a genuinely distinct reader job.
+   - When the pilot lesson requires a visual explanation, apply `knowledgebase-visual-explainer`, embed the real asset and fallback, and record its ID in the pilot verdict. Do not approve a prompt-only or decorative result.
 5. Write `_kb-control/pilot-review.md` with artifacts, source/knowledge-unit trace, fidelity comparison, decisions, checks, defects, repairs, and whether the sample is safe to scale.
 6. Write `_kb-control/pilot-verdict.json` from the plugin template. Run a separate counter-review that actively looks for abstract examples, terminology jumps, repeated legacy bodies, page-role confusion, exercise pressure, and inability to transfer. Do not scale while any required dimension fails.
 
@@ -28,11 +29,16 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 4. Add only missing mechanisms, decisions, examples, tools, practice, evidence, and exceptions.
    - When `learning-design.json` requires a worked example, show a locatable input, human judgment, revised output, and transfer move. A template or principle list is not a worked example.
    - Record example and practice locations plus realistic reading time in `content-coverage.json`.
+   - Apply `knowledgebase-visual-explainer` for every required visual contract. Record IDs per page in `content-coverage.json` and maintain `_kb-control/visual-explanations.json`. Use no visual when the learning contract marks it unnecessary.
 5. Update cross-links and indexes as canonical pages move.
 6. Archive superseded material recoverably after replacements and routes exist.
 7. Run:
 
    `python3 <plugin-root>/scripts/kb_content_check.py <target> --output <target>/_kb-control/content-integrity.json`
+
+   When visual explanations are required or the manifest exists, also run:
+
+   `python3 <plugin-root>/scripts/kb_visual_check.py <target> --output <target>/_kb-control/visual-check.json`
 
 8. Rerun `kb_audit.py` and inspect `near-duplicate-page`, `repeated-outline-pattern`, and shared-block warnings. Similar structure is allowed only when the reader job genuinely requires it; a common template is not evidence of consistency.
 9. Write `_kb-control/content-build-report.md` with files added/rewritten/merged/archived, knowledge-unit coverage, meanings preserved/changed/unresolved, gaps filled, assumptions, validation, and unresolved source risks.
@@ -45,6 +51,7 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 - Use minimum sufficient explanation, not encyclopedic completeness.
 - Define terms before use and control simultaneous new relationships.
 - Attach practice and feedback to key abilities, not every article.
+- Use diagrams or animation only when they reduce the cognitive load of a real relationship or change. A prompt, storyboard, renderer source, or decorative motion is not a learner-facing asset.
 - Separate facts, inferences, internal defaults, and hypotheses.
 - Keep learner-facing source presentation separate from internal traceability. “Do not show sources to learners” never means deleting the evidence ledger.
 - Preserve the source's meaning, not its wording. A rewrite may compress language but must retain consequential mechanism, conditions, boundary, and uncertainty.
@@ -54,4 +61,4 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 
 ## Gate
 
-Pass the pilot only after the representative slice survives comprehension, fidelity, usefulness, and posture review. Pass content only when the migration map is accounted for, every knowledge unit has a canonical owner, every target page has traceable coverage and distinctive value, public navigation points to canonical content, near-duplicate risks are resolved, and the build report identifies remaining evidence gaps.
+Pass the pilot only after the representative slice survives comprehension, fidelity, usefulness, posture, and any required visual-explanation review. Pass content only when the migration map is accounted for, every knowledge unit has a canonical owner, every target page has traceable coverage and distinctive value, every required visual is an actual embedded and validated asset, public navigation points to canonical content, near-duplicate risks are resolved, and the build report identifies remaining evidence gaps.

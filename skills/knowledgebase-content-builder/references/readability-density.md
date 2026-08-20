@@ -31,6 +31,7 @@ Remove repeated forms of “本章将”“前面已经讲过”“接下来再�
 - bullets for parallel items;
 - tables for exact repeated mappings or comparisons;
 - diagrams for relationships, flow, hierarchy, or state change;
+- animation only when temporal change itself carries explanatory meaning;
 - callouts only for risks, defaults, or exceptions that must interrupt scanning.
 
 Avoid both text walls and bullet-list confetti.

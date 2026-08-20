@@ -31,6 +31,13 @@
       }
     ]
   },
+  "visuals": {
+    "status": "pass",
+    "checkedIds": ["visual.unit.example.mechanism"],
+    "animatedIds": [],
+    "fallback": "not_applicable",
+    "reducedMotion": "not_applicable"
+  },
   "checksNotRun": [],
   "remainingRisks": []
 }

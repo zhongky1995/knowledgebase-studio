@@ -18,6 +18,7 @@ intake → audit → architecture → pilot → content → app → QC → relea
 - Audits sources and records claims, mechanisms, boundaries, conflicts, and unknowns.
 - Models traceable knowledge units and page responsibilities.
 - Reviews prerequisites, examples, exercises, feedback, cognitive load, and transfer evidence for learning products.
+- Decides when a visual explanation is justified, then validates the real embedded diagram or animation, its source fidelity, alternative text, and static fallback.
 - Validates the actual reader-facing corpus and app deliverable, not only narrative reports.
 - Fingerprints stage artifacts so changed deliverables invalidate stale downstream evidence.
 - Packages an isolated local release while keeping external publication as a separate approval.
@@ -30,11 +31,12 @@ intake → audit → architecture → pilot → content → app → QC → relea
 | `knowledgebase-auditor` | Inventories and evaluates the source knowledge base |
 | `knowledgebase-architect` | Designs the knowledge model, information architecture, and migration |
 | `knowledgebase-learning-reviewer` | Reviews the learning-product layer and transfer design |
+| `knowledgebase-visual-explainer` | Builds and validates source-faithful diagrams or explanatory motion when prose is insufficient |
 | `knowledgebase-content-builder` | Builds faithful reader-facing content and representative pilots |
 | `knowledgebase-app-builder` | Builds or validates a local Markdown knowledge app |
 | `knowledgebase-qc-release` | Runs final QC and validates an isolated release package |
 
-The repository also includes dependency-free Python tools for deterministic auditing, content checks, semantic stage gates, release checks, and durable workflow state.
+The repository also includes dependency-free Python tools for deterministic auditing, content checks, visual-asset validation, semantic stage gates, release checks, and durable workflow state.
 
 ## Requirements
 
@@ -58,7 +60,7 @@ Make sure the `plugins` array in `~/.agents/plugins/marketplace.json` contains a
 codex plugin add knowledgebase-studio@personal
 ```
 
-If your marketplace has another name, replace `personal` with that name. Start a new Codex task after installation so the seven skills are loaded.
+If your marketplace has another name, replace `personal` with that name. Start a new Codex task after installation so the eight skills are loaded.
 
 ## Use it
 
@@ -90,6 +92,7 @@ Run the standalone checks when you need a narrower diagnostic:
 ```bash
 python3 scripts/kb_audit.py /path/to/knowledge-base --strict
 python3 scripts/kb_content_check.py /path/to/knowledge-base --phase content
+python3 scripts/kb_visual_check.py /path/to/knowledge-base
 python3 scripts/kb_stage_check.py /path/to/knowledge-base --stage qc
 python3 scripts/kb_release_check.py /path/to/release-root
 ```
@@ -102,7 +105,8 @@ Generated workflow evidence is stored in `<knowledge-base>/_kb-control/`. Do not
 2. **Product posture before polish.** A beautiful implementation can still teach the wrong behavior.
 3. **Pilots before scale.** Validate one representative slice before rebuilding the whole corpus.
 4. **Evidence before status.** A stage passes only when current artifacts and the actual deliverable pass their gates.
-5. **Local readiness before publication.** Packaging never silently authorizes an external upload.
+5. **Explanation before decoration.** Add a diagram or animation only when it makes a real relationship or change easier to understand.
+6. **Local readiness before publication.** Packaging never silently authorizes an external upload.
 
 ## Development
 

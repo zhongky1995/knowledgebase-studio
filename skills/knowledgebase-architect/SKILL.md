@@ -28,6 +28,7 @@ Read `references/architecture-modes.md`.
    - For any learning posture, apply `knowledgebase-learning-reviewer` and create `_kb-control/learning-design.json` from the plugin template.
    - Every main-path knowledge unit must appear exactly once in a progression, after its prerequisites.
    - Count learner-visible units separately from source files, compatibility routes, wrappers, references, labs, and workbooks.
+   - For every main-path lesson, record whether a visual explanation is required. Require one only when a mechanism, relationship, flow, hierarchy, comparison, or state change is materially harder to understand in prose or a table. Declare its ID, reason, static/animated preference, misconception, and success evidence before production.
 6. Map every old public file to a target action and path.
 7. Identify a representative pilot slice that tests the hardest architecture, source-synthesis, progression, and writing assumptions.
 
@@ -39,7 +40,7 @@ Read `references/architecture-modes.md`.
 
 `migration-map.yaml` must map each old path to an action, target path, canonical owner, dependencies, and preservation status. Do not delete superseded material before the replacement and route changes are validated.
 
-For learning products, `learning-design.json` must define route roles, learner-visible unit count, lesson starting state, one learning result, prerequisite units, new terms, likely misconception, worked-example requirement, transfer evidence, and realistic reading time.
+For learning products, `learning-design.json` must define route roles, learner-visible unit count, lesson starting state, one learning result, prerequisite units, new terms, likely misconception, worked-example requirement, visual-explanation decision, transfer evidence, and realistic reading time.
 
 ## Gate
 

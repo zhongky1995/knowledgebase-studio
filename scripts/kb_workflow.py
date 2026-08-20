@@ -59,12 +59,14 @@ FEEDBACK_STAGE = {
     "example-depth": "pilot",
     "learning-progression": "architecture",
     "learning-transfer": "pilot",
+    "visual-explanation": "pilot",
     "tone": "content",
     "source-presentation": "intake",
     "distribution": "intake",
     "public-scope": "intake",
     "license": "intake",
     "rendering": "app",
+    "visual-rendering": "app",
     "interaction": "app",
     "responsive": "app",
     "validation": "qc",
@@ -277,14 +279,35 @@ def json_declared_paths(root, filename, key):
     return [candidate for value in values if (candidate := scoped_deliverable(root, value)) is not None]
 
 
+def visual_asset_paths(root, visual_ids=None, include_manifest=False):
+    manifest = root / CONTROL_DIR / "visual-explanations.json"
+    document = read_json_if_possible(manifest)
+    selected = set(visual_ids or [])
+    paths = []
+    if include_manifest and manifest.is_file():
+        paths.append(manifest)
+    for item in document.get("items") or []:
+        if selected and item.get("id") not in selected:
+            continue
+        for key in ("assetPath", "fallbackPath"):
+            value = item.get(key)
+            if value and (candidate := scoped_deliverable(root, value)) is not None:
+                paths.append(candidate)
+    return paths
+
+
 def stage_deliverable_paths(root, stage_id):
     paths = []
     if stage_id == "pilot":
         paths.extend(json_declared_paths(root, "pilot-verdict.json", "representativePaths"))
+        verdict = read_json_if_possible(root / CONTROL_DIR / "pilot-verdict.json")
+        paths.extend(visual_asset_paths(root, verdict.get("visualExplanationIds") or []))
     if stage_id in {"content", "qc"}:
         paths.extend(public_content_paths(root))
     if stage_id in {"app", "qc"}:
         paths.extend(json_declared_paths(root, "app-validation.json", "appPaths"))
+    if stage_id in {"content", "app", "qc"}:
+        paths.extend(visual_asset_paths(root, include_manifest=True))
     if stage_id == "release":
         verdict = read_json_if_possible(root / CONTROL_DIR / "release-verdict.json")
         value = verdict.get("releaseRoot")
