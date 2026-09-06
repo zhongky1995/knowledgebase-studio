@@ -13,6 +13,8 @@ Use the visual contract in `_kb-control/learning-design.json`. If `required` is 
 
 Prefer a static SVG or PNG when spatial arrangement can carry the explanation. Use animation only when time, flow, feedback, accumulation, transformation, or before/after state is part of the mechanism.
 
+If changing a condition or judging evidence is the learning action, coordinate with the learning reviewer and app builder using `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. An interactive HTML/component belongs in `learning-activities.json`, not the media-only visual manifest. Separately declared SVG/image/animation assets still use the visual manifest. Do not turn every explainer into an interaction or require a recording for a text walkthrough.
+
 ## Procedure
 
 1. Distill one sentence stating what the reader should understand after viewing.

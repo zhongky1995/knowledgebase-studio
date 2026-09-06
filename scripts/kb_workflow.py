@@ -60,6 +60,8 @@ FEEDBACK_STAGE = {
     "learning-progression": "architecture",
     "learning-transfer": "pilot",
     "visual-explanation": "pilot",
+    "operation-depth": "pilot",
+    "teaching-interaction": "pilot",
     "tone": "content",
     "source-presentation": "intake",
     "distribution": "intake",
@@ -296,18 +298,40 @@ def visual_asset_paths(root, visual_ids=None, include_manifest=False):
     return paths
 
 
+def learning_asset_paths(root, page_paths=None):
+    manifest = root / CONTROL_DIR / "learning-activities.json"
+    document = read_json_if_possible(manifest)
+    paths = [manifest] if manifest.is_file() else []
+    for item in document.get("items") or []:
+        if not isinstance(item, dict):
+            continue
+        if page_paths is not None and item.get("pagePath") not in page_paths:
+            continue
+        review = item.get("review") if isinstance(item.get("review"), dict) else {}
+        interaction = item.get("interaction") if isinstance(item.get("interaction"), dict) else {}
+        values = list(interaction.get("assetPaths") or [])
+        values.extend(review.get("evidencePaths") or [])
+        values.extend(review.get("learnerStudyEvidencePaths") or [])
+        for value in values:
+            if (candidate := scoped_deliverable(root, value)) is not None:
+                paths.append(candidate)
+    return paths
+
+
 def stage_deliverable_paths(root, stage_id):
     paths = []
     if stage_id == "pilot":
         paths.extend(json_declared_paths(root, "pilot-verdict.json", "representativePaths"))
         verdict = read_json_if_possible(root / CONTROL_DIR / "pilot-verdict.json")
         paths.extend(visual_asset_paths(root, verdict.get("visualExplanationIds") or []))
+        paths.extend(learning_asset_paths(root, verdict.get("representativePaths") or []))
     if stage_id in {"content", "qc"}:
         paths.extend(public_content_paths(root))
     if stage_id in {"app", "qc"}:
         paths.extend(json_declared_paths(root, "app-validation.json", "appPaths"))
     if stage_id in {"content", "app", "qc"}:
         paths.extend(visual_asset_paths(root, include_manifest=True))
+        paths.extend(learning_asset_paths(root))
     if stage_id == "release":
         verdict = read_json_if_possible(root / CONTROL_DIR / "release-verdict.json")
         value = verdict.get("releaseRoot")

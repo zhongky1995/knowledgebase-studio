@@ -81,7 +81,7 @@ def dependency_cycles(units_by_id):
     return cycles
 
 
-def validate(root, source_path, model_path, coverage_path, phase="content"):
+def validate(root, source_path, model_path, coverage_path, phase="content", page_paths=None):
     errors = []
     warnings = []
     sources_document = read_json(source_path, errors, "source-understanding")
@@ -92,6 +92,23 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
     units = model_document.get("units") or []
     progressions = model_document.get("progressions") or []
     pages = coverage_document.get("pages") or []
+    if page_paths is not None and phase == "content":
+        requested = set(page_paths)
+        missing = requested - {page.get("path") for page in pages}
+        for value in sorted(missing):
+            issue(errors, "scoped-page-coverage", coverage_path, f"Update content coverage for changed page: {value}")
+        pages = [page for page in pages if page.get("path") in requested]
+        selected_ids = {value for page in pages for value in page.get("knowledgeUnitIds", [])}
+        while True:
+            dependencies = {value for unit in units if unit.get("id") in selected_ids for value in unit.get("dependencies", [])}
+            if dependencies.issubset(selected_ids):
+                break
+            selected_ids.update(dependencies)
+        units = [unit for unit in units if unit.get("id") in selected_ids]
+        source_ids = {str(value).split("#")[0] for unit in units for value in unit.get("sourceRefs", [])}
+        sources = [source for source in sources if source.get("id") in source_ids]
+        progressions = [dict(item, unitIds=[value for value in item.get("unitIds", []) if value in selected_ids]) for item in progressions]
+        progressions = [item for item in progressions if item["unitIds"]]
     posture = contract_posture(root)
     learning_design = {}
     if phase == "content" and posture in LEARNING_POSTURES:
@@ -183,7 +200,7 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
 
     if phase in {"architecture", "content"}:
         learning_product = posture in LEARNING_POSTURES
-        if learning_product and not progressions:
+        if learning_product and not progressions and any(unit.get("role") == "main-path" for unit in units):
             issue(errors, "empty-learning-progression", model_path, "Learning products require an explicit main-path progression.")
         progression_ids = set()
         flattened = []
@@ -244,6 +261,7 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
             candidate.relative_to(root)
         except ValueError:
             issue(errors, "escaping-page-path", label, value)
+            continue
         else:
             if not candidate.is_file():
                 issue(errors, "missing-page", label, value)
@@ -285,17 +303,22 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
                 issue(errors, "page-practice-policy", label, "Learning pages require an explicit practice policy.")
             if not nonempty(practice.get("output")) or not nonempty(practice.get("feedback")):
                 issue(errors, "page-practice-contract", label, "Practice policy requires an observable output statement and feedback route, including when policy is none.")
-            if example_required_units & set(unit_ids):
-                example = page.get("workedExample") or {}
-                if example.get("required") is not True:
-                    issue(errors, "worked-example-required", label, "The learning design requires a worked example on this page.")
-                for field in ("kind", "inputLocation", "judgmentLocation", "outputLocation", "transferLocation"):
-                    if not nonempty(example.get(field)):
-                        issue(errors, "worked-example-field", label, f"Missing {field}.")
-                    elif field.endswith("Location") and candidate.is_file():
-                        page_text = candidate.read_text(encoding="utf-8", errors="replace")
-                        if example[field] not in page_text:
-                            issue(errors, "worked-example-location-not-found", label, f"{field}: {example[field]}")
+        if phase == "content" and (example_required_units & set(unit_ids) or (page.get("workedExample") or {}).get("required") is True):
+            example = page.get("workedExample") or {}
+            if example.get("required") is not True:
+                issue(errors, "worked-example-required", label, "The learning design requires a worked example on this page, including cases and labs.")
+            fields = ["kind", "inputLocation", "judgmentLocation", "outputLocation", "transferLocation"]
+            if learning_design.get("schemaVersion") == 3 or coverage_document.get("schemaVersion") == 2:
+                fields.extend(["firstAttemptLocation", "revisionLocation"])
+            if example.get("kind") not in {"real", "anonymized", "composite", "fictional"}:
+                issue(errors, "worked-example-kind", label, "Case provenance must be explicit.")
+            for field in fields:
+                if not nonempty(example.get(field)):
+                    issue(errors, "worked-example-field", label, f"Missing {field}.")
+                elif field.endswith("Location") and candidate.is_file():
+                    page_text = candidate.read_text(encoding="utf-8", errors="replace")
+                    if example[field] not in page_text:
+                        issue(errors, "worked-example-location-not-found", label, f"{field}: {example[field]}")
 
     if phase == "content":
         content_pages = [page for page in pages if page.get("pageType") != "navigation"]
@@ -305,6 +328,8 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
 
         for unit_id, unit in units_by_id.items():
             owner = unit.get("canonicalOwner")
+            if page_paths is not None and owner not in set(page_paths):
+                continue
             page = pages_by_path.get(owner)
             if not page:
                 issue(errors, "missing-canonical-owner", unit_id, str(owner))
@@ -314,6 +339,8 @@ def validate(root, source_path, model_path, coverage_path, phase="content"):
     return {
         "status": "fail" if errors else "pass",
         "phase": phase,
+        "scope": "selected-pages-and-prerequisites" if page_paths is not None else "full",
+        "selectedPages": sorted(page_paths) if page_paths is not None else None,
         "root": str(root),
         "contracts": {
             "sourceUnderstanding": str(source_path),
@@ -341,6 +368,7 @@ def main():
     parser.add_argument("--content-coverage", default="_kb-control/content-coverage.json")
     parser.add_argument("--phase", choices=["audit", "architecture", "content"], default="content")
     parser.add_argument("--output")
+    parser.add_argument("--page", action="append", dest="pages", help="Check a changed page and its knowledge prerequisites; repeatable")
     args = parser.parse_args()
 
     root = Path(args.root).expanduser().resolve()
@@ -358,6 +386,7 @@ def main():
         contract_path(args.knowledge_model),
         contract_path(args.content_coverage),
         args.phase,
+        args.pages,
     )
     rendered = json.dumps(report, ensure_ascii=False, indent=2)
     if args.output:

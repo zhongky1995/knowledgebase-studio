@@ -28,6 +28,8 @@ Give each lesson one primary learning result. Define abbreviations before use. K
 
 When a worked example is necessary, expose enough of the causal chain for a novice to follow the judgment: realistic input, first attempt, what the human accepted or rejected, revised output, and how the same model changes in a second case. A finished template, polished answer, or list of principles without that judgment chain is not sufficient.
 
-When practice is part of the promised posture, it should resemble real judgments or outputs and have an answer, rubric, or feedback path. A running case is optional and should not repeat stable setup. Never use practice state to imply mastery unless the contract explicitly defines that progress truth.
+When practice is part of the promised posture, it should resemble real judgments or outputs and have an answer, rubric, or feedback path. A running case is optional and should not repeat stable setup. A progress definition alone cannot establish mastery: claims need appropriate assessment evidence, not clicks or filled fields.
+
+For operational walkthroughs and interactive inquiry, read the shared learning reviewer's `references/learning-activity-design.md`. Connect a learning action to evidence-dependent feedback, optional hints, revision, and changed transfer material as needed. These are composable teaching moves, not mandatory widgets or a fixed loop on every page. Keep explanations and text alternatives available to readers who skip practice.
 
 Estimate reading time from visible prose, tables, diagrams, decisions, and any promised practice. Treat a character-count estimate as a baseline, not evidence that a novice can complete the page in the advertised time.

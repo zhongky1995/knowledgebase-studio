@@ -16,7 +16,7 @@ Contributions that improve evidence quality, workflow correctness, learning desi
 3. Run the test suite:
 
    ```bash
-   python3 scripts/test_knowledgebase_studio.py
+   python3 -B -m unittest discover -s scripts -p 'test_*.py'
    ```
 
 4. If you changed a `SKILL.md`, validate that skill with the Codex skill validator available in your development environment.

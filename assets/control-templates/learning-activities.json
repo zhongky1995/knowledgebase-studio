@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "items": [
+    {
+      "id": "activity.unit.example.judgment",
+      "unitId": "unit.example",
+      "pagePath": "lesson.md",
+      "kind": "judgment",
+      "mode": "interactive",
+      "learningGoal": "根据原文区分建议与已确认决定，并能处理证据变化。",
+      "misconception": "把提出过的建议当成已经确认的决定。",
+      "provenance": "fictional",
+      "provenanceLocation": "以下是虚构教学材料",
+      "sourceRefs": ["source.example#claim.example"],
+      "steps": [],
+      "cases": [
+        {
+          "id": "meeting-guided",
+          "role": "guided",
+          "materialLocation": "主持人：先不定发布日期",
+          "taskLocation": "周四发布能写入决策记录吗",
+          "expectedOutcome": "发布日期待定",
+          "feedbackLocation": "建议尚未得到确认",
+          "evidenceLocation": "主持人的明确结论"
+        },
+        {
+          "id": "meeting-transfer",
+          "role": "transfer",
+          "comparedWith": "meeting-guided",
+          "changedCondition": "主持人从暂缓决定改为明确确认",
+          "materialLocation": "主持人：确认周四发布",
+          "taskLocation": "新证据下怎样记录",
+          "expectedOutcome": "确认周四发布",
+          "expectedChange": "different",
+          "transferRationale": "改变决定状态的证据变了，结论随之改变。",
+          "feedbackLocation": "现在已有明确确认",
+          "evidenceLocation": "确认周四发布"
+        }
+      ],
+      "interaction": {
+        "assetPaths": ["assets/demos/meeting-judgment.html"],
+        "entryLocation": "打开会议判断练习",
+        "feedbackMode": "rule-based",
+        "resultMode": "scripted",
+        "simulationLabelLocation": "预设教学示例，不调用实时模型",
+        "hints": [
+          {"level": "attention", "location": "对照主持人的话"},
+          {"level": "criterion", "location": "区分建议与确认"},
+          {"level": "worked-example", "location": "查看完整分析"}
+        ],
+        "fallbackLocation": "文字版完整示范与答案",
+        "skipAllowed": true,
+        "draftPolicyLocation": "选择仅保留在本次打开期间"
+      },
+      "review": {
+        "status": "not_run",
+        "method": "editor-review",
+        "evidencePaths": [],
+        "learnerStudyStatus": "not_run",
+        "learnerStudyEvidencePaths": []
+      }
+    }
+  ]
+}

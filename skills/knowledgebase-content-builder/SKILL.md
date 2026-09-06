@@ -9,6 +9,8 @@ Produce useful reader-facing content with the least necessary reading. Do not re
 
 Read `references/readability-density.md` for every rewrite. Also read `references/learning-mode.md` or `references/operations-mode.md` for the selected mode. For learning, obey the contract's product posture; do not treat “learning” as permission to require tasks or artifacts.
 
+For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.
+
 ## Pilot Stage
 
 1. Build the representative slice selected by architecture.
@@ -27,8 +29,9 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 2. Rewrite high-value main-path pages first.
 3. Create `_kb-control/content-coverage.json` from `assets/control-templates/content-coverage.json`. Give every target page a primary question, reader change, owned knowledge units, essential preserved meanings, fidelity locations, distinctive value, and evidence status.
 4. Add only missing mechanisms, decisions, examples, tools, practice, evidence, and exceptions.
-   - When `learning-design.json` requires a worked example, show a locatable input, human judgment, revised output, and transfer move. A template or principle list is not a worked example.
+   - When `learning-design.json` requires a worked example, show locatable input, first attempt, human judgment, revision action, revised output, and transfer material. Apply the promise to case/lab pages too. A template or principle list is not a worked example.
    - Record example and practice locations plus realistic reading time in `content-coverage.json`.
+   - Record activity IDs in page coverage and the representative pilot verdict. Supply actual case material, evidence-based feedback, optional hints, and a readable fallback for interactions. Label scripted outcomes and fictional cases; keep first attempt and revised result distinguishable.
    - Apply `knowledgebase-visual-explainer` for every required visual contract. Record IDs per page in `content-coverage.json` and maintain `_kb-control/visual-explanations.json`. Use no visual when the learning contract marks it unnecessary.
 5. Update cross-links and indexes as canonical pages move.
 6. Archive superseded material recoverably after replacements and routes exist.
@@ -42,6 +45,8 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 
 8. Rerun `kb_audit.py` and inspect `near-duplicate-page`, `repeated-outline-pattern`, and shared-block warnings. Similar structure is allowed only when the reader job genuinely requires it; a common template is not evidence of consistency.
 9. Write `_kb-control/content-build-report.md` with files added/rewritten/merged/archived, knowledge-unit coverage, meanings preserved/changed/unresolved, gaps filled, assumptions, validation, and unresolved source risks.
+
+When activities are declared, run `python3 <plugin-root>/scripts/kb_learning_check.py <target>`. Record actual editorial/simulated review evidence; passing a structural checker does not validate learning efficacy. For a bounded lesson update, use the controller's `references/incremental-updates.md` instead of asserting a fresh full-corpus pass.
 
 ## Universal Rules
 

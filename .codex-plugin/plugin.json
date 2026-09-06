@@ -1,7 +1,7 @@
 {
   "name": "knowledgebase-studio",
-  "version": "0.2.0+codex.20260820025756",
-  "description": "Source-grounded knowledge-base modeling, learning and visual explanation design, faithful content production, app validation, quality control, and clean local release packaging.",
+  "version": "0.2.0+codex.20260906103411",
+  "description": "Source-grounded knowledge-base production with operational teaching, optional heuristic learning interactions, visual explanation, app/QC evidence, scoped lesson updates, and clean local release packaging.",
   "author": {
     "name": "\u949f\u5764\u9896",
     "url": "https://github.com/zhongky1995"

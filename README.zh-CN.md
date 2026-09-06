@@ -19,6 +19,9 @@ Knowledgebase Studio 是一个面向 Codex 的知识库生产插件。它能把�
 - 审计来源资料，记录其中的主张、机制、适用边界、相互冲突和未知项。
 - 建立可追溯的知识单元，明确每个页面应该回答什么问题。
 - 面向课程型知识库，检查先修关系、案例、练习、反馈、阅读负荷和知识迁移证据。
+- 操作课串起“做什么—可能看到什么—怎么检查—如何继续或恢复”，支持纯文字教学，不强制录屏。
+- 学习设计、内容、页面与质检共用教学活动约定：按依据反馈、可选分层提示、修订、变式迁移和文字说明；不把点击或填空当成掌握。
+- 支持只更新几课的增量检查，保留整库旧验收的真实状态；功能检查、编辑审查与真实学员学习效果分开记录。
 - 判断视觉解释是否真的必要；需要时验收已经嵌入页面的静态图或动效，以及来源一致性、替代文本和静态回退。
 - 验证读者真正看到的内容和应用，而不是只检查总结报告。
 - 为阶段证据和真实交付物生成指纹；内容一旦变化，下游的旧结论会自动失效。
@@ -70,6 +73,7 @@ codex plugin add knowledgebase-studio@personal
 - `完整审计并修复这个知识库，做到本地发布可用。`
 - `把这些资料做成有学习坡度、案例和练习反馈的课程型知识库。`
 - `从上次断点继续知识库自动流程。`
+- `只完善这两课的操作步骤和可选判断练习，验证当前改动，不重建整库。`
 
 如果需要手动启动完整工作流，可以在目标知识库下初始化持久状态：
 
@@ -94,11 +98,14 @@ python3 scripts/kb_workflow.py check --root /path/to/knowledge-base
 python3 scripts/kb_audit.py /path/to/knowledge-base --strict
 python3 scripts/kb_content_check.py /path/to/knowledge-base --phase content
 python3 scripts/kb_visual_check.py /path/to/knowledge-base
+python3 scripts/kb_learning_check.py /path/to/knowledge-base --phase content
 python3 scripts/kb_stage_check.py /path/to/knowledge-base --stage qc
 python3 scripts/kb_release_check.py /path/to/release-root
 ```
 
 工作流证据会保存在 `<knowledge-base>/_kb-control/`。请不要手动修改 `workflow.json`；通过控制器命令更新状态，才能保证阶段修订、证据指纹和失效关系一致。
+
+只更新部分课节时，使用 `scripts/kb_update.py plan` 和 `check`。操作与证据要求见[增量更新说明](skills/structured-knowledgebase-builder/references/incremental-updates.md)。新模板采用学习设计 schema 3、内容覆盖 schema 2，旧版设计仍可读取。交互不是必选项；共享字段与检查边界见[教学活动设计说明](skills/knowledgebase-learning-reviewer/references/learning-activity-design.md)。
 
 ## 工作原则
 
@@ -114,7 +121,7 @@ python3 scripts/kb_release_check.py /path/to/release-root
 运行完整测试：
 
 ```bash
-python3 scripts/test_knowledgebase_studio.py
+python3 -B -m unittest discover -s scripts -p 'test_*.py'
 ```
 
 贡献代码或文档前，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。如果发现安全问题，请按 [SECURITY.md](SECURITY.md) 的方式私密报告，不要直接创建公开 Issue。

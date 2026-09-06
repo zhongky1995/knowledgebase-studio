@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "productPosture": "guided_learning",
   "learnerVisibleUnitCount": 1,
   "routes": [
@@ -21,10 +21,14 @@
       "newTerms": [],
       "likelyMisconception": "最容易发生且会影响后续理解的误解。",
       "workedExampleRequired": true,
+      "learningTaskType": "judgment",
+      "activityIds": ["activity.unit.example.judgment"],
       "exampleContract": {
         "kind": "fictional | composite | anonymized | real",
         "input": "案例提供给读者和 AI 的实际输入。",
+        "firstAttempt": "展示一版初稿或首次尝试，不跳过中间过程。",
         "judgment": "人为什么接受、拒绝或修改 AI 结果。",
+        "revision": "针对证据差距给出的具体修改动作。",
         "output": "修改后的可检查结果。",
         "transfer": "换一个场景时读者应该怎样迁移。"
       },

@@ -12,6 +12,8 @@ Every section must answer, explain, distinguish, prove, demonstrate, instruct, o
 
 Stop when the target reader can recognize the situation, explain the necessary mechanism, avoid the consequential mistake, and apply the idea once. Move optional derivation, history, uncommon exceptions, and adjacent theory to references.
 
+For operations, keep the action, input, possible observable results, check, and continuation/recovery connected. A shorter page that jumps from a request to a finished artifact has lost necessary teaching, even if the headings and final answer remain. Judge density against the reader's task, not a fixed length.
+
 ## Opening And Structure
 
 - Put the reader's question and a useful answer/model/action in the opening section.

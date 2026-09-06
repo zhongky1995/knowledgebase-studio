@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "draft",
+  "items": [
+    {
+      "id": "activity.unit.example.operation",
+      "unitId": "unit.example",
+      "pagePath": "lesson.md",
+      "kind": "operation",
+      "mode": "text",
+      "learningGoal": "拿到可以核对的行动清单，并按实际输出继续操作。",
+      "misconception": "把生成计划或文件名当成已经拿到实际清单。",
+      "provenance": "fictional",
+      "provenanceLocation": "以下是虚构教学材料",
+      "sourceRefs": ["source.example#claim.example"],
+      "steps": [
+        {
+          "precondition": "已打开允许输入文字的对话工具，并保留原会议记录。",
+          "action": "发送会议记录和整理请求。",
+          "input": "页面提供的虚构记录，以及要求保留原文依据、未知字段标待确认的请求。",
+          "possibleResults": [
+            {"result": "回复中出现了实际清单。", "nextAction": "逐项对照原文核对负责人、行动和日期。"},
+            {"result": "只出现准备整理的计划。", "nextAction": "要求现在给出实际条目；拿到条目后再核对。"}
+          ],
+          "check": "有真实任务条目，每个确定字段都有原文依据，待确认信息未被猜补。",
+          "recovery": "若请求未发送成功，保留原文并重试；若漏项或猜测，指出对应原话并要求修订后重新核对。",
+          "location": "发送请求后，根据实际输出继续"
+        }
+      ],
+      "cases": [],
+      "review": {
+        "status": "not_run",
+        "method": "editor-review",
+        "evidencePaths": [],
+        "learnerStudyStatus": "not_run",
+        "learnerStudyEvidencePaths": []
+      }
+    }
+  ]
+}

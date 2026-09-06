@@ -24,7 +24,7 @@ MIGRATION_ACTIONS = {
     "hide-compatibility",
 }
 
-PASS_VALUES = {"pass", "not_applicable"}
+PASS_VALUES = {"pass"}
 
 
 def issue(collection, kind, path, detail):
@@ -177,8 +177,8 @@ def validate_learning_design(root, errors, warnings, evidence):
     if not design or not model:
         return
     schema_version = design.get("schemaVersion")
-    if schema_version not in {1, 2}:
-        issue(errors, "learning-design-schema", design_path, "schemaVersion must be 1 or 2.")
+    if schema_version not in {1, 2, 3}:
+        issue(errors, "learning-design-schema", design_path, "schemaVersion must be 1, 2, or 3.")
     elif schema_version == 1:
         issue(warnings, "legacy-learning-design-schema", design_path, "Schema version 1 does not carry lesson-level visual decisions; upgrade to version 2 when architecture is revised.")
 
@@ -211,7 +211,7 @@ def validate_learning_design(root, errors, warnings, evidence):
             for field in ("input", "judgment", "output", "transfer"):
                 if not str(example.get(field, "")).strip():
                     issue(errors, "learning-example-field", label, f"Worked examples require {field}.")
-        if schema_version == 2:
+        if schema_version in {2, 3}:
             visual = lesson.get("visualExplanation")
             if not isinstance(visual, dict):
                 issue(errors, "learning-visual-decision", label, "Schema version 2 requires a visualExplanation decision.")
@@ -228,6 +228,19 @@ def validate_learning_design(root, errors, warnings, evidence):
                         issue(errors, "learning-visual-mode", label, str(visual.get("preferredMode")))
                 elif visual.get("preferredMode") not in {None, "", "not_applicable"}:
                     issue(warnings, "unused-learning-visual-mode", label, "A non-required visual should normally use preferredMode: not_applicable.")
+        if schema_version == 3:
+            task_type = lesson.get("learningTaskType")
+            if task_type not in {"concept", "judgment", "operation", "troubleshooting", "creation"}:
+                issue(errors, "learning-task-type", label, str(task_type))
+            activity_ids = lesson.get("activityIds")
+            if not isinstance(activity_ids, list) or any(not isinstance(value, str) or not value.strip() for value in activity_ids):
+                issue(errors, "learning-activity-ids", label, "activityIds must be a list of non-empty IDs; use [] when no activity is needed.")
+            elif task_type in {"operation", "troubleshooting"} and not activity_ids:
+                issue(errors, "operation-activity-required", label, "An operational lesson needs a text or interactive walkthrough.")
+            if lesson.get("workedExampleRequired"):
+                for field in ("firstAttempt", "revision"):
+                    if not str((lesson.get("exampleContract") or {}).get(field, "")).strip():
+                        issue(errors, "learning-example-field", label, f"Schema version 3 worked examples require {field}.")
         for dependency in lesson.get("prerequisiteUnitIds") or []:
             if dependency not in units:
                 issue(errors, "unknown-learning-prerequisite", label, str(dependency))
@@ -337,6 +350,19 @@ def validate_visual_alignment(root, contracts, visual_ids, errors):
             issue(errors, "visual-mode-mismatch", visual_id, f"Expected {expected.get('preferredMode')}, got {item.get('mode')}")
 
 
+def run_learning_gate(root, errors, warnings, evidence, phase, *, page_paths=None):
+    from kb_learning_check import check_learning
+    report = check_learning(root, phase="content" if phase == "pilot" else phase, page_paths=page_paths)
+    errors.extend(report["errors"])
+    warnings.extend(report["warnings"])
+    if report["validatedIds"] or report["errors"]:
+        output = root / "_kb-control" / f"{phase}-learning-check.json"
+        output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        evidence["learningActivities"] = report["validatedIds"]
+        evidence["learningCheck"] = str(output.relative_to(root))
+    return report
+
+
 def validate_architecture(root, errors, warnings, evidence):
     control = root / "_kb-control"
     read_text(control / "architecture-decision.md", errors, "architecture decision", minimum=500)
@@ -393,9 +419,9 @@ def validate_architecture(root, errors, warnings, evidence):
     evidence.update({"inventoryPaths": len(public_paths), "migrationRecords": len(records)})
 
 
-def require_dimension(document, dimensions, key, errors, path):
+def require_dimension(document, dimensions, key, errors, path, *, allow_not_applicable=False):
     value = dimensions.get(key)
-    if value not in PASS_VALUES:
+    if value != "pass" and not (allow_not_applicable and value == "not_applicable"):
         issue(errors, "dimension-not-passed", path, f"{key}: {value or 'missing'}")
 
 
@@ -426,8 +452,6 @@ def validate_pilot(root, errors, warnings, evidence):
     required = ["posture", "sourceFidelity", "usefulness", "distinctivePageJobs", "exampleDepth", "progression", "transfer", "navigation"]
     if contract(root).get("posture") in LEARNING_POSTURES:
         required.append("visualExplanation")
-    for key in required:
-        require_dimension(verdict, dimensions, key, errors, path)
     contracts = visual_contracts(root)
     model = read_json(control / "knowledge-model.json", errors, "knowledge model", required=False)
     representative_units = {
@@ -441,6 +465,11 @@ def validate_pilot(root, errors, warnings, evidence):
         if visual.get("unitId") in representative_units
     }
     declared_visuals = set(verdict.get("visualExplanationIds") or [])
+    for key in required:
+        optional = (key == "visualExplanation" and not (required_visuals or declared_visuals)) or (
+            key in {"progression", "transfer"} and contract(root).get("posture") not in LEARNING_POSTURES
+        )
+        require_dimension(verdict, dimensions, key, errors, path, allow_not_applicable=optional)
     if required_visuals:
         if dimensions.get("visualExplanation") != "pass":
             issue(errors, "pilot-visual-dimension", path, "The representative pilot requires a passed visualExplanation dimension.")
@@ -450,6 +479,11 @@ def validate_pilot(root, errors, warnings, evidence):
     if declared_visuals:
         run_visual_gate(root, errors, warnings, evidence, "pilot-visual-check.json", declared_visuals)
         validate_visual_alignment(root, contracts, declared_visuals, errors)
+    activities = run_learning_gate(root, errors, warnings, evidence, "pilot", page_paths=representative)
+    if activities["validatedIds"]:
+        require_dimension(verdict, dimensions, "learningActivities", errors, path)
+        if not set(activities["validatedIds"]).issubset(verdict.get("activityIds") or []):
+            issue(errors, "pilot-activity-coverage", path, "Record all representative activity IDs in the pilot verdict.")
     if verdict.get("criticalIssues"):
         issue(errors, "pilot-critical-issues", path, f"{len(verdict['criticalIssues'])} unresolved critical issue(s).")
     evidence.update({"representativePaths": len(representative), "assumptionsTested": len(assumptions)})
@@ -467,6 +501,14 @@ def validate_content(root, errors, warnings, evidence):
         issue(errors, "empty-content-coverage", control / "content-coverage.json", "Content coverage must account for every target page.")
     for index, page in enumerate(pages):
         checked_project_path(root, page.get("path"), errors, f"pages[{index}]", require_file=True)
+    activities = run_learning_gate(root, errors, warnings, evidence, "content")
+    activity_manifest = read_json(control / "learning-activities.json", errors, "learning activities", required=False)
+    for item in activity_manifest.get("items") or []:
+        if not isinstance(item, dict):
+            continue  # The learning gate reports malformed records.
+        matching_page = next((page for page in pages if page.get("path") == item.get("pagePath")), {})
+        if item.get("id") not in (matching_page.get("activityIds") or []):
+            issue(errors, "content-activity-coverage", item.get("pagePath"), f"Missing page activity ID: {item.get('id')}")
     required_visuals = set(visual_contracts(root))
     covered_visuals = {
         visual_id
@@ -562,6 +604,7 @@ def validate_app(root, errors, warnings, evidence):
                 issue(errors, "app-animation-fallback", path, "Animated explanations require a passed static fallback check.")
             if visuals.get("reducedMotion") != "pass":
                 issue(errors, "app-reduced-motion", path, "Animated explanations require a passed reduced-motion check.")
+    run_learning_gate(root, errors, warnings, evidence, "app")
     evidence.update({"appPaths": len(app_paths), "viewportWidths": viewports, "directEntries": len(navigation.get("directEntries") or [])})
 
 
@@ -581,6 +624,9 @@ def validate_qc(root, errors, warnings, evidence):
         required.append("learningTransfer")
     if current_contract.get("app_required") != "no":
         required.append("appExperience")
+    activities = run_learning_gate(root, errors, warnings, evidence, "qc")
+    if activities["validatedIds"]:
+        required.append("learningActivities")
     manifest, declared_visuals, _ = visual_manifest_summary(root)
     required_visuals = set(visual_contracts(root))
     if required_visuals or declared_visuals:

@@ -1,6 +1,6 @@
 ---
 name: knowledgebase-learning-reviewer
-description: Design and audit the learning-product layer of a knowledge base when product posture is reader-led learning, guided learning, a practice workbench, or learning-oriented hybrid. Use to separate source-file count from learner-visible units, verify prerequisite order and terminology, define lesson outcomes, worked examples and visual-explanation contracts, estimate realistic reading load, challenge pilots, and produce `_kb-control/learning-design.json`.
+description: Design and audit the learning-product layer of a knowledge base. Use for prerequisite order, terminology, lesson outcomes, operational walkthroughs, worked examples, heuristic learning, evidence-based feedback, optional hints, transfer cases, and visual-explanation contracts; produce learning-design.json and shared learning-activities.json contracts without equating interaction completion with mastery.
 ---
 
 # Knowledgebase Learning Reviewer
@@ -21,7 +21,15 @@ Prevent a technically complete content repository from being mistaken for a cohe
    - transfer evidence and realistic reading time;
    - exercise policy consistent with the product posture.
 4. Sequence units from prerequisites and conceptual load. Every main-path unit appears exactly once and after its dependencies.
-5. Create `_kb-control/learning-design.json` from `../../assets/control-templates/learning-design.json`. Use schema version 2 and give every main-path lesson an explicit visual-explanation decision.
+5. Create `_kb-control/learning-design.json` from `../../assets/control-templates/learning-design.json`. Use schema version 3: declare a learning task type, explicit visual decision, and activity IDs (empty when unnecessary). Include elective cases/labs that promise an example or activity, not only the core path. Existing schema 1/2 designs remain compatible.
+
+## Operational And Interactive Learning
+
+Read `references/learning-activity-design.md` when designing or reviewing operations, troubleshooting, or teaching interactions. Choose the learning action before a widget. A text walkthrough is sufficient when it connects concrete actions to observable results, checks, and continuation/recovery.
+
+For teaching interactions, share `_kb-control/learning-activities.json` with content, app, and QC. Define the learning goal, misconception, evidence-dependent feedback, optional support, changed transfer material, and a readable fallback. Context → prediction → consequence → explanation → revision → transfer is an optional pattern, not a universal lesson template. Allow novices a worked demonstration before independent attempts. Reader-led practice must remain skippable.
+
+Do not count a filled field, click, or correct guess as understanding. Distinguish editor review, simulated walkthrough, and real learner studies in the review evidence; never invent learner observations.
 
 ## Visual-Explanation Contract
 
@@ -43,7 +51,9 @@ After the pilot is built, review it again from the position of a representative 
 
 - an answer that is readable but still not learnable;
 - undefined terms or dependencies introduced out of order;
-- examples that omit the decision process or revised result;
+- examples that omit the first attempt, decision process, revision action, or revised result;
+- operations that jump from a request to success without observable results and recovery;
+- interactions that give generic feedback, repeat identical transfer material, hide necessary help, or require practice before reading;
 - visuals that decorate the page, flatten source boundaries, or stop at an unrendered prompt;
 - one lesson template forced onto different page jobs;
 - exercises or progress language that contradict the approved pressure policy;
@@ -54,4 +64,4 @@ Record the result in `_kb-control/pilot-verdict.json`. Do not approve scaling wh
 
 ## Gate
 
-Pass only when the learning path is coherent independently of folder order, learner-visible units have distinct jobs, prerequisites precede use, required worked examples are concrete and locatable, every lesson has a justified visual decision, practice matches the promised posture, and a representative reader can transfer at least one key model to a new case.
+Pass only when the learning path is coherent independently of folder order, learner-visible units have distinct jobs, prerequisites precede use, required worked examples are concrete and locatable, every lesson has a justified visual decision, and practice matches the promised posture. Review at least one changed case against its evidence and rubric; only claim observed learner transfer when a real learner study supports it.

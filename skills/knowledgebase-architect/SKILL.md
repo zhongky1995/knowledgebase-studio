@@ -26,6 +26,7 @@ Read `references/architecture-modes.md`.
 4. Convert understood source claims into `_kb-control/knowledge-model.json` using `assets/control-templates/knowledge-model.json`. Each knowledge unit must own one reader question, core answer, reader change, necessary mechanism, boundary, source reference, prerequisites, role, and canonical page.
 5. Define progression from dependencies and reader difficulty, not from the old folder order or a desire for visually balanced modules.
    - For any learning posture, apply `knowledgebase-learning-reviewer` and create `_kb-control/learning-design.json` from the plugin template.
+   - In schema version 3, identify each lesson's learning task type and activity IDs. Operations/troubleshooting need a text walkthrough or appropriate interaction. Include elective cases/labs with promised examples; do not impose interactions on reference pages.
    - Every main-path knowledge unit must appear exactly once in a progression, after its prerequisites.
    - Count learner-visible units separately from source files, compatibility routes, wrappers, references, labs, and workbooks.
    - For every main-path lesson, record whether a visual explanation is required. Require one only when a mechanism, relationship, flow, hierarchy, comparison, or state change is materially harder to understand in prose or a table. Declare its ID, reason, static/animated preference, misconception, and success evidence before production.

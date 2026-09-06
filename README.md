@@ -18,6 +18,9 @@ intake → audit → architecture → pilot → content → app → QC → relea
 - Audits sources and records claims, mechanisms, boundaries, conflicts, and unknowns.
 - Models traceable knowledge units and page responsibilities.
 - Reviews prerequisites, examples, exercises, feedback, cognitive load, and transfer evidence for learning products.
+- Connects operational steps to observable outcomes and recovery, with text-only walkthroughs supported.
+- Shares optional teaching activities across learning design, content, app, and QC: evidence-based feedback, layered hints, revision, changed transfer cases, and readable fallbacks.
+- Checks bounded lesson updates separately while preserving any stale full-workflow verdict; structural/browser evidence is not a claim of learning efficacy.
 - Decides when a visual explanation is justified, then validates the real embedded diagram or animation, its source fidelity, alternative text, and static fallback.
 - Validates the actual reader-facing corpus and app deliverable, not only narrative reports.
 - Fingerprints stage artifacts so changed deliverables invalidate stale downstream evidence.
@@ -69,6 +72,7 @@ Ask Codex naturally, for example:
 - `完整审计并修复这个知识库，做到本地发布可用。`
 - `把这些资料做成有学习坡度、案例和练习反馈的课程型知识库。`
 - `从上次断点继续知识库自动流程。`
+- `只完善这两课的操作步骤和可选判断练习，验证当前改动，不重建整库。`
 
 For a complete workflow, the controller initializes durable state under the target knowledge base:
 
@@ -93,11 +97,14 @@ Run the standalone checks when you need a narrower diagnostic:
 python3 scripts/kb_audit.py /path/to/knowledge-base --strict
 python3 scripts/kb_content_check.py /path/to/knowledge-base --phase content
 python3 scripts/kb_visual_check.py /path/to/knowledge-base
+python3 scripts/kb_learning_check.py /path/to/knowledge-base --phase content
 python3 scripts/kb_stage_check.py /path/to/knowledge-base --stage qc
 python3 scripts/kb_release_check.py /path/to/release-root
 ```
 
 Generated workflow evidence is stored in `<knowledge-base>/_kb-control/`. Do not hand-edit `workflow.json`; use the controller commands so revisions and invalidation remain consistent.
+
+For bounded updates, use `scripts/kb_update.py plan` and `check`; see the [scoped-update guide](skills/structured-knowledgebase-builder/references/incremental-updates.md) for required review receipts and app/release paths. New learning templates use design schema 3 and coverage schema 2; older designs remain supported. See [activity design](skills/knowledgebase-learning-reviewer/references/learning-activity-design.md) for the shared contract and validation limits.
 
 ## Design principles
 
@@ -113,7 +120,7 @@ Generated workflow evidence is stored in `<knowledge-base>/_kb-control/`. Do not
 Run the complete test suite:
 
 ```bash
-python3 scripts/test_knowledgebase_studio.py
+python3 -B -m unittest discover -s scripts -p 'test_*.py'
 ```
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and [SECURITY.md](SECURITY.md) for private vulnerability reporting.

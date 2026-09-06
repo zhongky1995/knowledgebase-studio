@@ -7,6 +7,8 @@ description: Validate and release a completed knowledge base. Use for semantic a
 
 Keep QC logically separate from implementation. Read `references/qc-checklist.md`.
 
+For declared teaching activities, read `../knowledgebase-learning-reviewer/references/learning-activity-design.md` and run `python3 <plugin-root>/scripts/kb_learning_check.py <target> --phase qc`. Review operational continuity, case provenance, evidence-dependent feedback, optional support, changed transfer material, and the component/fallback agreement. Record `learningActivities` as a separate verdict dimension when activities exist.
+
 ## QC Stage
 
 1. Run `kb_audit.py` in strict mode after resolving intentionally allowed patterns through configuration.
@@ -17,6 +19,8 @@ Keep QC logically separate from implementation. Read `references/qc-checklist.md
 5. Reconcile the migration map and public file tree.
 6. Write `_kb-control/qc-report.md` with pass/fail evidence and required repairs.
 7. Write `_kb-control/qc-verdict.json` from the plugin template. Report corpus integrity, product architecture, content quality, evidence, learning transfer when applicable, and app experience when applicable as separate dimensions with evidence. `checksNotRun` and critical issues must be empty for a pass.
+
+Required dimensions cannot pass as `not_applicable`. Distinguish required checks from optional learner studies: an editor review or simulated walkthrough can support local readiness, while `learnerStudyStatus: not_run` must remain explicit and cannot support claims of learning gains. If the user requires learner testing, it becomes a required check and cannot be waived by this distinction.
 
 Return failed items to the earliest affected stage. Do not repair silently and claim independent review; record what changed and rerun QC.
 

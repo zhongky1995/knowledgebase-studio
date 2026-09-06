@@ -1,6 +1,6 @@
 ---
 name: structured-knowledgebase-builder
-description: Orchestrate complete or cross-stage knowledge-base work from scope and source locking through audit, architecture, pilot, content production, app integration, QC, and release. Use when the user asks to build, overhaul, complete, comprehensively inspect and repair, package, resume, or jointly change content plus navigation/app behavior, especially when they request automatic continuation, do not stop, finish the whole flow, or resume from a prior checkpoint.
+description: Orchestrate full or scoped knowledge-base work across source understanding, learning design, content, app, QC, and release. Use to build, overhaul, resume, package, update a few lessons, revise operational teaching or heuristic interactions, or jointly change content and navigation/app behavior. Supports bounded update checks without falsely renewing an old full-workflow pass.
 ---
 
 # Structured Knowledgebase Builder
@@ -10,6 +10,8 @@ Run Knowledgebase Studio as a state-driven controller. Lock the intended knowled
 ## Start Or Resume
 
 Locate the plugin root from this `SKILL.md`. Use `../../scripts/kb_workflow.py` relative to this skill directory.
+
+First choose scope. For a bounded update to existing lessons, examples, or learning interactions, or an explicitly requested standalone lesson sample, read `references/incremental-updates.md` and use its scoped plan/check route. Do not automatically reconcile with `--apply`, restart all stages, or initialize a new full workflow for that route. A course-wide restructure, changed audience/product posture, or requested full release still uses the full workflow below.
 
 1. If `<target>/_kb-control/workflow.json` does not exist, initialize it:
 
@@ -31,7 +33,7 @@ Locate the plugin root from this `SKILL.md`. Use `../../scripts/kb_workflow.py` 
 
 7. The completion command automatically claims the next eligible stage. Continue immediately.
 
-For any cross-stage request, run `check` before reporting completion even when the task did not begin through this controller. A raw `workflow.json` status is not a current verdict; `check` and the semantic gate artifacts are authoritative.
+For full cross-stage requests, run `check` before reporting completion even when the task did not begin through this controller. A raw `workflow.json` status is not a current verdict; `check` and the semantic gate artifacts are authoritative. Scoped updates instead run `kb_update.py check` and report both the limited result and the unchanged full-workflow state.
 
 Read `references/workflow-protocol.md` before the first automated run.
 
@@ -102,6 +104,7 @@ When `learning-design.json` marks a visual explanation as required, apply `knowl
 - Do not mark a stage passed from report existence alone. `kb_workflow.py complete` must generate and pass the corresponding `_kb-control/stage-check-<stage>.json`.
 - Content, app, QC, and release passes must fingerprint the actual learner-facing corpus, app deliverable, and release root. A changed deliverable makes downstream evidence stale even when narrative reports were not edited.
 - Required visual assets and their manifest are learner-facing deliverables. Editing an SVG, PNG, GIF, video, fallback, or declaration invalidates the affected content, app, and QC evidence.
+- Shared learning-activity declarations, real interaction assets, and their review evidence are also fingerprinted. Required verdict dimensions must pass; `not_applicable` is allowed only for explicitly irrelevant dimensions.
 - Do not scale content before the pilot gate passes.
 - When the user changes scope or rejects the sample, invalidate from the earliest affected stage:
 
@@ -131,4 +134,4 @@ Send progress updates only at stage start, material discovery, blocker/failure, 
 
 ## Completion
 
-Finish only when `kb_workflow.py check` reports `status: ok`, the workflow reports complete, QC and release both passed, every required verdict dimension has current evidence, and all local routes/builds/packages requested by the user are validated. External upload is a separate action and may remain intentionally undone. Never turn a corpus/link/build-only pass into an “overall pass.” Report substantive outcomes, not every controller command.
+For full-workflow work, finish only when `kb_workflow.py check` reports `status: ok`, the workflow reports complete, QC and release both passed, every required verdict dimension has current evidence, and all requested local routes/builds/packages are validated. For scoped work, finish with a passed current update check and identify exactly which pages/deliverables it covers; keep any old full-workflow staleness explicit. External upload is a separate action and may remain intentionally undone. Never turn a corpus/link/build-only or scoped pass into an “overall pass.” Report substantive outcomes, not every controller command.

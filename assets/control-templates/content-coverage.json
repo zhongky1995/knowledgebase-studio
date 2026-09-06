@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "pages": [
     {
       "path": "target/page.md",
@@ -20,7 +20,9 @@
         "required": true,
         "kind": "fictional | composite | anonymized | real",
         "inputLocation": "案例输入所在标题或段落。",
+        "firstAttemptLocation": "初稿或首次尝试所在位置。",
         "judgmentLocation": "人工判断所在标题或段落。",
+        "revisionLocation": "具体修改要求或动作所在位置。",
         "outputLocation": "修改后结果所在标题或段落。",
         "transferLocation": "迁移提示所在标题或段落。"
       },
@@ -30,6 +32,7 @@
         "feedback": "读者如何获得结构反馈、案例对照或人工判断。"
       },
       "visualExplanationIds": ["visual.unit.example.mechanism"],
+      "activityIds": ["activity.unit.example.judgment"],
       "estimatedReadingMinutes": 8,
       "preservedFrom": ["old/page.md"],
       "evidenceStatus": "verified | internal-default | inference | unresolved"

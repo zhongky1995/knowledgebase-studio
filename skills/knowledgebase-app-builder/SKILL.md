@@ -7,6 +7,8 @@ description: Build, refactor, or validate a local Markdown knowledge-base app af
 
 Treat the app first as information architecture, then visual styling. Read `references/local-knowledge-app-ux.md`.
 
+When learning activities are declared, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Implement the shared activity IDs, cases, feedback rules/rubric, optional hints, retry, and transfer material. Do not replace pedagogical feedback with a non-empty-field check. Label scripted results; never imply a real tool/model run.
+
 ## Entry Decision
 
 - If no app exists and the project contract does not require one, skip the workflow stage with `kb_workflow.py skip --stage app --reason <reason>`.
@@ -24,8 +26,11 @@ Treat the app first as information architecture, then visual styling. Read `refe
    - Useful content must be reachable in one or two clicks from an intended entry unless the contract explicitly approves a deeper path.
 6. Run rendering-fidelity checks on representative Markdown: semantic tables, images with useful alternative text, relative `.md` links, code blocks, headings, and wide content. Confirm a search label and its default filter describe the same actual scope.
    - When `_kb-control/visual-explanations.json` exists, test every declared asset in its real page: loading, aspect behavior, label readability, alternative text, poster/static fallback, and reduced-motion behavior. Animation may not replace access to the explanation.
+   - For teaching interactions, check feedback against different choices/evidence, optional hints, retry, changed transfer material, text fallback, keyboard use, and draft retention/clearing. Mobile review must preserve material → action → result → feedback reading order, not merely avoid overflow. Verify practice is skippable when promised and progress labels describe observed actions, not mastery.
 7. Repeat the browser checks against any packaged static-site or single-file output; source-app success does not prove release success.
 8. Write `_kb-control/app-validation.md` with commands, paths checked, views inspected, defects repaired, and remaining risks. Also write `_kb-control/app-validation.json` from the plugin template with app paths, browser status, desktop/mobile widths, checks, primary-path click depth, direct-entry destinations, visual IDs and fallback/reduced-motion results when applicable, and checks not run.
+
+For every interactive activity, add a `learningActivities` entry with its ID, pass/fail status, actual viewport widths, behavior checks, and real evidence paths. Run `python3 <plugin-root>/scripts/kb_learning_check.py <target> --phase app`. The checker verifies declarations/evidence presence; it does not run the browser or judge feedback quality for you.
 
 ## Gate
 
