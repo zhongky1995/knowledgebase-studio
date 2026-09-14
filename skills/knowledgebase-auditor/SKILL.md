@@ -7,6 +7,8 @@ description: Audit an existing knowledge base before restructuring. Use for repo
 
 Produce an evidence-backed baseline without rewriting public content.
 
+For empirical numbers or cross-source comparisons, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Add optional measurement context and actual verification records to the existing source ledger before drafting around those values. Distinguish original evidence from retellings, analysis levels, subgroup denominators, and unknown sample sizes. Do not require a quantitative contract for a non-quantitative claim.
+
 ## Procedure
 
 1. Read root entry files, `AGENTS.md`, navigation, app routes, build scripts, archives summaries, planning/control files, and nearby truth sources.

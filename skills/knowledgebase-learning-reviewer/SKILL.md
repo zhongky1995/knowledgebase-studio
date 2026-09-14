@@ -7,6 +7,8 @@ description: Design and audit the learning-product layer of a knowledge base. Us
 
 Prevent a technically complete content repository from being mistaken for a coherent course or learning manual.
 
+For evidence-based explanations or transferable judgment, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Review whether the learner can ask useful questions of the next claim, not just repeat today's answer. Test analogies by a new inference and their failure boundary; allow prediction and revision without forcing errors, hiding necessary help, or requiring a toolkit chapter.
+
 ## Architecture Review
 
 1. Read the project contract, inventory, knowledge model, architecture decision, and migration map.

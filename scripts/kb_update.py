@@ -74,8 +74,12 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
     for value in changed:
         owned_pages = {page for asset, owners in activity_assets.items() if asset == value or asset.startswith(value + "/") for page in owners}
         affected.update(owned_pages)
-        if (Path(value).suffix in {".js", ".mjs", ".css", ".html", ".tsx", ".vue"} or (root / value).is_dir()) and not owned_pages:
-            shared_app_changed = True
+        candidate = root / value
+        files = candidate.rglob("*") if candidate.is_dir() else [candidate]
+        for changed_file in files:
+            if changed_file.suffix in {".js", ".mjs", ".css", ".html", ".ts", ".tsx", ".jsx", ".vue", ".svelte"}:
+                if normalize(root, str(changed_file)) not in activity_assets:
+                    shared_app_changed = True
     for page in public_pages:
         candidate = root / normalize(root, page)
         if structure_changed or unscoped_control or shared_app_changed or any(page == value or page.startswith(value + "/") for value in changed):

@@ -5,6 +5,8 @@ import json
 import re
 from pathlib import Path
 
+from kb_evidence import check_comparisons, check_measurement
+
 
 CONTENT_ROLES = {"main-path", "reference", "rule", "tool", "case"}
 PAGE_TYPES = CONTENT_ROLES | {"navigation"}
@@ -127,6 +129,7 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
 
     sources_by_id = {}
     claims_by_source = {}
+    measurements = {}
     for index, source in enumerate(sources):
         label = f"sources[{index}]"
         source_id = source.get("id")
@@ -161,6 +164,10 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
                 issue(warnings, "claim-evidence-gap", claim_label, "Claim evidence or a locatable basis is missing.")
             if claim.get("confidence") not in {"high", "medium", "low"}:
                 issue(errors, "claim-confidence", claim_label, "Confidence must be high, medium, or low.")
+            if "measurement" in claim:
+                check_measurement(claim["measurement"], errors, warnings, claim_label)
+                if nonempty(claim_id):
+                    measurements[f"{source_id}#{claim_id}"] = claim["measurement"]
         claims_by_source[source_id] = claim_ids
 
     units_by_id = {}
@@ -190,6 +197,7 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
                 issue(errors, "unknown-claim-ref", label, str(ref))
         if unit.get("role") in {"main-path", "rule", "tool"} and not (unit.get("boundaries") or []):
             issue(errors, "unit-boundary-gap", label, "Main-path, rule, and tool units require at least one boundary or misuse condition.")
+        check_comparisons(unit, measurements, errors, label)
 
     for unit_id, unit in units_by_id.items():
         for dependency in unit.get("dependencies") or []:
@@ -294,6 +302,13 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
                     issue(errors, "fidelity-location-not-found", label, f"Locator is not present in the output page: {check.get('location')}")
         if page.get("evidenceStatus") not in EVIDENCE_STATUSES:
             issue(errors, "evidence-status", label, f"Unsupported evidenceStatus: {page.get('evidenceStatus')}")
+        if page.get("evidenceStatus") == "verified":
+            referenced = {str(ref) for unit_id in unit_ids for ref in (units_by_id.get(unit_id, {}).get("sourceRefs") or [])}
+            for ref, measurement in measurements.items():
+                if ref in referenced or ref.split("#")[0] in referenced:
+                    review = measurement.get("verification") if isinstance(measurement, dict) else None
+                    if isinstance(review, dict) and review.get("status") == "unverified":
+                        issue(errors, "page-unverified-measurement", label, f"Page marked verified relies on an unverified value: {ref}")
         if phase == "content" and posture in LEARNING_POSTURES and page.get("pageType") == "main-path":
             minutes = page.get("estimatedReadingMinutes")
             if not isinstance(minutes, (int, float)) or minutes <= 0:

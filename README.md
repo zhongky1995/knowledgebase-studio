@@ -18,6 +18,7 @@ intake → audit → architecture → pilot → content → app → QC → relea
 - Audits sources and records claims, mechanisms, boundaries, conflicts, and unknowns.
 - Models traceable knowledge units and page responsibilities.
 - Reviews prerequisites, examples, exercises, feedback, cognitive load, and transfer evidence for learning products.
+- Builds transferable judgment through mechanisms, usable decision questions, predictive analogies, and uncertainty beside the claim. Optional quantitative contracts check context, verification, and cross-source alignment in the existing content checker.
 - Connects operational steps to observable outcomes and recovery, with text-only walkthroughs supported.
 - Shares optional teaching activities across learning design, content, app, and QC: evidence-based feedback, layered hints, revision, changed transfer cases, and readable fallbacks.
 - Checks bounded lesson updates separately while preserving any stale full-workflow verdict; structural/browser evidence is not a claim of learning efficacy.
@@ -116,6 +117,8 @@ For bounded updates, use `scripts/kb_update.py plan` and `check`; see the [scope
 6. **Local readiness before publication.** Packaging never silently authorizes an external upload.
 
 ## Development
+
+The [evidence-to-judgment guide](skills/knowledgebase-content-builder/references/evidence-to-judgment.md) adapts selected ideas from [huashu-report](https://github.com/alchaincyf/huashu-report): reader-purpose first, evidence before prose, explanatory depth, and mechanical rules in tooling. It does not import report-only layouts, quotas, renderer code, or claims of proven learning gains.
 
 Run the complete test suite:
 

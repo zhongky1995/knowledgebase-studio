@@ -51,6 +51,10 @@ Alternative text should name the important entities, relationship or change, and
 
 ## Failure Modes
 
+For quantitative visuals, also read `../../knowledgebase-content-builder/references/evidence-to-judgment.md`. Choose the encoding from the reader's comparison: magnitude, change, distribution, composition, relationship, or exact lookup. Use a qualified conclusion title when the evidence supports one; retain neutral titles for lookup/exploration. Show units, relevant basis/period, and important limitations near the figure. Distinguish actual values, forecasts, and illustrative cases.
+
+Check negative, zero, and missing values separately; never invent a zero series for a missing group. Bar lengths normally share a zero baseline; explain deliberate truncation, and choose meaningful clearly labeled scales for line/scatter plots. Inspect near-equal decimal ticks, long labels, edge annotations, and source lines at desktop/mobile widths. Keep color semantics stable with non-color cues and the existing accessible theme. Do not impose a fixed brand-color percentage or copy a report's print dimensions onto the app.
+
 - **Prompt-only delivery:** export and inspect the real asset.
 - **Decorative motion:** add a visible flow, feedback, transformation, accumulation, or state change that explains the mechanism.
 - **Icon collage:** remove secondary metaphors until one visual model remains.

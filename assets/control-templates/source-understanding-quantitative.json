@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "source.example",
+      "path": "replace-with-inspected-source-path-or-url",
+      "role": "supporting",
+      "authority": "unknown",
+      "summary": "Replace this fictional schema example with the inspected source's actual position.",
+      "coreClaims": [
+        {
+          "id": "claim.example",
+          "statement": "Fictional schema example: 12 of 60 observed tasks met the stated completion criterion (20%).",
+          "evidence": "Replace with the actual source locator and matching evidence; this template is not an empirical finding.",
+          "confidence": "low",
+          "measurement": {
+            "value": 20,
+            "measureKind": "proportion",
+            "unit": "%",
+            "basis": "Completed tasks / all observed tasks; 12 / 60 in this fictional example.",
+            "population": "60 tasks in a fictional teaching example, not 60 people or organizations.",
+            "period": "Fictional observation window; replace with the source's actual window.",
+            "analysisLevel": "task",
+            "sampleSize": {"status": "known", "value": 60},
+            "citationMode": "direct",
+            "verification": {"status": "unverified", "reason": "Starter example; no real source has been inspected."}
+          }
+        }
+      ],
+      "mechanisms": [],
+      "boundaries": ["A task-level completion rate alone does not establish a person-level or organization-level outcome."],
+      "conflicts": [],
+      "unknowns": ["Replace the fictional values and metadata before empirical use."]
+    }
+  ]
+}

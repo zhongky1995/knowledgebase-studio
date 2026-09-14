@@ -100,6 +100,8 @@ When `learning-design.json` marks a visual explanation as required, apply `knowl
 
 ## Gate And Correction Rules
 
+For evidence-heavy learning, comparisons, or knowledge pages that must build judgment, route to `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Reuse the existing source ledger and knowledge model. Keep research, editorial, presentation, and review responsibilities distinct without adding stages or requiring separate agents. This route does not turn an ordinary lesson into a research report.
+
 - Do not mark a stage passed unless its required artifacts exist.
 - Do not mark a stage passed from report existence alone. `kb_workflow.py complete` must generate and pass the corresponding `_kb-control/stage-check-<stage>.json`.
 - Content, app, QC, and release passes must fingerprint the actual learner-facing corpus, app deliverable, and release root. A changed deliverable makes downstream evidence stale even when narrative reports were not edited.

@@ -7,6 +7,8 @@ description: Build or rewrite reader-facing knowledge-base content after archite
 
 Produce useful reader-facing content with the least necessary reading. Do not reopen approved architecture unless evidence makes it unworkable.
 
+For conceptual explanations, evidence-heavy pages, or transferable judgment, read `references/evidence-to-judgment.md`. Go beyond source summaries: explain mechanisms, relevant competing explanations, and what the reader can decide next. Keep consequential uncertainty next to its claim. Scenes and predictive analogies are optional tools, not mandatory prose templates.
+
 Read `references/readability-density.md` for every rewrite. Also read `references/learning-mode.md` or `references/operations-mode.md` for the selected mode. For learning, obey the contract's product posture; do not treat “learning” as permission to require tasks or artifacts.
 
 For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.

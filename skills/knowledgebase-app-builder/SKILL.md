@@ -7,6 +7,8 @@ description: Build, refactor, or validate a local Markdown knowledge-base app af
 
 Treat the app first as information architecture, then visual styling. Read `references/local-knowledge-app-ux.md`.
 
+For data-backed content or reusable explanatory components, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Keep canonical evidence values separate from display logic, reuse the existing design system, and validate supported content blocks. Rebuild before inspecting actual pages. After a rendering defect, check other consumers of that component and include long tables, negative/missing values, narrow decimals, and long labels where applicable. Do not replace semantic review with mechanical checks.
+
 When learning activities are declared, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Implement the shared activity IDs, cases, feedback rules/rubric, optional hints, retry, and transfer material. Do not replace pedagogical feedback with a non-empty-field check. Label scripted results; never imply a real tool/model run.
 
 ## Entry Decision

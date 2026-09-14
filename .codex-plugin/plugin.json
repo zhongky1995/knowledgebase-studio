@@ -1,6 +1,6 @@
 {
   "name": "knowledgebase-studio",
-  "version": "0.2.0+codex.20260906103411",
+  "version": "0.2.0+codex.20260914133850",
   "description": "Source-grounded knowledge-base production with operational teaching, optional heuristic learning interactions, visual explanation, app/QC evidence, scoped lesson updates, and clean local release packaging.",
   "author": {
     "name": "\u949f\u5764\u9896",
