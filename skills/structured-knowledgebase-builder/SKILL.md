@@ -81,6 +81,8 @@ For high-impact posture choices, add a plain-language intent mirror such as: “
 
 Record a stop with `kb_workflow.py block`; never simulate progress past a blocker.
 
+For requests to understand how a system works from zero, route architecture, pilot and content through `../knowledgebase-content-builder/references/novice-mental-model.md`. Reuse explicit audience/posture decisions from the current conversation or authorized prior context; only clarify unresolved consequential choices. “No technical vocabulary” does not mean a collection of disconnected short definitions.
+
 ## Stage Map
 
 | Stage | Apply skill | Required output |
@@ -116,7 +118,7 @@ For evidence-heavy learning, comparisons, or knowledge pages that must build jud
 
   `python3 <plugin-root>/scripts/kb_workflow.py feedback --root <target> --kind <kind> --reason <reason>`
 
-  Product posture, audience, and source-presentation feedback returns to intake; navigation pressure and learning progression return to architecture; content depth, example depth, or learning-transfer rejection returns to pilot; tone-only feedback returns to content; rendering, interaction, or responsive defects return to app; validation defects return to QC.
+  Product posture, audience, and source-presentation feedback returns to intake; missing system relationships, navigation pressure and learning progression return to architecture; content depth, example depth, or learning-transfer rejection returns to pilot; tone-only feedback returns to content; rendering, interaction, or responsive defects return to app; validation defects return to QC.
 
 - Keep public content separate from `_kb-control/`, archives, build caches, and release reports.
 - Build public-ready material in an isolated release root. Never treat the full working repository as the share package.

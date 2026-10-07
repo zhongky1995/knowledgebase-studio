@@ -17,6 +17,7 @@
       ],
       "distinctiveValue": "为什么这一页不能被相邻页面替代。",
       "workedExample": {
+        "pattern": "judgment_revision",
         "required": true,
         "kind": "fictional | composite | anonymized | real",
         "inputLocation": "案例输入所在标题或段落。",

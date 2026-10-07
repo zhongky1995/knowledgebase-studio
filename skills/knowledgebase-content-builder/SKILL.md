@@ -13,6 +13,8 @@ Read `references/readability-density.md` for every rewrite. Also read `reference
 
 For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.
 
+For zero-prerequisite explanations of how a system works, read `references/novice-mental-model.md`. Select the worked-example pattern from the learning job, and preserve causal continuity before compressing prose.
+
 ## Pilot Stage
 
 1. Build the representative slice selected by architecture.
@@ -31,7 +33,7 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 2. Rewrite high-value main-path pages first.
 3. Create `_kb-control/content-coverage.json` from `assets/control-templates/content-coverage.json`. Give every target page a primary question, reader change, owned knowledge units, essential preserved meanings, fidelity locations, distinctive value, and evidence status.
 4. Add only missing mechanisms, decisions, examples, tools, practice, evidence, and exceptions.
-   - When `learning-design.json` requires a worked example, show locatable input, first attempt, human judgment, revision action, revised output, and transfer material. Apply the promise to case/lab pages too. A template or principle list is not a worked example.
+   - When `learning-design.json` requires a worked example, follow its pattern: `judgment_revision` needs input, first attempt, judgment, revision, output and transfer; `mechanism_trace` needs input, participants, intermediate trace, output, boundary and transfer. Record the corresponding locations in coverage. Apply the promise to case/lab pages too. A template or principle list is not a worked example.
    - Record example and practice locations plus realistic reading time in `content-coverage.json`.
    - Record activity IDs in page coverage and the representative pilot verdict. Supply actual case material, evidence-based feedback, optional hints, and a readable fallback for interactions. Label scripted outcomes and fictional cases; keep first attempt and revised result distinguishable.
    - Apply `knowledgebase-visual-explainer` for every required visual contract. Record IDs per page in `content-coverage.json` and maintain `_kb-control/visual-explanations.json`. Use no visual when the learning contract marks it unnecessary.

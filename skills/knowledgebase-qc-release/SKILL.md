@@ -11,6 +11,10 @@ For evidence-heavy or judgment-oriented content, read `../knowledgebase-content-
 
 For declared teaching activities, read `../knowledgebase-learning-reviewer/references/learning-activity-design.md` and run `python3 <plugin-root>/scripts/kb_learning_check.py <target> --phase qc`. Review operational continuity, case provenance, evidence-dependent feedback, optional support, changed transfer material, and the component/fallback agreement. Record `learningActivities` as a separate verdict dimension when activities exist.
 
+For novice mental-model projects, use the comprehension checks in `../knowledgebase-content-builder/references/novice-mental-model.md` during final editorial review. Recheck the full scenario, weak cross-page transitions, concrete sentence subjects and mobile visual meaning. Distinguish content review, rendering checks and real reader observations; increased page/word/image counts do not establish learning quality.
+
+For new or redesigned diagrams, follow `../knowledgebase-visual-explainer/references/diagram-design-system.md` and complete schema 2 visual design receipts against the actual embedded files. Inspect arrow endpoints, grouping, color-independent meaning, clipping and rendered labels; preserve desktop/mobile figure screenshots and file hashes. A legacy schema 1 pass does not establish these checks.
+
 ## QC Stage
 
 1. Run `kb_audit.py` in strict mode after resolving intentionally allowed patterns through configuration.

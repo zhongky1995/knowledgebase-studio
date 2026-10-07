@@ -5,6 +5,8 @@ import json
 import re
 from pathlib import Path
 
+from kb_explanation import example_fields, nonempty, validate_explanation_design, validate_comprehension
+
 
 LEARNING_POSTURES = {
     "reading_manual",
@@ -183,6 +185,7 @@ def validate_learning_design(root, errors, warnings, evidence):
         issue(warnings, "legacy-learning-design-schema", design_path, "Schema version 1 does not carry lesson-level visual decisions; upgrade to version 2 when architecture is revised.")
 
     units = {item.get("id"): item for item in model.get("units") or [] if item.get("id")}
+    validate_explanation_design(root, design, units, errors)
     main_ids = {unit_id for unit_id, item in units.items() if item.get("role") == "main-path"}
     lessons = design.get("lessons") or []
     routes = design.get("routes") or []
@@ -208,8 +211,8 @@ def validate_learning_design(root, errors, warnings, evidence):
             issue(errors, "learning-example-policy", label, "workedExampleRequired must be true or false.")
         if lesson.get("workedExampleRequired"):
             example = lesson.get("exampleContract") or {}
-            for field in ("input", "judgment", "output", "transfer"):
-                if not str(example.get(field, "")).strip():
+            for field in example_fields(example, errors, label, modern=schema_version == 3):
+                if not nonempty(example.get(field)):
                     issue(errors, "learning-example-field", label, f"Worked examples require {field}.")
         if schema_version in {2, 3}:
             visual = lesson.get("visualExplanation")
@@ -237,10 +240,6 @@ def validate_learning_design(root, errors, warnings, evidence):
                 issue(errors, "learning-activity-ids", label, "activityIds must be a list of non-empty IDs; use [] when no activity is needed.")
             elif task_type in {"operation", "troubleshooting"} and not activity_ids:
                 issue(errors, "operation-activity-required", label, "An operational lesson needs a text or interactive walkthrough.")
-            if lesson.get("workedExampleRequired"):
-                for field in ("firstAttempt", "revision"):
-                    if not str((lesson.get("exampleContract") or {}).get(field, "")).strip():
-                        issue(errors, "learning-example-field", label, f"Schema version 3 worked examples require {field}.")
         for dependency in lesson.get("prerequisiteUnitIds") or []:
             if dependency not in units:
                 issue(errors, "unknown-learning-prerequisite", label, str(dependency))
@@ -445,6 +444,8 @@ def validate_pilot(root, errors, warnings, evidence):
     for index, item in enumerate(assumptions):
         if item.get("result") != "pass" or not str(item.get("evidence", "")).strip():
             issue(errors, "pilot-assumption-result", f"assumptionsTested[{index}]", "Each assumption needs pass evidence.")
+    design = read_json(control / "learning-design.json", errors, "learning design", required=False)
+    validate_comprehension(root, design, verdict, errors)
     counter = verdict.get("counterReview") or {}
     if counter.get("status") != "pass" or not (counter.get("reviewedRisks") or []):
         issue(errors, "pilot-counter-review", path, "A separate counter-review must challenge the pilot before scaling.")

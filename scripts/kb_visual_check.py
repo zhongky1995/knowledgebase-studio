@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import math
 import re
 import struct
 import sys
@@ -161,7 +163,77 @@ def probe_media(path, media_format, validation):
     return {key: probe[key] for key in required}
 
 
-def validate_item(root, item, errors, warnings, stats, label):
+DESIGN_DIMENSIONS = {"hierarchy", "legibility", "colorSemantics", "connections", "composition", "mechanismVisibility", "sourceBoundary"}
+
+
+def positive_number(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value > 0
+
+
+def validate_design_review(root, item, errors, label):
+    review = item.get("designReview")
+    if not isinstance(review, dict):
+        issue(errors, "visual-design-review", label, "Schema 2 requires designReview with real rendered evidence.")
+        return
+    for field in ("pattern", "designSystem"):
+        if not isinstance(review.get(field), str) or not review[field].strip():
+            issue(errors, "visual-design-field", label, f"Missing {field}.")
+    target = review.get("minLabelPxTarget")
+    if not positive_number(target):
+        issue(errors, "visual-label-target", label, "Declare a positive minimum rendered label size.")
+    elif target < 14 and not str(review.get("smallLabelReason") or "").strip():
+        issue(errors, "visual-label-exception", label, "Explain and review a label target below the 14px default.")
+    hashes = review.get("assetSha256")
+    hashes = hashes if isinstance(hashes, dict) else {}
+    for field in ("assetPath", "fallbackPath"):
+        value = item.get(field)
+        if field == "fallbackPath" and item.get("mode") != "animated":
+            continue
+        asset = project_path(root, value, errors, f"{label}.{field}")
+        if asset and hashes.get(value) != hashlib.sha256(asset.read_bytes()).hexdigest():
+            issue(errors, "visual-design-stale", label, f"Review must match the current {field} bytes.")
+    dimensions = review.get("dimensions")
+    dimensions = dimensions if isinstance(dimensions, dict) else {}
+    for key in sorted(DESIGN_DIMENSIONS):
+        check = dimensions.get(key)
+        if not isinstance(check, dict) or check.get("status") != "pass" or not str(check.get("observation") or "").strip():
+            issue(errors, "visual-design-dimension", label, f"{key} needs a passed, specific observation.")
+    viewports = review.get("viewports")
+    viewports = viewports if isinstance(viewports, list) else []
+    mobile = desktop = False
+    for index, entry in enumerate(viewports):
+        location = f"{label}.designReview.viewports[{index}]"
+        if not isinstance(entry, dict):
+            issue(errors, "visual-viewport", location, "Expected an evidence record.")
+            continue
+        width = entry.get("viewportWidth")
+        rendered = entry.get("renderedWidth")
+        minimum = entry.get("minLabelPx")
+        scale = entry.get("captureScale")
+        if not all(positive_number(n) for n in (width, rendered, minimum, scale)):
+            issue(errors, "visual-viewport", location, "Positive viewportWidth, renderedWidth, minLabelPx and captureScale required.")
+            continue
+        mobile |= width <= 480
+        desktop |= width >= 960
+        if rendered > width:
+            issue(errors, "visual-overflow", location, "Main explanation must fit the viewport.")
+        if positive_number(target) and minimum < target:
+            issue(errors, "visual-small-label", location, "Rendered labels fall below the declared minimum.")
+        screenshot = project_path(root, entry.get("screenshotPath"), errors, location)
+        if screenshot:
+            try:
+                metadata = probe_png(screenshot)
+                if abs(metadata["width"] - rendered * scale) > 2:
+                    issue(errors, "visual-capture-size", location, "Use a complete figure crop matching renderedWidth and captureScale.")
+            except (ValueError, OSError) as error:
+                issue(errors, "visual-screenshot", location, str(error))
+            if entry.get("screenshotSha256") != hashlib.sha256(screenshot.read_bytes()).hexdigest():
+                issue(errors, "visual-screenshot-stale", location, "Screenshot hash does not match the evidence file.")
+    if not mobile or not desktop:
+        issue(errors, "visual-viewports", label, "Design review requires mobile (<=480px) and desktop (>=960px) figure captures.")
+
+
+def validate_item(root, item, errors, warnings, stats, label, schema_version=1):
     for field in ("id", "unitId", "pagePath", "purpose", "learningJob", "misconception", "mode", "format", "metaphor", "assetPath", "embedLocation", "altText"):
         if not str(item.get(field, "")).strip():
             issue(errors, "visual-field", label, f"Missing {field}.")
@@ -233,6 +305,8 @@ def validate_item(root, item, errors, warnings, stats, label):
         issue(errors, "filename-alt-text", label, "Alternative text must explain the mechanism, not repeat the filename.")
 
     validation = item.get("validation") or {}
+    if schema_version == 2:
+        validate_design_review(root, item, errors, label)
     if validation.get("status") != "pass":
         issue(errors, "visual-validation-status", label, str(validation.get("status")))
     for field in ("sourceFidelityChecked", "readabilityChecked", "embedChecked"):
@@ -270,8 +344,10 @@ def check_visuals(root, manifest_path=None, required_ids=None):
             issue(errors, "invalid-json", manifest_path, str(error))
             document = {}
 
-    if document and document.get("schemaVersion") != 1:
-        issue(errors, "visual-schema", manifest_path, "schemaVersion must be 1.")
+    if document and document.get("schemaVersion") not in {1, 2}:
+        issue(errors, "visual-schema", manifest_path, "schemaVersion must be 1 or 2.")
+    elif document.get("schemaVersion") == 1:
+        issue(warnings, "legacy-visual-design", manifest_path, "Schema 1 does not establish rendered design review; use schema 2 for new or redesigned visuals.")
     if document and document.get("status") != "pass":
         issue(errors, "visual-manifest-status", manifest_path, str(document.get("status")))
     if document.get("checksNotRun"):
@@ -288,7 +364,7 @@ def check_visuals(root, manifest_path=None, required_ids=None):
     selected = [item for item in items if not required_ids or item.get("id") in required_ids]
     stats = {"declared": len(items), "validated": len(selected), "animated": 0, "formats": {}, "media": {}}
     for index, item in enumerate(selected):
-        validate_item(root, item, errors, warnings, stats, f"items[{index}]")
+        validate_item(root, item, errors, warnings, stats, f"items[{index}]", document.get("schemaVersion"))
         if item.get("mode") == "animated":
             stats["animated"] += 1
         media_format = item.get("format")

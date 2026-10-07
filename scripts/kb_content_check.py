@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 from kb_evidence import check_comparisons, check_measurement
+from kb_explanation import example_fields
 
 
 CONTENT_ROLES = {"main-path", "reference", "rule", "tool", "case"}
@@ -322,9 +323,13 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
             example = page.get("workedExample") or {}
             if example.get("required") is not True:
                 issue(errors, "worked-example-required", label, "The learning design requires a worked example on this page, including cases and labs.")
-            fields = ["kind", "inputLocation", "judgmentLocation", "outputLocation", "transferLocation"]
-            if learning_design.get("schemaVersion") == 3 or coverage_document.get("schemaVersion") == 2:
-                fields.extend(["firstAttemptLocation", "revisionLocation"])
+            modern = learning_design.get("schemaVersion") == 3 or coverage_document.get("schemaVersion") == 2
+            fields = ["kind"] + [f"{field}Location" for field in example_fields(example, errors, label, modern=modern)]
+            for lesson in learning_design.get("lessons") or []:
+                if lesson.get("unitId") in unit_ids and lesson.get("workedExampleRequired"):
+                    expected = (lesson.get("exampleContract") or {}).get("pattern", "judgment_revision")
+                    if example.get("pattern", "judgment_revision") != expected:
+                        issue(errors, "worked-example-pattern-mismatch", label, "Page example pattern differs from its learning contract.")
             if example.get("kind") not in {"real", "anonymized", "composite", "fictional"}:
                 issue(errors, "worked-example-kind", label, "Case provenance must be explicit.")
             for field in fields:

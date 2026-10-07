@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "status": "pass",
+  "schemaVersion": 2,
+  "status": "needs_work",
   "items": [
     {
       "id": "visual.unit.example.mechanism",
@@ -11,8 +11,10 @@
       "misconception": "这张图要纠正的一个关键误解。",
       "mode": "static | animated",
       "format": "svg | png | gif | mp4 | webm",
-      "metaphor": "贯穿整张图或整段动画的单一空间或物理隐喻。",
-      "essentialFacts": ["画面必须保留且可追溯的一到五个事实。"],
+      "metaphor": "直接画真实对象及其关系；若使用比喻，记录对应关系与失效边界。",
+      "essentialFacts": [
+        "画面必须保留且可追溯的一到五个事实。"
+      ],
       "storyboard": [
         {
           "beat": 1,
@@ -21,13 +23,15 @@
         }
       ],
       "assetPath": "assets/visuals/example.svg",
-      "fallbackPath": "assets/visuals/example.png",
+      "fallbackPath": "",
       "embedLocation": "example.svg",
       "altText": "不用看图也能理解其关系、变化和结论的替代说明。",
-      "sourceRefs": ["source.example#claim.example"],
+      "sourceRefs": [
+        "source.example#claim.example"
+      ],
       "loopRequired": false,
       "validation": {
-        "status": "pass",
+        "status": "needs_work",
         "sourceFidelityChecked": true,
         "readabilityChecked": true,
         "embedChecked": true,
@@ -35,6 +39,62 @@
         "meaningfulStateChange": "not_applicable",
         "loopChecked": "not_applicable",
         "reducedMotionChecked": "not_applicable"
+      },
+      "designReview": {
+        "pattern": "选择 before-after / request-reply / shared-boundary / condition-branch 或解释自定义图型",
+        "designSystem": "引用宿主视觉规范，或本插件图解设计规范及实际调整。",
+        "minLabelPxTarget": 14,
+        "assetSha256": {
+          "assets/visuals/example.svg": "填写实际文件 SHA-256"
+        },
+        "dimensions": {
+          "hierarchy": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "legibility": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "colorSemantics": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "connections": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "composition": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "mechanismVisibility": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          },
+          "sourceBoundary": {
+            "status": "needs_work",
+            "observation": "记录实际观察、发现与修正，不能只填已检查。"
+          }
+        },
+        "viewports": [
+          {
+            "viewportWidth": 390,
+            "renderedWidth": 0,
+            "minLabelPx": 0,
+            "captureScale": 1,
+            "screenshotPath": "_kb-control/visuals/example-mobile.png",
+            "screenshotSha256": "填写实际截图 SHA-256"
+          },
+          {
+            "viewportWidth": 1280,
+            "renderedWidth": 0,
+            "minLabelPx": 0,
+            "captureScale": 1,
+            "screenshotPath": "_kb-control/visuals/example-desktop.png",
+            "screenshotSha256": "填写实际截图 SHA-256"
+          }
+        ]
       }
     }
   ],

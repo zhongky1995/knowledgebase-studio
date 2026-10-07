@@ -131,3 +131,11 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines and [SECURITY
 ## License
 
 Released under the [MIT License](LICENSE).
+
+## Beginner mental models
+
+For zero-prerequisite explanations of how systems work, use the optional `novice_mental_model` profile: connect a complete everyday event before splitting concept pages. Mechanism examples use participants, actions, handoffs, outcomes and changed conditions; judgment/creation examples retain draft-and-revision teaching. Pilot receipts must locate actual explanatory text and distinguish editorial or simulated review from observed learners. See the [novice mental-model guide](skills/knowledgebase-content-builder/references/novice-mental-model.md). Structural checks cannot establish learning efficacy.
+
+## Diagram design and examples
+
+The [diagram design system](skills/knowledgebase-visual-explainer/references/diagram-design-system.md) covers type, spacing, semantic color, connectors, boundaries and narrow layouts. Open the [local pattern gallery](assets/visual-patterns/index.html) for four editable SVG patterns and deliberate counterexamples; rebuild with `python3 scripts/kb_visual_examples.py --output <directory>`. New/redesigned visuals use manifest schema 2 with real mobile/desktop figure captures, rendered type measurements, design observations and file hashes. The checker validates receipts, not aesthetics; legacy schema 1 remains compatible with an explicit warning.

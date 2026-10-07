@@ -9,6 +9,8 @@ Prevent a technically complete content repository from being mistaken for a cohe
 
 For evidence-based explanations or transferable judgment, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Review whether the learner can ask useful questions of the next claim, not just repeat today's answer. Test analogies by a new inference and their failure boundary; allow prediction and revision without forcing errors, hiding necessary help, or requiring a toolkit chapter.
 
+For a zero-prerequisite system explanation or “world model”, read `../knowledgebase-content-builder/references/novice-mental-model.md`. Keep a continuous real-world scenario across page boundaries and use the opt-in `novice_mental_model` explanation profile; do not substitute a glossary or a shorter programmer summary.
+
 ## Architecture Review
 
 1. Read the project contract, inventory, knowledge model, architecture decision, and migration map.
@@ -41,9 +43,12 @@ When required, define a stable visual ID, the cognitive reason, preferred mode, 
 
 ## Worked-Example Contract
 
-A worked example is not a topic label, prompt template, or list of principles. When required, it must expose:
+A worked example is not a topic label, prompt template, or list of principles. Choose a pattern from the learning job:
 
-`realistic input → AI or human first attempt → human judgment → revised output → transfer to a second case`
+- `judgment_revision` (default): realistic input → first attempt → judgment → revision → revised output → transfer.
+- `mechanism_trace`: familiar situation → participants and actions → intermediate handoffs → visible result → boundary and changed condition. Use it for conceptual explanation without inventing a draft/revision task.
+
+Record the pattern in the lesson example contract and page coverage. The novice mental-model reference defines the fields.
 
 Label the case real, anonymized, composite, or fictional. Do not present fictional outcomes as evidence.
 
@@ -53,7 +58,7 @@ After the pilot is built, review it again from the position of a representative 
 
 - an answer that is readable but still not learnable;
 - undefined terms or dependencies introduced out of order;
-- examples that omit the first attempt, decision process, revision action, or revised result;
+- examples that omit the process promised by their pattern: first attempt, judgment and revision for judgment/creation; concrete participants, intermediate actions and changed conditions for mechanism explanations;
 - operations that jump from a request to success without observable results and recovery;
 - interactions that give generic feedback, repeat identical transfer material, hide necessary help, or require practice before reading;
 - visuals that decorate the page, flatten source boundaries, or stop at an unrendered prompt;

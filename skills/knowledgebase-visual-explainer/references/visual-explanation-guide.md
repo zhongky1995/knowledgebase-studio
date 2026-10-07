@@ -19,7 +19,7 @@ Before production, state:
 4. one to five facts the source supports;
 5. the visible evidence that the explanation worked.
 
-Choose one spatial or physical metaphor that can carry the entire explanation. A metaphor may simplify appearance but must not replace the real mechanism. Keep source terms nearby when the metaphor could be mistaken for a literal implementation.
+Prefer literal domain objects when they make the relationship clear. When helpful, choose one spatial or physical metaphor that can carry the explanation. A metaphor may simplify appearance but must not replace the real mechanism. Keep source terms nearby when the metaphor could be mistaken for a literal implementation.
 
 ## Storyboard
 
@@ -33,6 +33,14 @@ For a static visual, use one to four ordered reading beats. For animation, use t
 6. reset only when a loop serves comprehension.
 
 Use a small motion vocabulary: reveal, flow, split, merge, focus, accumulate, transform, return. Animate explanatory properties, not every object.
+
+## Mechanism Before Labels
+
+For novice explanations, show recognizable objects, information moving between them, ownership, grouping, or before/after state. If removing most labels leaves only identical rectangles, the diagram may be prose in boxes. Rework its visual structure until a relationship is visible, while retaining the concise labels needed to interpret it. A meaningful flowchart is valid; decorative icons alone do not fix the problem.
+
+Inspect at the actual embedded mobile size, not only a zoomed source image. Split an overcrowded overview into linked reading beats instead of shrinking all labels. Ask what the reader can now explain that the surrounding prose made difficult.
+
+Use `diagram-design-system.md` for concrete type/spacing/color/connector defaults, pattern selection and rendered review receipts.
 
 ## Destination And Accessibility
 

@@ -5,7 +5,7 @@ description: Design, build, embed, and validate explanatory visual assets for kn
 
 # Knowledgebase Visual Explainer
 
-Turn one difficult relationship or change into one faithful visual explanation. Read `references/visual-explanation-guide.md` before choosing a medium.
+Turn one difficult relationship or change into one faithful visual explanation. Read `references/visual-explanation-guide.md` before choosing a medium. For diagrams, read `references/diagram-design-system.md` for hierarchy, typography, spacing, color semantics, connectors, reusable SVG patterns and good/bad examples.
 
 ## Entry Decision
 
@@ -19,12 +19,12 @@ If changing a condition or judging evidence is the learning action, coordinate w
 
 1. Distill one sentence stating what the reader should understand after viewing.
 2. Identify the entities, relationship or change, one consequential misconception, and one to five source-grounded facts.
-3. Select one dominant visual metaphor. Do not assemble a collage of icons.
+3. Prefer recognizable domain objects and one clear visual relationship. Use a metaphor only when it helps, then reconnect it to the real mechanism; do not assemble a collage of icons.
 4. Design one to four reading beats for a static visual, or four to six beats for animation. Give every beat one explanatory job.
 5. Produce the actual asset. A prompt, storyboard, or renderer source without the exported file is not a deliverable.
 6. Embed the asset in its canonical page and add alternative text that explains the mechanism rather than repeating the title.
 7. For animation, provide an SVG or PNG fallback and test reduced-motion behavior. Require a seamless loop only when repetition improves understanding.
-8. Create or update `_kb-control/visual-explanations.json` from `../../assets/control-templates/visual-explanations.json`.
+8. Create or update `_kb-control/visual-explanations.json` from `../../assets/control-templates/visual-explanations.json`. Use schema 2 for new/redesigned visuals. Fill `designReview` only after actual desktop/mobile inspection: record the design pattern, seven design observations, rendered label sizes, figure screenshots, and current asset/screenshot hashes. Legacy schema 1 remains compatible but is not a design-review pass.
 9. Validate the manifest and files:
 
    `python3 <plugin-root>/scripts/kb_visual_check.py <target> --output <target>/_kb-control/visual-check.json`

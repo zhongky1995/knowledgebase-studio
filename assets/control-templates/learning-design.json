@@ -24,6 +24,7 @@
       "learningTaskType": "judgment",
       "activityIds": ["activity.unit.example.judgment"],
       "exampleContract": {
+        "pattern": "judgment_revision",
         "kind": "fictional | composite | anonymized | real",
         "input": "案例提供给读者和 AI 的实际输入。",
         "firstAttempt": "展示一版初稿或首次尝试，不跳过中间过程。",

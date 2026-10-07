@@ -295,6 +295,12 @@ def visual_asset_paths(root, visual_ids=None, include_manifest=False):
             value = item.get(key)
             if value and (candidate := scoped_deliverable(root, value)) is not None:
                 paths.append(candidate)
+        review = item.get("designReview")
+        if isinstance(review, dict):
+            for capture in review.get("viewports") or []:
+                value = capture.get("screenshotPath") if isinstance(capture, dict) else None
+                if value and (candidate := scoped_deliverable(root, value)) is not None:
+                    paths.append(candidate)
     return paths
 
 

@@ -11,6 +11,8 @@ Read `references/architecture-modes.md`.
 
 For evidence-heavy learning or comparative units, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Design for the reader's intended use and one restatable idea. Connect evidence to mechanisms and usable judgments; retain uncertainty and counterexamples where they change the decision. Record quantitative comparisons on existing units only when needed, not in a parallel knowledge model.
 
+For a zero-prerequisite system explanation or “world model”, read `../knowledgebase-content-builder/references/novice-mental-model.md`. Keep a continuous real-world scenario across page boundaries and use the opt-in `novice_mental_model` explanation profile; do not substitute a glossary or a shorter programmer summary.
+
 ## Procedure
 
 1. Read the project contract, inventory, audit report, and canonical sources.
