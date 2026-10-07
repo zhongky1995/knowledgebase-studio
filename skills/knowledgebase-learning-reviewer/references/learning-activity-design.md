@@ -38,7 +38,7 @@ Transfer changes a consequential condition or surface context. Declare whether t
 
 ## Worked examples and provenance
 
-When a worked example is required, locate input, first attempt, human judgment, revision action, revised output, and transfer material. These requirements follow the learning promise, including elective cases/labs; they are not limited to core-course pages. Check that the artifacts and explanatory text agree. Location checks only establish presence, not instructional quality.
+When a judgment/revision worked example is required, locate input, first attempt, human judgment, revision action, revised output, and transfer material. Concept explanations may instead use `mechanism_trace` from `../../knowledgebase-content-builder/references/novice-mental-model.md`; do not invent an attempt/revision exercise for them. These requirements follow the learning promise, including elective cases/labs; they are not limited to core-course pages. Check that the artifacts and explanatory text agree. Location checks only establish presence, not instructional quality.
 
 Label real, anonymized, composite, and fictional materials. Scripted outputs must be identified as teaching examples. Distinguish observable tool results, illustrative runtime traces, source-backed mechanisms, and analogies. Fictional cases may be authored for teaching; do not invent real user observations, model runs, or learning outcomes.
 

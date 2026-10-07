@@ -14,6 +14,8 @@ Stop when the target reader can recognize the situation, explain the necessary m
 
 For operations, keep the action, input, possible observable results, check, and continuation/recovery connected. A shorter page that jumps from a request to a finished artifact has lost necessary teaching, even if the headings and final answer remain. Judge density against the reader's task, not a fixed length.
 
+For novices, preserve the full explanation before optimizing length: who acts, on what, what changes, and what happens next. Simple words do not repair a missing causal step. Read `novice-mental-model.md` when the intended outcome is a mental model of an unfamiliar system.
+
 ## Opening And Structure
 
 - Put the reader's question and a useful answer/model/action in the opening section.

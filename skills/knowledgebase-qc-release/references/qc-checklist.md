@@ -32,7 +32,7 @@
 - High-leverage concepts have minimum sufficient mechanism and application depth.
 - Key abilities have realistic practice and feedback.
 - A representative reader can transfer the model to a new case.
-- Required worked examples expose input, first attempt, human judgment, revised output, and transfer; a template alone does not satisfy this check.
+- Required worked examples follow their declared pattern: judgment/revision examples expose attempts and reasoned changes; mechanism traces expose concrete participants, intermediate actions, outcome, boundary and changed condition. A template or topic list alone does not satisfy either.
 - Every lesson has an explicit visual decision. Required visuals perform one declared learning job, correct one misconception, and preserve source mechanisms and boundaries.
 - Static visuals are legible and embedded. Animated visuals show a meaningful state change, retain an accessible static fallback, and work with reduced motion.
 - Advertised reading time is plausible for the prose, tables, decisions, and practice actually shown.

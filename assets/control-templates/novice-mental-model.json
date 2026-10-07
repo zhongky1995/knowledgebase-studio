@@ -1,0 +1,106 @@
+{
+  "usage": "Merge learningDesign fields into learning-design.json; attach the example contract to a relevant lesson, workedExample to its content coverage, and comprehensionReview to pilot-verdict.json. Replace illustrative paths and statements with actual project evidence.",
+  "learningDesign": {
+    "explanationProfile": "novice_mental_model",
+    "scenarioSpine": {
+      "readerQuestion": "点击收藏后，软件如何记住这件事？",
+      "entryPath": "lesson.md",
+      "steps": [
+        {
+          "unitId": "unit.example",
+          "trigger": "用户点击收藏",
+          "actor": "浏览器",
+          "action": "把收藏哪篇文章的请求发给网站。",
+          "result": "网站收到请求。",
+          "handoff": "网站核对请求对应的账号，并准备保存收藏。"
+        },
+        {
+          "unitId": "unit.example",
+          "trigger": "网站确认账号和文章",
+          "actor": "网站程序",
+          "action": "请数据库保存这个账号与这篇文章的收藏关系。",
+          "result": "数据库收到保存要求。",
+          "handoff": "数据库执行保存后，把成功或失败的结果交回网站程序。"
+        },
+        {
+          "unitId": "unit.example",
+          "trigger": "数据库报告保存成功",
+          "actor": "网站程序",
+          "action": "向浏览器回复收藏成功。",
+          "result": "浏览器收到保存结果。",
+          "handoff": "浏览器根据结果更新按钮；刷新时重新向网站请求已保存的收藏记录。"
+        }
+      ],
+      "everydayQuestions": [
+        {
+          "question": "刷新后为什么还在，换设备后呢？",
+          "unitIds": [
+            "unit.example"
+          ]
+        }
+      ]
+    }
+  },
+  "lessonExampleContract": {
+    "pattern": "mechanism_trace",
+    "kind": "fictional",
+    "input": "你收藏了一篇文章，然后刷新页面。",
+    "participants": "浏览器显示按钮；网站接收请求；数据库保存收藏记录。",
+    "trace": "浏览器发出收藏请求；网站核对账号并写入收藏记录；写入成功后回复浏览器。",
+    "output": "刷新后浏览器重新向网站取回收藏记录，页面仍显示已收藏。",
+    "boundary": "如果只改了当前按钮外观而没有保存记录，刷新后可能恢复未收藏。",
+    "transfer": "换一台设备登录同一账号，解释为什么是否可见取决于记录保存在哪里。"
+  },
+  "workedExample": {
+    "required": true,
+    "pattern": "mechanism_trace",
+    "kind": "fictional",
+    "inputLocation": "正文中解释 input 的实际标题或原句",
+    "participantsLocation": "正文中解释 participants 的实际标题或原句",
+    "traceLocation": "正文中解释 trace 的实际标题或原句",
+    "outputLocation": "正文中解释 output 的实际标题或原句",
+    "boundaryLocation": "正文中解释 boundary 的实际标题或原句",
+    "transferLocation": "正文中解释 transfer 的实际标题或原句"
+  },
+  "comprehensionReview": {
+    "reviewType": "editorial",
+    "checks": [
+      {
+        "dimension": "causalContinuity",
+        "status": "needs_work",
+        "question": "点击到刷新后的显示之间发生了什么？",
+        "expectedExplanation": "请求先送到网站；网站保存并回复；刷新重新读取已存记录。",
+        "path": "lesson.md",
+        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
+        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+      },
+      {
+        "dimension": "concreteLanguage",
+        "status": "needs_work",
+        "question": "是谁记住了收藏，而不是谁的外观变了？",
+        "expectedExplanation": "网站把收藏写入记录，浏览器按回复更新显示。",
+        "path": "lesson.md",
+        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
+        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+      },
+      {
+        "dimension": "scenarioApplication",
+        "status": "needs_work",
+        "question": "换设备后会怎样？",
+        "expectedExplanation": "若记录存在网站且登录同一账号，新设备可向网站读取；仅存在原设备则不同。",
+        "path": "lesson.md",
+        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
+        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+      },
+      {
+        "dimension": "conceptBoundaries",
+        "status": "needs_work",
+        "question": "按钮变色能证明记录保存了吗？",
+        "expectedExplanation": "不能，页面显示和网站保存是两个步骤，需要确认后者。",
+        "path": "lesson.md",
+        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
+        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+      }
+    ]
+  }
+}

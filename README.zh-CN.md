@@ -132,3 +132,11 @@ python3 -B -m unittest discover -s scripts -p 'test_*.py'
 ## 开源许可
 
 Knowledgebase Studio 使用 [MIT License](LICENSE) 开源。
+
+## 零基础原理解说
+
+当目标是“理解系统如何工作”时，可采用 `novice_mental_model` 解释配置：先用一个完整日常事件连接全貌，再拆分概念页。机制示范直接展示参与者、动作、传递过程、结果和变化条件；判断与创作案例继续使用初稿、判断和修改过程。样章检查要求定位到真实正文的理解证据，并区分编辑审读、模拟审读与真实读者观察。图解要让关系可见，Markdown 要检查最终页面。配置与字段见 [零基础原理解说指南](skills/knowledgebase-content-builder/references/novice-mental-model.md)。这些检查能拦住缺项和无效证据，不能自动证明读者理解。
+
+## 图解设计与实际样例
+
+[图解规范](skills/knowledgebase-visual-explainer/references/diagram-design-system.md)提供字阶、间距、语义配色、箭头、边框和移动端布局标准。[本地图型样例](assets/visual-patterns/index.html)包含四组可编辑 SVG 与反例，可用 `python3 scripts/kb_visual_examples.py --output <目录>` 重建。新制作或重设计的图解使用视觉清单 schema 2，保存实际手机/桌面截图、显示字号、具体设计观察和文件指纹；检查程序验证记录与文件的一致性，实际效果仍需审图。旧 schema 1 保持兼容并明确提示缺少新版设计审读。
