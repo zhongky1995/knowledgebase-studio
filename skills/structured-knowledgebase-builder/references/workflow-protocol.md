@@ -1,8 +1,25 @@
 # Knowledgebase Studio Workflow Protocol
 
+## Artifact Ownership
+
+Keep one authoring home per decision. Other artifacts describe its implementation or evidence, not another independent specification.
+
+| Existing artifact | Owns | Consumers |
+| --- | --- | --- |
+| Project contract / design brief | Requested endpoint, reader outcome, product posture and boundaries | Every stage |
+| Source understanding | Claims, basis, uncertainty; what new material contributes or does not warrant importing | Knowledge model and editorial review |
+| Knowledge model | Unit identity, core reader change, necessary dependencies, mechanism and canonical owner | Learning design, routes and page coverage |
+| Learning design | Starting state, teaching choices, route composition, examples and unit-level time estimate | Content, visuals and app |
+| Content coverage | Actual page responsibility, preserved meanings and locations in delivered content | QC; a page may contain multiple units |
+| Activity / visual manifests | Shared behavior or asset contract when needed | Content, app and QC refer to the same IDs |
+| Navigation contract | Entrypoints, destinations and reachability | App implementation and browser checks |
+| Stage/update receipts | Checks actually performed against particular inputs | Completion claims |
+
+In learning design, omitted `learningResult` inherits the unit's `readerChange`; omitted `prerequisiteUnitIds` inherits its `dependencies`. Explicit values remain supported for an actual teaching distinction. Do not restate either merely to satisfy a template. Page-level outcomes and total reading time can differ from unit-level ones; they are not aliases. Existing contracts remain readable without migration. Plain-language reports interpret the records and explain decisions instead of transcribing every field.
+
 ## Control Model
 
-Use `_kb-control/workflow.json` as the durable workflow checkpoint. The controller script owns state transitions; do not hand-edit the JSON.
+This protocol governs full production only. Diagnosis/design finish at their requested endpoint without starting this state machine; samples/updates use the scoped protocol. Use `_kb-control/workflow.json` as the durable workflow checkpoint. The controller script owns state transitions; do not hand-edit the JSON.
 
 Stages move through:
 

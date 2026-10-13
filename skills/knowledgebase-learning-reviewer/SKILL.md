@@ -9,15 +9,15 @@ Prevent a technically complete content repository from being mistaken for a cohe
 
 For evidence-based explanations or transferable judgment, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Review whether the learner can ask useful questions of the next claim, not just repeat today's answer. Test analogies by a new inference and their failure boundary; allow prediction and revision without forcing errors, hiding necessary help, or requiring a toolkit chapter.
 
-For a zero-prerequisite system explanation or “world model”, read `../knowledgebase-content-builder/references/novice-mental-model.md`. Keep a continuous real-world scenario across page boundaries and use the opt-in `novice_mental_model` explanation profile; do not substitute a glossary or a shorter programmer summary.
+For unfamiliar-system explanations, apply the shared [novice explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md) to the connected reader path.
 
 ## Architecture Review
 
 1. Read the project contract, inventory, knowledge model, architecture decision, and migration map.
 2. Separate orientation, core path, advanced path, reference, lab, workbook, and compatibility routes. Report source-file count and learner-visible unit count separately.
 3. For every main-path unit define:
-   - the learner's starting state and one observable learning result;
-   - prerequisite units and terms already introduced;
+   - the learner's starting state and one observable learning result (inherit the model reader change unless it differs);
+   - prerequisite units and terms already introduced (inherit model dependencies unless the teaching path needs an explicit distinction);
    - new terms and relationships introduced here;
    - the likely misconception and consequential boundary;
    - whether a worked example is required;
@@ -41,16 +41,9 @@ Do not request a diagram merely to vary the page. Require one when relationship,
 
 When required, define a stable visual ID, the cognitive reason, preferred mode, likely misconception, and observable success evidence. The content stage must apply `knowledgebase-visual-explainer` and deliver the real embedded asset; a prompt or storyboard cannot satisfy the contract.
 
-## Worked-Example Contract
+## Worked Examples
 
-A worked example is not a topic label, prompt template, or list of principles. Choose a pattern from the learning job:
-
-- `judgment_revision` (default): realistic input → first attempt → judgment → revision → revised output → transfer.
-- `mechanism_trace`: familiar situation → participants and actions → intermediate handoffs → visible result → boundary and changed condition. Use it for conceptual explanation without inventing a draft/revision task.
-
-Record the pattern in the lesson example contract and page coverage. The novice mental-model reference defines the fields.
-
-Label the case real, anonymized, composite, or fictional. Do not present fictional outcomes as evidence.
+Choose the example pattern from the learning job using the content builder's [shared explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md). Record the teaching intention here and actual locations in coverage. Review the intermediate process and case provenance, not the presence of headings.
 
 ## Pilot Counter-Review
 

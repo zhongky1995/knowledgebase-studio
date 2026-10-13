@@ -51,15 +51,24 @@ def global_state(root):
     return {"status": "stale" if stale else state.get("status", "unknown"), "staleStages": [item["stage"] for item in stale]}
 
 
-def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_paths=()):
+def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_paths=(), schema_version=2, change_kind="content"):
     root = Path(root).resolve()
+    if change_kind not in {"content", "rendering"}:
+        raise ValueError("change_kind must be content or rendering")
     changed = sorted({normalize(root, value) for value in changed_paths})
     if not changed:
         raise ValueError("At least one changed path is required.")
     coverage = read_json_if_possible(root / "_kb-control/content-coverage.json")
     public_pages = [page.get("path") for page in coverage.get("pages", []) if isinstance(page, dict) and page.get("path")]
-    affected = {normalize(root, value) for value in pages}
-    affected.update(value for value in changed if value.endswith(".md") and not value.startswith("_"))
+    requested = {normalize(root, value) for value in pages}
+    app = read_json_if_possible(root / "_kb-control/app-validation.json")
+    deliveries = {normalize(root, value) for value in delivery_paths}
+    deliveries.update(normalize(root, value) for value in app.get("appPaths", []) if isinstance(value, str) and (root / value).exists())
+    releases = {normalize(root, value) for value in release_paths}
+    affected = set(requested)
+    affected.update(value for value in changed if value.endswith(".md") and not value.startswith("_")
+                    and (schema_version == 1 or not any(value == output or value.startswith(output + "/") for output in deliveries | releases)))
+    reviewed = set(affected)
     structure_changed = any(value.startswith("_kb-control/") and Path(value).name in STRUCTURAL_CONTRACTS for value in changed)
     unscoped_control = not pages and any(value.startswith("_kb-control/") and Path(value).name in CONTRACTS for value in changed)
     manifest = read_json_if_possible(root / "_kb-control/learning-activities.json")
@@ -70,10 +79,25 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
         for value in item["interaction"].get("assetPaths", []):
             if isinstance(value, str) and isinstance(item.get("pagePath"), str):
                 activity_assets.setdefault(normalize(root, value), set()).add(normalize(root, item["pagePath"]))
+    # Media owns meaning even when a shared renderer changes in the same update.
+    visual_assets = {}
+    if schema_version == 2:
+        visuals = read_json_if_possible(root / "_kb-control/visual-explanations.json")
+        for item in visuals.get("items", []):
+            if isinstance(item, dict) and isinstance(item.get("pagePath"), str):
+                for field in ("assetPath", "fallbackPath"):
+                    if item.get(field):
+                        visual_assets.setdefault(normalize(root, item[field]), set()).add(normalize(root, item["pagePath"]))
+    for value in changed:
+        for asset, owners in visual_assets.items():
+            if asset == value or asset.startswith(value + "/"):
+                affected.update(owners)
+                reviewed.update(owners)
     shared_app_changed = False
     for value in changed:
         owned_pages = {page for asset, owners in activity_assets.items() if asset == value or asset.startswith(value + "/") for page in owners}
         affected.update(owned_pages)
+        reviewed.update(owned_pages)
         candidate = root / value
         files = candidate.rglob("*") if candidate.is_dir() else [candidate]
         for changed_file in files:
@@ -88,12 +112,11 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
             text = candidate.read_text(encoding="utf-8", errors="replace")
             if any(Path(value).name in text for value in changed):
                 affected.add(page)
+                reviewed.add(page)
+    if not requested and (structure_changed or unscoped_control or (shared_app_changed and change_kind != "rendering")):
+        reviewed.update(public_pages)
     if not affected:
         raise ValueError("No affected pages found; provide --page for the learner-facing scope.")
-    app = read_json_if_possible(root / "_kb-control/app-validation.json")
-    deliveries = {normalize(root, value) for value in delivery_paths}
-    deliveries.update(normalize(root, value) for value in app.get("appPaths", []) if isinstance(value, str) and (root / value).exists())
-    releases = {normalize(root, value) for value in release_paths}
     tracked = set(changed) | affected | deliveries | releases
     tracked.update(f"_kb-control/{name}" for name in CONTRACTS if (root / "_kb-control" / name).is_file())
     model = read_json_if_possible(root / "_kb-control/knowledge-model.json")
@@ -110,7 +133,7 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
             tracked.update(normalize(root, value) for value in check.get("evidencePaths", []) if isinstance(value, str))
     for path in learning_asset_paths(root, affected) + visual_asset_paths(root, include_manifest=True):
         tracked.add(normalize(root, str(path)))
-    required = ["editor-review"]
+    required = ["editor-review"] if reviewed or schema_version == 1 else []
     if structure_changed:
         required.append("architecture-review")
     interactive = any(item.get("mode") == "interactive" and item.get("pagePath") in affected for item in manifest.get("items", []) if isinstance(item, dict))
@@ -118,26 +141,40 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
         required.append("browser")
     if releases:
         required.append("release")
-    return {
-        "schemaVersion": 1, "scope": "incremental", "changedPaths": changed,
+    result = {
+        "schemaVersion": schema_version, "scope": "incremental", "changedPaths": changed,
         "affectedPages": sorted(affected), "deliveryPaths": sorted(deliveries), "releasePaths": sorted(releases),
         "inputDigests": {value: fingerprint(root, value) for value in sorted(tracked)},
         "requiredChecks": required, "checks": [], "globalWorkflow": global_state(root),
     }
+    if schema_version == 2:
+        result.update(changeKind=change_kind, requestedPages=sorted(requested), reviewPages=sorted(reviewed),
+                      regressionPages=sorted(affected),
+                      checkScopes={kind: sorted(reviewed if kind == "editor-review" else affected) for kind in required})
+    return result
 
 
 def check_update(root, plan):
     root = Path(root).resolve()
     errors = []
-    if plan.get("schemaVersion") != 1 or plan.get("scope") != "incremental":
-        issue(errors, "update-schema", "plan", "Expected incremental schema version 1.")
+    schema_version = plan.get("schemaVersion")
+    if schema_version not in {1, 2} or plan.get("scope") != "incremental":
+        issue(errors, "update-schema", "plan", "Expected incremental schema version 1 or 2.")
     changed = strings(plan.get("changedPaths"), errors, "changedPaths")
     pages = strings(plan.get("affectedPages"), errors, "affectedPages")
+    requested = strings(plan.get("requestedPages", []), errors, "requestedPages", required=False) if schema_version == 2 else pages
     deliveries = strings(plan.get("deliveryPaths", []), errors, "deliveryPaths", required=False)
     releases = strings(plan.get("releasePaths", []), errors, "releasePaths", required=False)
     if errors:
         return {"status": "fail", "scope": "incremental", "errors": errors}
-    expected = plan_update(root, changed, pages=pages, delivery_paths=deliveries, release_paths=releases)
+    change_kind = plan.get("changeKind", "content") if schema_version == 2 else "content"
+    if change_kind not in {"content", "rendering"}:
+        return {"status": "fail", "errors": [{"kind": "update-change-kind", "path": "changeKind", "detail": "Expected content or rendering."}]}
+    expected = plan_update(root, changed, pages=requested, delivery_paths=deliveries, release_paths=releases, schema_version=schema_version, change_kind=change_kind)
+    if schema_version == 2:
+        for field in ("reviewPages", "regressionPages", "checkScopes"):
+            if plan.get(field) != expected[field]:
+                issue(errors, "update-scope-gap", field, "Review scopes must match the current changed inputs and declared pages.")
     planned = plan.get("inputDigests") or {}
     if not isinstance(planned, dict):
         return {"status": "fail", "scope": "incremental", "errors": [{"kind": "update-digests", "path": "inputDigests", "detail": "Expected an object of tracked input fingerprints."}]}
@@ -153,6 +190,8 @@ def check_update(root, plan):
         receipt = next((item for item in checks if item.get("kind") == kind), {})
         if receipt.get("status") != "pass":
             issue(errors, "update-check-missing", kind, "A current passed check is required.")
+        if schema_version == 2 and receipt.get("pagePaths") != expected["checkScopes"][kind]:
+            issue(errors, "update-check-scope", kind, "Receipt pagePaths must name the scope actually checked.")
         if receipt.get("inputDigests") != planned:
             issue(errors, "update-check-stale", kind, "Check evidence must name the exact inputDigests it actually reviewed.")
         for value in strings(receipt.get("evidencePaths"), errors, kind):
@@ -179,6 +218,8 @@ def check_update(root, plan):
     return {
         "schemaVersion": 1, "status": "fail" if errors else "pass", "scope": "incremental",
         "claim": "selected-update-only", "affectedPages": pages,
+        "reviewPages": expected.get("reviewPages", pages),
+        "regressionPages": expected.get("regressionPages", pages),
         "inputDigests": expected["inputDigests"], "evidenceDigests": evidence_digests,
         "learningActivities": learning["validatedIds"], "globalWorkflow": global_state(root),
         "errors": errors, "warnings": content["warnings"] + learning["warnings"],
@@ -191,6 +232,7 @@ def main():
     parser.add_argument("--root", required=True)
     parser.add_argument("--path", action="append", default=[], dest="changed")
     parser.add_argument("--page", action="append", default=[])
+    parser.add_argument("--change-kind", choices=["content", "rendering"], default="content", help="Use rendering only after establishing that shared app edits preserve meaning/behavior promises")
     parser.add_argument("--delivery-path", action="append", default=[])
     parser.add_argument("--release-path", action="append", default=[])
     parser.add_argument("--plan")
@@ -201,7 +243,7 @@ def main():
         parser.error("root must be an existing directory")
     try:
         if args.command == "plan":
-            result = plan_update(root, args.changed, pages=args.page, delivery_paths=args.delivery_path, release_paths=args.release_path)
+            result = plan_update(root, args.changed, pages=args.page, delivery_paths=args.delivery_path, release_paths=args.release_path, change_kind=args.change_kind)
         else:
             if not args.plan:
                 parser.error("check requires --plan")

@@ -25,7 +25,7 @@ For empirical numbers or cross-source comparisons, read `../knowledgebase-conten
    - the mechanism or causal relationship behind the claim;
    - conditions, boundaries, conflicts, and unknowns;
    - confidence and whether the source is primary, secondary, existing corpus, or an internal standard.
-5. Classify each public document by page type and primary reader job.
+5. Classify each public document by page type and primary reader job. When evaluating a new source, distinguish new knowledge from useful explanation methods (granularity, intermediate examples, diagrams). Record its fit and limits in the existing ledger/report; a source's quality does not itself justify a new course branch.
 6. Identify:
    - duplicated or fragmented canonical knowledge;
    - long setup, process narration, generic importance, and low-value recap;

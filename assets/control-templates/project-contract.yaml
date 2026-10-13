@@ -1,6 +1,7 @@
 schema_version: 3
 status: draft
 goal: ""
+delivery_target: release  # diagnosis | design | sample | release | update; current user scope wins
 primary_mode: unresolved
 product_posture: unresolved
 audiences: []

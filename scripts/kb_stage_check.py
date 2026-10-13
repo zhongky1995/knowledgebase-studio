@@ -201,6 +201,11 @@ def validate_learning_design(root, errors, warnings, evidence):
         lesson_ids.append(unit_id)
         if unit_id not in units:
             issue(errors, "unknown-learning-unit", label, str(unit_id))
+        unit = units.get(unit_id, {})
+        # Exact aliases may inherit their canonical decision; explicit overrides stay valid.
+        lesson = dict(lesson)
+        lesson.setdefault("learningResult", unit.get("readerChange", ""))
+        lesson.setdefault("prerequisiteUnitIds", unit.get("dependencies", []))
         for field in ("startingState", "learningResult", "likelyMisconception", "transferEvidence"):
             if not str(lesson.get(field, "")).strip():
                 issue(errors, "learning-field", label, f"Missing {field}.")

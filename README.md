@@ -2,36 +2,33 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Knowledgebase Studio is a source-grounded Codex plugin for turning raw material into a traceable, teachable, testable, and release-ready Markdown knowledge base.
+Knowledgebase Studio helps design, produce and maintain coherent, source-grounded knowledge products for a defined reader and situation, with Markdown as the editable content base.
 
-它不只检查“文件有没有”，而是把资料理解、知识建模、学习设计、内容生产、应用验收和发布质检串成一条可恢复的工作流，并用语义门禁阻止“报告写完但产品没做完”。
+## Work at the requested scope
 
-## What it does
+The controller chooses the current delivery endpoint before starting production:
 
-The plugin follows an evidence-first pipeline:
+| Request | Deliverable |
+| --- | --- |
+| Diagnose | Evidence-backed findings and priorities |
+| Design the whole | Reader outcome, connected content map, routes and explicit decisions |
+| Make a sample | Reviewed representative slice without automatic expansion |
+| Build for local release | Validated content and the requested app/package |
+| Update selected work | Scoped changes and current evidence, preserving global workflow truth |
 
-```text
-intake → audit → architecture → pilot → content → app → QC → release
-```
+Full production keeps the existing eight stages:
 
-- Locks the intended product posture, audience, learning pressure, source presentation, and distribution boundary before scaling.
-- Audits sources and records claims, mechanisms, boundaries, conflicts, and unknowns.
-- Models traceable knowledge units and page responsibilities.
-- Reviews prerequisites, examples, exercises, feedback, cognitive load, and transfer evidence for learning products.
-- Builds transferable judgment through mechanisms, usable decision questions, predictive analogies, and uncertainty beside the claim. Optional quantitative contracts check context, verification, and cross-source alignment in the existing content checker.
-- Connects operational steps to observable outcomes and recovery, with text-only walkthroughs supported.
-- Shares optional teaching activities across learning design, content, app, and QC: evidence-based feedback, layered hints, revision, changed transfer cases, and readable fallbacks.
-- Checks bounded lesson updates separately while preserving any stale full-workflow verdict; structural/browser evidence is not a claim of learning efficacy.
-- Decides when a visual explanation is justified, then validates the real embedded diagram or animation, its source fidelity, alternative text, and static fallback.
-- Validates the actual reader-facing corpus and app deliverable, not only narrative reports.
-- Fingerprints stage artifacts so changed deliverables invalidate stale downstream evidence.
-- Packages an isolated local release while keeping external publication as a separate approval.
+`intake → audit → architecture → pilot → content → app → QC → release`
+
+The product may serve understanding, judgment, action or retrieval. Knowledge units have canonical ownership and may be reused across routes; page counts follow the reader's cognitive steps. New sources deepen or repair the product where useful rather than automatically expanding its scope.
+
+Sources, learning choices, delivered content and evidence have distinct [authoring homes](skills/structured-knowledgebase-builder/references/workflow-protocol.md). Learning, activities and visuals are applied when the product needs them. The actual explanation, navigation, rendering and requested package are checked; changed inputs invalidate old evidence. Structural checks, editorial review and observed learning remain separate claims. Local readiness does not authorize external publication.
 
 ## Included skills
 
 | Skill | Responsibility |
 | --- | --- |
-| `structured-knowledgebase-builder` | Orchestrates the complete resumable workflow |
+| `structured-knowledgebase-builder` | Chooses the requested endpoint and coordinates the existing skills |
 | `knowledgebase-auditor` | Inventories and evaluates the source knowledge base |
 | `knowledgebase-architect` | Designs the knowledge model, information architecture, and migration |
 | `knowledgebase-learning-reviewer` | Reviews the learning-product layer and transfer design |
@@ -70,6 +67,7 @@ If your marketplace has another name, replace `personal` with that name. Start a
 
 Ask Codex naturally, for example:
 
+- `先梳理整体知识地图和阅读路线，完成设计，暂不开发。`
 - `完整审计并修复这个知识库，做到本地发布可用。`
 - `把这些资料做成有学习坡度、案例和练习反馈的课程型知识库。`
 - `从上次断点继续知识库自动流程。`

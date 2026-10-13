@@ -8,7 +8,7 @@ from pathlib import Path
 
 from kb_content_check import validate as check_content
 from kb_learning_check import check_learning
-from kb_stage_check import require_dimension
+from kb_stage_check import require_dimension, validate_learning_design
 from kb_update import check_update, plan_update
 from kb_workflow import stage_deliverable_digests
 from test_knowledgebase_studio import (
@@ -94,7 +94,7 @@ class LearningUpdateTests(unittest.TestCase):
     def receipts(self, plan):
         (self.root / "_kb-control/update-evidence.md").write_text("Synthetic update check evidence.", encoding="utf-8")
         plan["checks"] = [{"kind": kind, "status": "pass", "inputDigests": copy.deepcopy(plan["inputDigests"]),
-                           "evidencePaths": ["_kb-control/update-evidence.md"]} for kind in plan["requiredChecks"]]
+                           "evidencePaths": ["_kb-control/update-evidence.md"], **({"pagePaths": plan["checkScopes"][kind]} if plan["schemaVersion"] == 2 else {})} for kind in plan["requiredChecks"]]
         return plan
 
     def test_required_dimension_cannot_be_not_applicable(self):
@@ -314,6 +314,127 @@ class LearningUpdateTests(unittest.TestCase):
         self.assertEqual(report["status"], "pass", report)
         self.assertEqual(report["globalWorkflow"]["status"], "stale")
         self.assertEqual(state.read_bytes(), before)
+
+    def architecture(self):
+        control = self.root / "_kb-control"
+        return check_content(self.root, control / "source-understanding.json", control / "knowledge-model.json", control / "content-coverage.json", phase="architecture")
+
+    def test_routes_reuse_one_canonical_explanation(self):
+        route = copy.deepcopy(self.model["progressions"][0])
+        route["id"] = "another-entry"
+        self.model["progressions"].append(route)
+        self.save_baseline()
+        self.assertEqual(self.architecture()["status"], "pass")
+        self.assertEqual(self.content()["status"], "pass")
+
+    def test_route_cannot_repeat_its_own_unit(self):
+        self.model["progressions"][0]["unitIds"].append("unit.one")
+        self.save_baseline()
+        self.assert_kind(self.architecture(), "duplicate-progression-unit")
+
+    def test_route_reuse_still_checks_local_prerequisite_order(self):
+        prior = copy.deepcopy(self.model["units"][0])
+        prior.update(id="unit.prior", canonicalOwner="prior.md", question="Prior?", readerChange="Understands the prior idea.")
+        self.model["units"].append(prior)
+        self.model["units"][0]["dependencies"] = ["unit.prior"]
+        self.model["progressions"][0]["unitIds"] = ["unit.prior", "unit.one"]
+        route = copy.deepcopy(self.model["progressions"][0])
+        route.update(id="bad-route", unitIds=["unit.one", "unit.prior"])
+        self.model["progressions"].append(route)
+        self.save_baseline()
+        self.assert_kind(self.architecture(), "progression-order")
+        route["unitIds"] = ["unit.prior", "unit.one"]
+        self.save_baseline()
+        self.assertEqual(self.architecture()["status"], "pass")
+
+    def test_route_reuse_does_not_hide_uncovered_units(self):
+        missing = copy.deepcopy(self.model["units"][0])
+        missing.update(id="unit.missing", canonicalOwner="missing.md", question="Missing?")
+        self.model["units"].append(missing)
+        self.save_baseline()
+        self.assert_kind(self.architecture(), "progression-coverage-gap")
+
+    def test_learning_aliases_inherit_without_rewriting_old_contracts(self):
+        lesson = self.design["lessons"][0]
+        lesson.pop("learningResult")
+        lesson.pop("prerequisiteUnitIds")
+        self.save_baseline()
+        before = (self.root / "_kb-control/learning-design.json").read_bytes()
+        errors = []
+        validate_learning_design(self.root, errors, [], {})
+        self.assertEqual(errors, [])
+        self.assertEqual((self.root / "_kb-control/learning-design.json").read_bytes(), before)
+        lesson["learningResult"] = ""
+        self.save_baseline()
+        errors = []
+        validate_learning_design(self.root, errors, [], {})
+        self.assertIn("learning-field", {item["kind"] for item in errors})
+
+    def test_inherited_missing_prerequisite_still_fails(self):
+        self.design["lessons"][0].pop("prerequisiteUnitIds")
+        self.model["units"][0]["dependencies"] = ["missing"]
+        self.save_baseline()
+        errors = []
+        validate_learning_design(self.root, errors, [], {})
+        self.assertIn("unknown-learning-prerequisite", {item["kind"] for item in errors})
+
+    def test_renderer_only_update_has_browser_scope_without_editorial_claim(self):
+        (self.root / "renderer.js").write_text("// Synthetic renderer change")
+        plan = self.receipts(plan_update(self.root, ["renderer.js"], change_kind="rendering"))
+        self.assertEqual(plan["reviewPages"], [])
+        self.assertEqual(plan["regressionPages"], ["lesson.md"])
+        self.assertEqual(plan["requiredChecks"], ["browser"])
+        self.assertEqual(check_update(self.root, plan)["status"], "pass")
+
+    def test_unclassified_shared_app_change_keeps_conservative_editorial_scope(self):
+        (self.root / "renderer.js").write_text("// May contain generated teaching content")
+        plan = plan_update(self.root, ["renderer.js"])
+        self.assertEqual(plan["reviewPages"], ["lesson.md"])
+        self.assertIn("editor-review", plan["requiredChecks"])
+
+    def test_shared_build_does_not_turn_one_lesson_review_into_corpus_review(self):
+        self.coverage["pages"].append({"path": "unrelated.md"})
+        self.save_baseline()
+        (self.root / "build.js").write_text("// Synthetic build")
+        plan = plan_update(self.root, ["lesson.md", "build.js"], pages=["lesson.md"])
+        self.assertEqual(plan["reviewPages"], ["lesson.md"])
+        self.assertEqual(plan["regressionPages"], ["lesson.md", "unrelated.md"])
+        self.assertEqual(plan["checkScopes"]["browser"], plan["regressionPages"])
+
+    def test_update_receipt_cannot_claim_a_different_page_scope(self):
+        plan = self.receipts(plan_update(self.root, ["lesson.md"]))
+        plan["checks"][0]["pagePaths"] = []
+        self.assert_kind(check_update(self.root, plan), "update-check-scope")
+
+    def test_update_cannot_shrink_derived_review_scope(self):
+        plan = self.receipts(plan_update(self.root, ["lesson.md"]))
+        plan["reviewPages"] = []
+        plan["checkScopes"]["editor-review"] = []
+        self.assert_kind(check_update(self.root, plan), "update-scope-gap")
+
+    def test_legacy_update_receipts_remain_supported(self):
+        plan = self.receipts(plan_update(self.root, ["lesson.md"], schema_version=1))
+        self.assertNotIn("checkScopes", plan)
+        self.assertNotIn("pagePaths", plan["checks"][0])
+        self.assertEqual(check_update(self.root, plan)["status"], "pass")
+
+    def test_release_readme_is_not_a_second_source_lesson(self):
+        release = self.root / "release"
+        release.mkdir()
+        (release / "README.md").write_text("Synthetic public instructions")
+        plan = plan_update(self.root, ["lesson.md", "release/README.md"], release_paths=["release"])
+        self.assertEqual(plan["reviewPages"], ["lesson.md"])
+        self.assertIn("release", plan["requiredChecks"])
+        self.assertIn("release", plan["inputDigests"])
+
+    def test_media_change_keeps_editorial_review_alongside_renderer_change(self):
+        (self.root / "figure.svg").write_text("<svg/>")
+        (self.root / "renderer.js").write_text("// Synthetic renderer")
+        self.write_json("visual-explanations.json", {"items": [{"pagePath": "lesson.md", "assetPath": "figure.svg"}]})
+        plan = plan_update(self.root, ["figure.svg", "renderer.js"], change_kind="rendering")
+        self.assertEqual(plan["reviewPages"], ["lesson.md"])
+        self.assertIn("editor-review", plan["requiredChecks"])
+        self.assertIn("browser", plan["requiredChecks"])
 
     def test_update_cli_rejects_report_inside_tracked_delivery(self):
         (self.root / "app").mkdir()
