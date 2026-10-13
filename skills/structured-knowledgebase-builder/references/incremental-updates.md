@@ -1,6 +1,6 @@
 # Scoped lesson and interaction updates
 
-Use for a bounded change to existing lessons, examples, operations, or teaching interactions. A different audience/product posture, course-wide redesign, or full-release request uses the full workflow. This route records current evidence for selected work; it never resets or promotes `_kb-control/workflow.json`.
+Use for a bounded change to existing lessons, examples, operations, or teaching interactions. A different audience/product posture or course-wide redesign first returns to overall design; a requested full release then uses the production workflow. This route records current evidence for selected work; it never resets or promotes `_kb-control/workflow.json`.
 
 An explicitly requested standalone lesson sample can also use this limited route without initializing a full-course workflow. First lock the sample's audience/posture and establish only the baseline the checks need: project contract, understood source/claim ledger, knowledge model, learning design, and page coverage; add the activity manifest only when needed. Label authored teaching assumptions as internal standards rather than pretending they came from research. Leave global workflow status uninitialized and report a sample-only claim. For audit scans, use `.knowledgebase-audit.json` to declare public roots and internal/raw-material directories; an underscore-prefixed directory is not automatically excluded. File counts do not establish learner-visible unit counts.
 
@@ -24,11 +24,16 @@ python3 <plugin-root>/scripts/kb_update.py plan --root <target> \
 
 Omit `--delivery-path` for text-only work without an app. The planner includes declared activity assets, prerequisites, and control contracts, infers page references, and expands shared app or structural-contract changes to coverage pages. For lesson-level metadata edits, give explicit `--page` values; without them, changed control files conservatively include all coverage pages. A declared activity asset maps to its owning page rather than automatically treating it as shared app code. Review scope yourself: arbitrary build/runtime dependencies cannot always be inferred. Add `--page` for other affected learner pages and record missing baseline contracts instead of fabricating a pass.
 
+Schema 2 separates `reviewPages` (content/meaning to reread) from `regressionPages` / `affectedPages` (all impacted pages to check for consistency and behavior). `requestedPages` preserves the explicit `--page` selection so broad generated/app effects do not silently become a claim of full editorial review. `checkScopes` gives the page list for each required receipt. Use `--change-kind rendering` only after establishing that a shared app change is purely presentation/rendering: it needs browser regression across its consumers, not a new explanation review. Unclassified shared app changes retain conservative editorial scope because code can also contain teaching content or feedback; edited lessons, declared media and activities retain editorial review. Structural changes still need architecture review. Include additional semantic dependents with `--page`; automatic file inference cannot judge whether a changed explanation affects another lesson.
+
+All affected pages still undergo content/learning integrity checks, with prerequisites and actual outputs fingerprinted. Old schema 1 plans remain readable with their conservative scope; do not relabel historical receipts as schema 2.
+
 The plan contains input fingerprints and required checks. Run the actual editorial review and, when required, architecture review, browser tests, and release checks on those exact inputs. Record evidence under `_kb-control/updates/<update-id>/` outside tracked deliverable directories. Each entry in `checks` has:
 
 - `kind`: one of the plan's required checks;
 - `status`: `pass` only after performing the check;
 - `inputDigests`: the exact plan fingerprints that the check actually inspected;
+- `pagePaths` (schema 2): the exact list from `checkScopes[kind]`, reviewed before marking the check passed;
 - `evidencePaths`: non-empty report/trace paths inside the knowledge base.
 
 Do not copy fingerprints into an old report to relabel it as current. Evidence must describe the affected pages, checks actually run, observed results, defects/rechecks, and limitations. Browser evidence must include real interaction checks when applicable. The updater validates receipt binding and file existence; it does not itself run a browser or prove a report's claims.

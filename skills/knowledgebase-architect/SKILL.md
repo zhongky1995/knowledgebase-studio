@@ -5,13 +5,13 @@ description: Design the target information architecture and migration plan for a
 
 # Knowledgebase Architect
 
-Turn audit evidence into a target architecture. Do not rewrite the full corpus in this stage.
+Turn audit evidence into a connected knowledge product before dividing it into pages. Do not rewrite the corpus in this stage. For a design-only request, the architecture is the deliverable: proposed paths, source candidates and untested assumptions may remain explicitly provisional; production gates apply when production is requested.
 
 Read `references/architecture-modes.md`.
 
 For evidence-heavy learning or comparative units, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Design for the reader's intended use and one restatable idea. Connect evidence to mechanisms and usable judgments; retain uncertainty and counterexamples where they change the decision. Record quantitative comparisons on existing units only when needed, not in a parallel knowledge model.
 
-For a zero-prerequisite system explanation or “world model”, read `../knowledgebase-content-builder/references/novice-mental-model.md`. Keep a continuous real-world scenario across page boundaries and use the opt-in `novice_mental_model` explanation profile; do not substitute a glossary or a shorter programmer summary.
+For unfamiliar-system explanations, apply the shared [novice explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md) to the connected reader path.
 
 ## Procedure
 
@@ -31,10 +31,11 @@ For a zero-prerequisite system explanation or “world model”, read `../knowle
 5. Define progression from dependencies and reader difficulty, not from the old folder order or a desire for visually balanced modules.
    - For any learning posture, apply `knowledgebase-learning-reviewer` and create `_kb-control/learning-design.json` from the plugin template.
    - In schema version 3, identify each lesson's learning task type and activity IDs. Operations/troubleshooting need a text walkthrough or appropriate interaction. Include elective cases/labs with promised examples; do not impose interactions on reference pages.
-   - Every main-path knowledge unit must appear exactly once in a progression, after its prerequisites.
+   - Domains check coverage; units define meaningful reader changes; routes organize entry and sequence; pages present connected material. Several units may share a page, and one unit may be referenced by several routes without copying its explanation. Keep necessary connecting sentences on the reading path.
+   - Every main-path unit must be covered. Reuse across progressions is valid; duplicate occurrences within one progression are not. Put required prerequisites before use, or identify what readers must already know at entry. Page/unit counts follow cognitive steps, not a quota.
    - Count learner-visible units separately from source files, compatibility routes, wrappers, references, labs, and workbooks.
    - For every main-path lesson, record whether a visual explanation is required. Require one only when a mechanism, relationship, flow, hierarchy, comparison, or state change is materially harder to understand in prose or a table. Declare its ID, reason, static/animated preference, misconception, and success evidence before production.
-6. Map every old public file to a target action and path.
+6. Map every old public file to a target action and path. For new sources, use the existing source ledger and architecture/migration decision to identify the reader gap, affected canonical units, replacement/deepening/reference disposition and material not absorbed. A good source may improve explanation without adding a page or expanding the main path.
 7. Identify a representative pilot slice that tests the hardest architecture, source-synthesis, progression, and writing assumptions.
 
 ## Required Artifacts

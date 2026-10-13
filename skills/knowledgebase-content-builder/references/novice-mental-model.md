@@ -29,6 +29,18 @@ Read paragraphs aloud in sequence. Identify who acts, what they act on, what cha
 
 Do not merely replace “路径可达” with another metaphor such as “打通入口”. Preserve factual boundaries while naming the objects. Apply this pass to headings, cards, captions, labels and glossary entries as well as body text. Shorter is useful only after the causal explanation is complete.
 
+## Calibrate Against A Complete Slice
+
+These are editorial comparisons, not compulsory lesson formats. Reuse the reasoning move when it serves the reader; do not copy the surface wording.
+
+**A summary becomes a mechanism.** “状态负责持久化，前端反馈不等于后端成功” names conclusions the novice cannot yet explain. A connected version is: “你点了收藏，星星先亮起来。网页还要把收藏请求发给网站，网站再把这条记录保存下来。如果请求没有送到，星星虽然亮了，重新打开时收藏仍可能消失。” It exposes an action, intermediate handoff and condition; the term can follow. A diagram can show the star beside the saved-record state before/after, with the uncompleted handoff visible. Repeating the two abstract sentences inside boxes adds no explanation.
+
+**A page boundary keeps the event alive.** Ending with “下一节讲端口” leaves a topic jump. Instead connect the event: “地址帮助消息到达那台电脑，但同一台电脑可以运行多个接收消息的程序。接下来要确定这次消息交给哪一个。” The next page continues that request, distinguishes the receiving program from a webpage, and shows what changing the port changes. The link adds navigation; the bridge provides comprehension.
+
+**A new source improves the existing explanation.** A long model-training article may suggest a small, explicitly fictional calculation: input 2, weight 1, output 2, target 8, squared error 36; changing weight to 2 gives output 4 and error 16. Show how each number follows, then explain that real training has many parameters and an update rule. Absorb useful intermediate reasoning into the owning concept; deeper training detail can remain optional reference. Do not import the article's length, whole taxonomy or numerical examples as empirical evidence.
+
+Use a sample verdict to record which editorial choices are safe to scale and which assumptions remain untested. Existing pilot evidence carries these decisions; no additional style contract is needed. Review the reader's complete path, not isolated prose and images independently.
+
 ## Pilot And Review Evidence
 
 Set `explanationProfile: novice_mental_model` in `learning-design.json` and use the fragments in `../../../assets/control-templates/novice-mental-model.json`. Other designs may omit the profile. It adds no stage and requires no user quiz.

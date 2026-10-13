@@ -5,7 +5,7 @@ description: Build or rewrite reader-facing knowledge-base content after archite
 
 # Knowledgebase Content Builder
 
-Produce useful reader-facing content with the least necessary reading. Do not reopen approved architecture unless evidence makes it unworkable.
+Produce the explanation the target reader needs, then remove unnecessary reading. Do not reopen approved architecture unless evidence makes it unworkable.
 
 For conceptual explanations, evidence-heavy pages, or transferable judgment, read `references/evidence-to-judgment.md`. Go beyond source summaries: explain mechanisms, relevant competing explanations, and what the reader can decide next. Keep consequential uncertainty next to its claim. Scenes and predictive analogies are optional tools, not mandatory prose templates.
 
@@ -18,7 +18,7 @@ For zero-prerequisite explanations of how a system works, read `references/novic
 ## Pilot Stage
 
 1. Build the representative slice selected by architecture.
-2. Include every page type needed to expose risk, not merely the easiest article.
+2. Include the hardest distinction and a cross-page transition when continuity matters. Test the actual connected slice, including embedded visuals and supported rendering, before scaling; use the comparisons in `references/novice-mental-model.md` when relevant.
 3. Trace the pilot from source claim → knowledge unit → page section. Compare essential points before and after rewriting; record preserved, intentionally changed, and unresolved meanings.
 4. Validate first-screen value, explanation budget, terminology, default action, pressure level, catalog exposure, task/ability output when applicable, navigation context, evidence treatment, and whether the page has a genuinely distinct reader job.
    - When the pilot lesson requires a visual explanation, apply `knowledgebase-visual-explainer`, embed the real asset and fallback, and record its ID in the pilot verdict. Do not approve a prompt-only or decorative result.

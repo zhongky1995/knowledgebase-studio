@@ -233,15 +233,26 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
                     issue(errors, "unknown-progression-unit", label, str(unit_id))
                 flattened.append(unit_id)
 
-        duplicates = {value for value in flattened if flattened.count(value) > 1}
-        for value in sorted(duplicates):
-            issue(errors, "duplicate-progression-unit", "knowledge-model", value)
+        # Routes can reuse canonical units; only repetition inside a route is an error.
+        for progression in progressions:
+            unit_ids = progression.get("unitIds") or []
+            for value in sorted({value for value in unit_ids if unit_ids.count(value) > 1}):
+                issue(errors, "duplicate-progression-unit", progression.get("id", "knowledge-model"), value)
+            local_order = {value: index for index, value in enumerate(unit_ids)}
+            for unit_id in unit_ids:
+                for dependency in units_by_id.get(unit_id, {}).get("dependencies") or []:
+                    if dependency in local_order and local_order[dependency] >= local_order[unit_id]:
+                        issue(errors, "progression-order", unit_id, f"Dependency {dependency} must appear before {unit_id} in {progression.get('id')}.")
         if learning_product:
             main_ids = {unit_id for unit_id, unit in units_by_id.items() if unit.get("role") == "main-path"}
             missing = sorted(main_ids - set(flattened))
             if missing:
                 issue(errors, "progression-coverage-gap", "knowledge-model", ", ".join(missing))
-            order = {unit_id: index for index, unit_id in enumerate(flattened)}
+            # Preserve the earlier core -> advanced ordering check for split routes.
+            # Later reuse must not overwrite a unit's first introduction.
+            order = {}
+            for index, unit_id in enumerate(flattened):
+                order.setdefault(unit_id, index)
             for unit_id in main_ids:
                 if unit_id not in order:
                     continue
