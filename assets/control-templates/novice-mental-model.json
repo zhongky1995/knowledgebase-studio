@@ -1,5 +1,5 @@
 {
-  "usage": "Merge learningDesign fields into learning-design.json; attach the example contract to a relevant lesson, workedExample to its content coverage, and comprehensionReview to pilot-verdict.json. Replace illustrative paths and statements with actual project evidence.",
+  "usage": "Merge learningDesign fields into learning-design.json; attach the example contract to a relevant lesson, workedExample to its content coverage, and comprehensionReview to pilot-verdict.json. For authored/revised novice main-path or case pages, attach pageComprehensionReview as comprehensionReview in the existing page coverage. Replace illustrative paths, excerpts and claims with actual reviewed evidence; compute the page digest after editing. No receipt proves comprehension. Newly authored or semantically renewed novice reviews use review schemaVersion 2, promises and per-check promiseIds/basisExcerpt. Legacy schema 1 remains readable, without a new promise-coverage claim. Promise lists and exact excerpts require editorial judgment; they do not automatically establish completeness.",
   "learningDesign": {
     "explanationProfile": "novice_mental_model",
     "scenarioSpine": {
@@ -71,8 +71,12 @@
         "question": "点击到刷新后的显示之间发生了什么？",
         "expectedExplanation": "请求先送到网站；网站保存并回复；刷新重新读取已存记录。",
         "path": "lesson.md",
-        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
-        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+        "excerpt": "浏览器把这篇文章的收藏请求发给网站。网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。刷新时，浏览器重新向网站读取这条记录，所以还能显示已收藏。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
       },
       {
         "dimension": "concreteLanguage",
@@ -80,8 +84,12 @@
         "question": "是谁记住了收藏，而不是谁的外观变了？",
         "expectedExplanation": "网站把收藏写入记录，浏览器按回复更新显示。",
         "path": "lesson.md",
-        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
-        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+        "excerpt": "浏览器负责按钮的显示，网站请数据库保存账号与文章的收藏关系。两处发生的是不同的变化。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "网站请数据库保存账号与文章的收藏关系"
       },
       {
         "dimension": "scenarioApplication",
@@ -89,8 +97,12 @@
         "question": "换设备后会怎样？",
         "expectedExplanation": "若记录存在网站且登录同一账号，新设备可向网站读取；仅存在原设备则不同。",
         "path": "lesson.md",
-        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
-        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+        "excerpt": "换一台设备登录同一账号，新设备仍可向网站读取该账号保存的收藏。若收藏只存于原设备，新设备便不能从网站读到它。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "若收藏只存于原设备，新设备便不能从网站读到它。"
       },
       {
         "dimension": "conceptBoundaries",
@@ -98,8 +110,61 @@
         "question": "按钮变色能证明记录保存了吗？",
         "expectedExplanation": "不能，页面显示和网站保存是两个步骤，需要确认后者。",
         "path": "lesson.md",
-        "excerpt": "网站核对账号并保存收藏记录，保存成功后回复浏览器。",
-        "rationale": "替换为实际正文摘录，并说明其是否足以回答问题；审读后才能改为 pass。"
+        "excerpt": "按钮可以先变色，再发送保存请求。如果请求没有送到网站，按钮虽然亮了，数据库却没有新增收藏；刷新后仍可能显示未收藏。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "如果请求没有送到网站，按钮虽然亮了，数据库却没有新增收藏"
+      }
+    ],
+    "schemaVersion": 2,
+    "promises": [
+      {
+        "id": "favorite-retained",
+        "path": "lesson.md",
+        "claim": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
+      }
+    ]
+  },
+  "pageComprehensionReview": {
+    "reviewType": "editorial",
+    "contentSha256": "REPLACE_WITH_SHA256_OF_REVIEWED_PAGE_BYTES",
+    "unresolvedGaps": [],
+    "checks": [
+      {
+        "dimension": "causalContinuity",
+        "status": "needs_work",
+        "question": "点击到刷新后的显示之间发生了什么？",
+        "expectedExplanation": "请求先送到网站；网站保存并回复；刷新重新读取已存记录。",
+        "path": "lesson.md",
+        "excerpt": "浏览器把这篇文章的收藏请求发给网站。网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。刷新时，浏览器重新向网站读取这条记录，所以还能显示已收藏。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
+      },
+      {
+        "dimension": "scenarioApplication",
+        "status": "needs_work",
+        "question": "换设备后会怎样？",
+        "expectedExplanation": "若记录存在网站且登录同一账号，新设备可向网站读取；仅存在原设备则不同。",
+        "path": "lesson.md",
+        "excerpt": "换一台设备登录同一账号，新设备仍可向网站读取该账号保存的收藏。若收藏只存于原设备，新设备便不能从网站读到它。",
+        "rationale": "教学示例，尚未审读目标正文。先从完整正文找出本页及后部独立承诺，再以promiseIds关联；basisExcerpt应指出实际判断或变化依据，答案不得添加正文未讲的步骤。",
+        "promiseIds": [
+          "favorite-retained"
+        ],
+        "basisExcerpt": "若收藏只存于原设备，新设备便不能从网站读到它。"
+      }
+    ],
+    "schemaVersion": 2,
+    "promises": [
+      {
+        "id": "favorite-retained",
+        "path": "lesson.md",
+        "claim": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
       }
     ]
   }

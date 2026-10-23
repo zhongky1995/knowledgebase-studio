@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 
 from kb_content_check import validate as check_content
+from kb_explanation import require_promise_review
 from kb_learning_check import check_learning, file_in_root, issue, read_object, records, strings
 from kb_workflow import read_json_if_possible, stale_stage_reasons, learning_asset_paths, visual_asset_paths
 
@@ -199,6 +200,15 @@ def check_update(root, plan):
     control = root / "_kb-control"
     content = check_content(root, control / "source-understanding.json", control / "knowledge-model.json", control / "content-coverage.json", page_paths=pages)
     errors.extend(content["errors"])
+    missing_reviews = set(content["comprehensionEvidence"]["missingPages"])
+    for value in sorted(missing_reviews & set(expected.get("reviewPages", pages))):
+        issue(errors, "page-comprehension-required", value,
+              "This novice page is in the editorial update scope; record current page comprehension evidence before claiming the explanation was reviewed.")
+    editorial_novice_pages = set(content["comprehensionEvidence"]["requiredPages"]) & set(expected.get("reviewPages", pages))
+    coverage = read_json_if_possible(control / "content-coverage.json")
+    for page in coverage.get("pages", []):
+        if isinstance(page, dict) and page.get("path") in editorial_novice_pages:
+            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"))
     learning = check_learning(root, phase="app" if "browser" in expected["requiredChecks"] else "content", page_paths=pages)
     errors.extend(learning["errors"])
     visual_manifest = read_json_if_possible(control / "visual-explanations.json")
@@ -220,6 +230,7 @@ def check_update(root, plan):
         "claim": "selected-update-only", "affectedPages": pages,
         "reviewPages": expected.get("reviewPages", pages),
         "regressionPages": expected.get("regressionPages", pages),
+        "comprehensionEvidence": content["comprehensionEvidence"],
         "inputDigests": expected["inputDigests"], "evidenceDigests": evidence_digests,
         "learningActivities": learning["validatedIds"], "globalWorkflow": global_state(root),
         "errors": errors, "warnings": content["warnings"] + learning["warnings"],

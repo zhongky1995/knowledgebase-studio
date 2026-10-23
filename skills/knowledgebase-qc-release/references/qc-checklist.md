@@ -30,6 +30,10 @@
 - Reader-led products allow immediate reading without a task, artifact, curriculum decision, or completion commitment.
 - Guided and practice-led products form an ability path with the outputs promised by the contract.
 - High-leverage concepts have minimum sufficient mechanism and application depth.
+- For novice explanations, the normal case establishes starting conditions, decisive intermediate changes and their basis before deriving a changed-condition outcome. A correct guarantee or an unexplained verb does not substitute for the promised mechanism.
+- Page comprehension evidence covers the claimed editorial scope and current content. Expected answers must follow from published passages; the review must not supply missing teaching. Pilot evidence alone does not cover later pages.
+- Discover the page's consequential promises independently of its review list. New novice reviews map those promises to causal checks and pinpoint the decisive basis within the exact excerpt; a strong opening cannot certify a later independent guarantee.
+- Where relevant, test the trigger-to-program association, decision data and comparison, available first configuration, identity across time/sharing, and the place coordinating checks with writes. Keep local guarantees and other participants' obligations distinct. These are selective challenges, not compulsory sections.
 - Key abilities have realistic practice and feedback.
 - A representative reader can transfer the model to a new case.
 - Required worked examples follow their declared pattern: judgment/revision examples expose attempts and reasoned changes; mechanism traces expose concrete participants, intermediate actions, outcome, boundary and changed condition. A template or topic list alone does not satisfy either.
@@ -70,6 +74,7 @@
 - Declared visual assets, previews, posters, fallbacks, and alternative text survive packaging and work at desktop and mobile widths.
 - Desktop and mobile checks run against the packaged result, not only the source app.
 - Learner-facing output contains no internal paths, source ledgers, migration metadata, test reports, or maintenance-only fields.
+- Read body text, catalog/search summaries, glossary hints and figure labels without the authoring chat. Remove conversational callbacks such as “你最初的问题” and production verdicts such as “这一版已检查”; retain relevant provenance, uncertainty and any intentionally quoted dialogue. Keyword scans only flag candidates for review.
 - A public package has a user-approved license policy; QC never invents CC, MIT, or another license.
 - Local release readiness is recorded separately from repository creation, upload, hosting, sending, and visibility changes.
 - Remaining risks and maintenance triggers are reported.

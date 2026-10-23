@@ -15,6 +15,8 @@ For operational lessons or teaching interactions, also read `../knowledgebase-le
 
 For zero-prerequisite explanations of how a system works, read `references/novice-mental-model.md`. Select the worked-example pattern from the learning job, and preserve causal continuity before compressing prose.
 
+Inventory the page's substantive explanation promises before drafting, including later guarantees. Explain the information and rule behind each decisive action, and test the promised result against a relevant changed condition. Use the novice reference's calibrated regressions for new pilots or recurring “话说一半” repairs; do not substitute a longer outline or more exceptions for the missing mechanism.
+
 ## Pilot Stage
 
 1. Build the representative slice selected by architecture.
@@ -34,7 +36,7 @@ Do not scale a sample that still contains repeated setup, unclear canonical owne
 3. Create `_kb-control/content-coverage.json` from `assets/control-templates/content-coverage.json`. Give every target page a primary question, reader change, owned knowledge units, essential preserved meanings, fidelity locations, distinctive value, and evidence status.
 4. Add only missing mechanisms, decisions, examples, tools, practice, evidence, and exceptions.
    - When `learning-design.json` requires a worked example, follow its pattern: `judgment_revision` needs input, first attempt, judgment, revision, output and transfer; `mechanism_trace` needs input, participants, intermediate trace, output, boundary and transfer. Record the corresponding locations in coverage. Apply the promise to case/lab pages too. A template or principle list is not a worked example.
-   - Record example and practice locations plus realistic reading time in `content-coverage.json`.
+   - Record example and practice locations plus realistic reading time in `content-coverage.json`. For novice explanations, follow the version 2 page-level comprehension review in `references/novice-mental-model.md`: connect the page's declared promises to specific causal checks and exact basis excerpts, then challenge a relevant changed condition. A pilot pass, two generic questions or populated location fields do not establish that later pages explain their conclusions.
    - Record activity IDs in page coverage and the representative pilot verdict. Supply actual case material, evidence-based feedback, optional hints, and a readable fallback for interactions. Label scripted outcomes and fictional cases; keep first attempt and revised result distinguishable.
    - Apply `knowledgebase-visual-explainer` for every required visual contract. Record IDs per page in `content-coverage.json` and maintain `_kb-control/visual-explanations.json`. Use no visual when the learning contract marks it unnecessary.
 5. Update cross-links and indexes as canonical pages move.
@@ -63,6 +65,7 @@ When activities are declared, run `python3 <plugin-root>/scripts/kb_learning_che
 - Use diagrams or animation only when they reduce the cognitive load of a real relationship or change. A prompt, storyboard, renderer source, or decorative motion is not a learner-facing asset.
 - Separate facts, inferences, internal defaults, and hypotheses.
 - Keep learner-facing source presentation separate from internal traceability. “Do not show sources to learners” never means deleting the evidence ledger.
+- Write for a reader who has not seen the authoring chat. Replace conversation callbacks and production/review commentary in body text, summaries, captions and glossary entries with self-contained explanations; keep provenance and factual qualifications that help the reader interpret the content.
 - Preserve the source's meaning, not its wording. A rewrite may compress language but must retain consequential mechanism, conditions, boundary, and uncertainty.
 - Synthesize disagreements explicitly. Do not flatten multiple sources into a false consensus.
 - Never fabricate cases, metrics, source behavior, or outcomes.

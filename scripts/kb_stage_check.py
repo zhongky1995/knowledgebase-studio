@@ -5,7 +5,7 @@ import json
 import re
 from pathlib import Path
 
-from kb_explanation import example_fields, nonempty, validate_explanation_design, validate_comprehension
+from kb_explanation import example_fields, nonempty, validate_explanation_design, validate_comprehension, validate_page_comprehension, require_promise_review
 
 
 LEARNING_POSTURES = {
@@ -451,6 +451,8 @@ def validate_pilot(root, errors, warnings, evidence):
             issue(errors, "pilot-assumption-result", f"assumptionsTested[{index}]", "Each assumption needs pass evidence.")
     design = read_json(control / "learning-design.json", errors, "learning design", required=False)
     validate_comprehension(root, design, verdict, errors)
+    if design.get("explanationProfile") == "novice_mental_model":
+        require_promise_review(verdict.get("comprehensionReview"), errors, "pilot-verdict")
     counter = verdict.get("counterReview") or {}
     if counter.get("status") != "pass" or not (counter.get("reviewedRisks") or []):
         issue(errors, "pilot-counter-review", path, "A separate counter-review must challenge the pilot before scaling.")
@@ -495,6 +497,24 @@ def validate_pilot(root, errors, warnings, evidence):
     evidence.update({"representativePaths": len(representative), "assumptionsTested": len(assumptions)})
 
 
+def run_comprehension_gate(root, errors, evidence):
+    control = root / "_kb-control"
+    design = read_json(control / "learning-design.json", errors, "learning design", required=False)
+    if design.get("explanationProfile") != "novice_mental_model":
+        return
+    coverage = read_json(control / "content-coverage.json", errors, "content coverage")
+    required = [page for page in coverage.get("pages", [])
+                if isinstance(page, dict) and page.get("pageType") in {"main-path", "case"}]
+    for page in required:
+        if "comprehensionReview" not in page:
+            issue(errors, "page-comprehension-required", page.get("path"),
+                  "Full novice content/QC readiness requires current page review evidence; pilot or structural passes alone are insufficient.")
+        else:
+            validate_page_comprehension(root, page, errors)
+            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"))
+    evidence["comprehensionReviewPages"] = [page.get("path") for page in required]
+
+
 def validate_content(root, errors, warnings, evidence):
     control = root / "_kb-control"
     read_text(control / "content-build-report.md", errors, "content build report", minimum=500)
@@ -507,6 +527,7 @@ def validate_content(root, errors, warnings, evidence):
         issue(errors, "empty-content-coverage", control / "content-coverage.json", "Content coverage must account for every target page.")
     for index, page in enumerate(pages):
         checked_project_path(root, page.get("path"), errors, f"pages[{index}]", require_file=True)
+    run_comprehension_gate(root, errors, evidence)
     activities = run_learning_gate(root, errors, warnings, evidence, "content")
     activity_manifest = read_json(control / "learning-activities.json", errors, "learning activities", required=False)
     for item in activity_manifest.get("items") or []:
@@ -616,6 +637,7 @@ def validate_app(root, errors, warnings, evidence):
 
 def validate_qc(root, errors, warnings, evidence):
     control = root / "_kb-control"
+    run_comprehension_gate(root, errors, evidence)
     read_text(control / "qc-report.md", errors, "QC report", minimum=500)
     path = control / "qc-verdict.json"
     verdict = read_json(path, errors, "QC verdict")

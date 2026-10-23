@@ -31,6 +31,8 @@ For `sample` or `update`, read `references/incremental-updates.md`. Use `kb_upda
 
 For unfamiliar-system explanations, read `../knowledgebase-content-builder/references/novice-mental-model.md` in architecture and pilot. For explanation depth and source synthesis, the content builder owns the shared editorial guidance. Learning review sets learning intent, visual explanation makes required assets, app builds the experience, and QC challenges the delivered result. Do not add a second model, extra stage or universal lesson template for a project-specific technique.
 
+When the confirmed audience wants a zero-prerequisite system explanation, activate `explanationProfile: novice_mental_model` in a new design and carry its review into content/QC. Reuse the same reference for “话说一半” or incomplete-scene feedback during updates. Older designs may lack the profile even when their prose says “零基础”: inspect the audience and actual passages before choosing the review, and record page comprehension evidence for the selected explanation rewrite. Do not silently label legacy coverage as reviewed or force a whole-design migration for a rendering-only repair.
+
 ## Full Production Workflow
 
 Locate the plugin root via `../../` from this skill directory. Read `references/workflow-protocol.md` before the first full run.
