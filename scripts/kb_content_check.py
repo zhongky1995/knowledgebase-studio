@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 from kb_evidence import check_comparisons, check_measurement
-from kb_explanation import example_fields
+from kb_explanation import example_fields, validate_page_comprehension
 
 
 CONTENT_ROLES = {"main-path", "reference", "rule", "tool", "case"}
@@ -261,6 +261,8 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
                         issue(errors, "progression-order", unit_id, f"Dependency {dependency} must appear before {unit_id}.")
 
     pages_by_path = {}
+    comprehension_required, comprehension_recorded, comprehension_valid = [], [], []
+    promise_receipts, legacy_receipts = [], []
     for index, page in enumerate(pages):
         label = f"pages[{index}]"
         value = page.get("path")
@@ -285,6 +287,27 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
         else:
             if not candidate.is_file():
                 issue(errors, "missing-page", label, value)
+        if phase == "content":
+            novice_page = (learning_design.get("explanationProfile") == "novice_mental_model"
+                           and page.get("pageType") in {"main-path", "case"})
+            if novice_page:
+                comprehension_required.append(value)
+            if "comprehensionReview" in page:
+                comprehension_recorded.append(value)
+                receipt_errors = []
+                validate_page_comprehension(root, page, receipt_errors)
+                errors.extend(receipt_errors)
+                if not receipt_errors:
+                    comprehension_valid.append(value)
+                    if page["comprehensionReview"].get("schemaVersion", 1) == 2:
+                        promise_receipts.append(value)
+                    else:
+                        legacy_receipts.append(value)
+                        issue(warnings, "page-comprehension-legacy-promises", value,
+                              "This schema 1 receipt remains valid historical evidence, but does not record version 2 promise coverage. Reread before renewing a semantic review.")
+            elif novice_page:
+                issue(warnings, "page-comprehension-missing", value,
+                      "Legacy coverage remains structurally valid, but no page comprehension receipt establishes editorial review. Add one when authoring or revising this explanation.")
         unit_ids = page.get("knowledgeUnitIds") or []
         if page.get("pageType") != "navigation" and not unit_ids:
             issue(errors, "page-unit-gap", label, "Reader-facing content pages require at least one knowledge unit.")
@@ -369,6 +392,23 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
 
     return {
         "status": "fail" if errors else "pass",
+        "validationKind": "structural_integrity",
+        "comprehensionEvidence": {
+            "status": ("incomplete" if set(comprehension_required) - set(comprehension_valid)
+                       or set(comprehension_recorded) - set(comprehension_valid)
+                       else "receipts_valid" if comprehension_recorded else "not_requested"),
+            "requiredPages": sorted(comprehension_required),
+            "recordedPages": sorted(comprehension_recorded),
+            "validReceiptPages": sorted(comprehension_valid),
+            "missingPages": sorted(set(comprehension_required) - set(comprehension_recorded)),
+            "promiseCoverage": {
+                "status": ("legacy" if legacy_receipts else "recorded" if promise_receipts else "not_recorded"),
+                "version2Pages": sorted(promise_receipts),
+                "legacyPages": sorted(legacy_receipts),
+                "limitation": "Declared promise coverage only. The checker cannot discover omitted promises or judge whether the basis explains the claim.",
+            },
+            "limitation": "Receipt integrity only; editorial reasoning and actual reader understanding require separate review.",
+        },
         "phase": phase,
         "scope": "selected-pages-and-prerequisites" if page_paths is not None else "full",
         "selectedPages": sorted(page_paths) if page_paths is not None else None,

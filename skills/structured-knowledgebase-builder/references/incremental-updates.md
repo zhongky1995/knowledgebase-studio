@@ -8,6 +8,7 @@ An explicitly requested standalone lesson sample can also use this limited route
 
 1. Inspect the project contract and existing source, knowledge-model, learning-design, coverage, navigation, activity, and app contracts. Respect existing product posture. If the user asks only for diagnosis, report findings without implementing this workflow.
 2. Identify changed pages and shared dependencies. Use the learning reviewer for teaching decisions, content builder for examples/operations, and app builder for actual interactions. Read the shared `learning-activity-design.md` reference under the learning-reviewer skill when applicable.
+   Treat “话说一半”“场景不详尽” as possible missing reasoning, not automatically as a wording issue. Inspect the cited passage and analogous mechanisms within the requested scope; repair the existing explanation using the novice reference when relevant. For “箭头压字” or Markdown defects, establish the presentation defect first and check its affected consumers; do not infer that the user requested a conceptual rewrite from a screenshot alone.
 3. Update source/claim understanding, unit ownership, examples, activity IDs, and page coverage as needed. Keep old schema 1/2 designs supported; when adopting schema 3, fill its required fields consistently across the design. This metadata migration does not require rewriting unrelated lesson bodies.
 4. Build the actual requested deliverables, including generated content, search/navigation, assets, and any separately requested local release. Inspect source-to-app-to-package consistency. Do not publish externally without authorization for the destination.
 
@@ -37,6 +38,10 @@ The plan contains input fingerprints and required checks. Run the actual editori
 - `evidencePaths`: non-empty report/trace paths inside the knowledge base.
 
 Do not copy fingerprints into an old report to relabel it as current. Evidence must describe the affected pages, checks actually run, observed results, defects/rechecks, and limitations. Browser evidence must include real interaction checks when applicable. The updater validates receipt binding and file existence; it does not itself run a browser or prove a report's claims.
+
+For novice explanation changes, record current page `comprehensionReview` evidence in existing content coverage for `reviewPages` as described in `novice-mental-model.md` under the content-builder skill. Missing legacy receipts on other regression pages are a coverage limitation, not permission to expand the editorial claim or force an unrelated rewrite. If a rendering-only repair changes page bytes with an existing receipt, retain its now-stale receipt as historical evidence and refresh it only after rereading; never update its hash alone to obtain a pass.
+
+New or semantically renewed novice reviews use the version 2 promise inventory, check references and basis excerpts from that same reference. Discover the actual promises before filling the receipt; adding fields to an old pass is not a new review. The updater requires version 2 only for novice main-path/case pages in `reviewPages`; schema 1 evidence remains readable and is reported as legacy promise coverage on other regression pages. Do not backfill unrelated pages during a rendering repair or claim semantic completeness from keyword scans or declared coverage alone.
 
 ```sh
 python3 <plugin-root>/scripts/kb_update.py check --root <target> \
