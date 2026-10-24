@@ -1,5 +1,5 @@
 {
-  "usage": "Merge learningDesign fields into learning-design.json; attach the example contract to a relevant lesson, workedExample to its content coverage, and comprehensionReview to pilot-verdict.json. For authored/revised novice main-path or case pages, attach pageComprehensionReview as comprehensionReview in the existing page coverage. Replace illustrative paths, excerpts and claims with actual reviewed evidence; compute the page digest after editing. No receipt proves comprehension. Newly authored or semantically renewed novice reviews use review schemaVersion 2, promises and per-check promiseIds/basisExcerpt. Legacy schema 1 remains readable, without a new promise-coverage claim. Promise lists and exact excerpts require editorial judgment; they do not automatically establish completeness.",
+  "usage": "Merge learningDesign fields into learning-design.json; attach the example contract to a relevant lesson, workedExample to its content coverage, and comprehensionReview to pilot-verdict.json. For authored/revised novice main-path or case pages, attach pageComprehensionReview as comprehensionReview in the existing page coverage. Replace illustrative paths, excerpts and claims with actual reviewed evidence; compute the page digest after editing. No receipt proves comprehension. Newly authored or semantically renewed novice reviews use review schemaVersion 2, promises and per-check promiseIds/basisExcerpt. Legacy schema 1 remains readable, without a new promise-coverage claim. Promise lists and exact excerpts require editorial judgment; they do not automatically establish completeness. Before a new approval, run kb_reader_probe.py against the final page, actually perform the reader task, then copy the returned readerProbe reference into the existing review. A prepared packet is not a review or learning result.",
   "learningDesign": {
     "explanationProfile": "novice_mental_model",
     "scenarioSpine": {
@@ -125,7 +125,8 @@
         "path": "lesson.md",
         "claim": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
       }
-    ]
+    ],
+    "readerProbe": null
   },
   "pageComprehensionReview": {
     "reviewType": "editorial",
@@ -166,6 +167,7 @@
         "path": "lesson.md",
         "claim": "网站核对账号，请数据库保存账号与文章的收藏关系，保存成功后回复浏览器。"
       }
-    ]
+    ],
+    "readerProbe": null
   }
 }

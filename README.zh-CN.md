@@ -139,3 +139,9 @@ Knowledgebase Studio 使用 [MIT License](LICENSE) 开源。
 ## 图解设计与实际样例
 
 [图解规范](skills/knowledgebase-visual-explainer/references/diagram-design-system.md)提供字阶、间距、语义配色、箭头、边框和移动端布局标准。[本地图型样例](assets/visual-patterns/index.html)包含四组可编辑 SVG 与反例，可用 `python3 scripts/kb_visual_examples.py --output <目录>` 重建。新制作或重设计的图解使用视觉清单 schema 2，保存实际手机/桌面截图、显示字号、具体设计观察和文件指纹；检查程序验证记录与文件的一致性，实际效果仍需审图。旧 schema 1 保持兼容并明确提示缺少新版设计审读。
+
+### 用工具支持读者任务复核
+
+[读者任务复核说明](skills/knowledgebase-content-builder/references/reader-task-review.md)区分理解、执行、判断和查用。`kb_reader_probe.py prepare --root <目标> --page <页面>` 从当前正文生成不含作者答案的材料、已有前提、后部片段及原图/去字图对照。新的零基础审批在既有评审中引用这些实际文件，完整流程与增量检查会核验其是否过期。复制同一问题和答案、仅更换检查类别会被拒绝。准备材料不等于完成审读，更不等于读者已经理解。
+
+对需要工时比较的 AI 案例，可在既有 `workedExample.workComparison` 中维护同一任务的数据，用 `kb_work_comparison.py <目标> --page <页面> --write` 生成正文里的人工、普通软件、AI 对照表。程序计算总人工作量、AI 增量与维护分摊，并拒绝正文表格漂移。教学假设保持明示，测量输入关联既有来源数据；任务是否可比、结果是否有经营价值仍需审读。两个工具均只依赖 Python 标准库。

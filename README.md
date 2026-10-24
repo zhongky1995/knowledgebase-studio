@@ -139,3 +139,9 @@ New novice pilot/content/QC approvals and scoped editorial updates require versi
 ## Diagram design and examples
 
 The [diagram design system](skills/knowledgebase-visual-explainer/references/diagram-design-system.md) covers type, spacing, semantic color, connectors, boundaries and narrow layouts. Open the [local pattern gallery](assets/visual-patterns/index.html) for four editable SVG patterns and deliberate counterexamples; rebuild with `python3 scripts/kb_visual_examples.py --output <directory>`. New/redesigned visuals use manifest schema 2 with real mobile/desktop figure captures, rendered type measurements, design observations and file hashes. The checker validates receipts, not aesthetics; legacy schema 1 remains compatible with an explicit warning.
+
+### Tool-assisted reader review
+
+Use [reader-task review](skills/knowledgebase-content-builder/references/reader-task-review.md) to distinguish understanding, performing, judging and retrieving. `kb_reader_probe.py prepare --root <target> --page <page>` creates answer-free current prose/prerequisite material, a later-section challenge and original/masked SVG pairs. New novice approvals reference these actual files in existing reviews; workflow and scoped-update checks bind their freshness. Copying a mechanism question and answer into a different check category is rejected. Preparation does not establish that a review was performed or that readers understood.
+
+For numeric AI workload cases, optional `workedExample.workComparison` data generates one same-task manual/software/AI table with `kb_work_comparison.py <target> --page <page> --write`. Totals, incremental AI contribution and maintenance allocation are computed; checks reject drift in the published block. Teaching assumptions remain labeled, measured inputs bind to existing source measurements, and comparable business outcomes still require editorial judgment. Both tools use the Python standard library.

@@ -8,6 +8,7 @@ from pathlib import Path
 
 from kb_content_check import validate as check_content
 from kb_explanation import require_promise_review
+from kb_reader_probe import reader_probe_paths
 from kb_learning_check import check_learning, file_in_root, issue, read_object, records, strings
 from kb_workflow import read_json_if_possible, stale_stage_reasons, learning_asset_paths, visual_asset_paths
 
@@ -134,6 +135,8 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
             tracked.update(normalize(root, value) for value in check.get("evidencePaths", []) if isinstance(value, str))
     for path in learning_asset_paths(root, affected) + visual_asset_paths(root, include_manifest=True):
         tracked.add(normalize(root, str(path)))
+    for path in reader_probe_paths(root, affected):
+        tracked.add(normalize(root, str(path)))
     required = ["editor-review"] if reviewed or schema_version == 1 else []
     if structure_changed:
         required.append("architecture-review")
@@ -198,7 +201,8 @@ def check_update(root, plan):
         for value in strings(receipt.get("evidencePaths"), errors, kind):
             file_in_root(root, value, errors, kind)
     control = root / "_kb-control"
-    content = check_content(root, control / "source-understanding.json", control / "knowledge-model.json", control / "content-coverage.json", page_paths=pages)
+    content = check_content(root, control / "source-understanding.json", control / "knowledge-model.json", control / "content-coverage.json", page_paths=pages,
+                            review_page_paths=expected.get("reviewPages", pages) if change_kind != "rendering" else [])
     errors.extend(content["errors"])
     missing_reviews = set(content["comprehensionEvidence"]["missingPages"])
     for value in sorted(missing_reviews & set(expected.get("reviewPages", pages))):
@@ -208,7 +212,8 @@ def check_update(root, plan):
     coverage = read_json_if_possible(control / "content-coverage.json")
     for page in coverage.get("pages", []):
         if isinstance(page, dict) and page.get("path") in editorial_novice_pages:
-            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"))
+            if change_kind != "rendering":
+                require_promise_review(page.get("comprehensionReview"), errors, page.get("path"), root=root, pages=[page.get("path")])
     learning = check_learning(root, phase="app" if "browser" in expected["requiredChecks"] else "content", page_paths=pages)
     errors.extend(learning["errors"])
     visual_manifest = read_json_if_possible(control / "visual-explanations.json")

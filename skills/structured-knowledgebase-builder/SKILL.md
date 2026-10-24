@@ -67,6 +67,8 @@ Full-workflow transitions are controlled by `kb_workflow.py`, including stage ch
 
 Distinguish deterministic integrity, editorial/simulated judgment, real browser checks and observed learner evidence. A source, screenshot or report must support the actual claim; none alone proves comprehension. QC remains logically separate from production even when performed sequentially by one agent.
 
+For new novice approvals or recurring task/value/diagram failures, use the content builder's `references/reader-task-review.md`: prepare current answer-free material with `kb_reader_probe.py`, actually attempt the task, and then record the existing review. Numeric AI workload examples can use `kb_work_comparison.py` to generate and verify their same-task comparison. These tools feed existing pilot/content/QC/update gates; they do not create another workflow or replace editorial judgment.
+
 Keep internal controls and archives out of the reader product. Package into an isolated release root when requested. A local release pass does not authorize repository creation, upload, hosting, sending or visibility changes; reuse any explicit destination authorization already given. Do not choose a license on the user's behalf.
 
 ## Completion And Continuity

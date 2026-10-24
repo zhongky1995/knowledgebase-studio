@@ -325,14 +325,17 @@ def learning_asset_paths(root, page_paths=None):
 
 
 def stage_deliverable_paths(root, stage_id):
+    from kb_reader_probe import reader_probe_paths
     paths = []
     if stage_id == "pilot":
         paths.extend(json_declared_paths(root, "pilot-verdict.json", "representativePaths"))
         verdict = read_json_if_possible(root / CONTROL_DIR / "pilot-verdict.json")
         paths.extend(visual_asset_paths(root, verdict.get("visualExplanationIds") or []))
         paths.extend(learning_asset_paths(root, verdict.get("representativePaths") or []))
+        paths.extend(reader_probe_paths(root, pilot=True))
     if stage_id in {"content", "qc"}:
         paths.extend(public_content_paths(root))
+        paths.extend(reader_probe_paths(root))
     if stage_id in {"app", "qc"}:
         paths.extend(json_declared_paths(root, "app-validation.json", "appPaths"))
     if stage_id in {"content", "app", "qc"}:

@@ -4,6 +4,7 @@
     {
       "path": "target/page.md",
       "pageType": "main-path | reference | rule | tool | case | navigation",
+      "readerJob": "understand | perform | judge | retrieve",
       "primaryQuestion": "这一页只负责回答的核心问题。",
       "readerChange": "这一页预期改变的理解、判断、行动或检索能力。",
       "knowledgeUnitIds": ["unit.example"],

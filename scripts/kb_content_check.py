@@ -7,6 +7,8 @@ from pathlib import Path
 
 from kb_evidence import check_comparisons, check_measurement
 from kb_explanation import example_fields, validate_page_comprehension
+from kb_work_comparison import validate_work_comparison
+from kb_reader_probe import JOBS
 
 
 CONTENT_ROLES = {"main-path", "reference", "rule", "tool", "case"}
@@ -84,7 +86,7 @@ def dependency_cycles(units_by_id):
     return cycles
 
 
-def validate(root, source_path, model_path, coverage_path, phase="content", page_paths=None):
+def validate(root, source_path, model_path, coverage_path, phase="content", page_paths=None, review_page_paths=None):
     errors = []
     warnings = []
     sources_document = read_json(source_path, errors, "source-understanding")
@@ -278,6 +280,8 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
         for field in ("primaryQuestion", "readerChange", "distinctiveValue"):
             if not nonempty(page.get(field)):
                 issue(errors, "page-field", label, f"Missing {field}.")
+        if "readerJob" in page and (not isinstance(page["readerJob"], str) or page["readerJob"] not in JOBS):
+            issue(errors, "page-reader-job", label, "Choose understand, perform, judge or retrieve from the page's actual promise.")
         candidate = (root / value).resolve()
         try:
             candidate.relative_to(root)
@@ -288,6 +292,7 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
             if not candidate.is_file():
                 issue(errors, "missing-page", label, value)
         if phase == "content":
+            validate_work_comparison(root, page, errors, measurements)
             novice_page = (learning_design.get("explanationProfile") == "novice_mental_model"
                            and page.get("pageType") in {"main-path", "case"})
             if novice_page:
@@ -295,7 +300,8 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
             if "comprehensionReview" in page:
                 comprehension_recorded.append(value)
                 receipt_errors = []
-                validate_page_comprehension(root, page, receipt_errors)
+                validate_page_comprehension(root, page, receipt_errors, warnings,
+                                            strict_shortcuts=review_page_paths is None or value in review_page_paths)
                 errors.extend(receipt_errors)
                 if not receipt_errors:
                     comprehension_valid.append(value)

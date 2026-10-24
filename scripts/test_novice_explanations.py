@@ -10,6 +10,7 @@ from pathlib import Path
 from kb_content_check import validate as check_content
 from kb_stage_check import validate_learning_design, validate_pilot, validate_content, validate_qc, run_comprehension_gate
 from kb_update import check_update, plan_update
+from kb_reader_probe import prepare
 from test_knowledgebase_studio import (
     SCRIPT_DIR, valid_content_coverage, valid_knowledge_model, valid_learning_design,
     valid_pilot_verdict, write_locked_contract, write_valid_audit_artifacts,
@@ -45,6 +46,11 @@ class NoviceExplanationTests(unittest.TestCase):
             check["excerpt"] for check in self.verdict["comprehensionReview"]["checks"]))
         (self.control / "pilot-review.md").write_text("Synthetic editorial review fixture. " * 30)
         self.save()
+        self.attach_probe(self.verdict["comprehensionReview"])
+
+    def attach_probe(self, review):
+        self.save()
+        review["readerProbe"] = prepare(self.root, ["lesson.md"], job="understand")["readerProbe"]
 
     def save(self):
         for name, value in [("knowledge-model", self.model), ("learning-design", self.design),
@@ -72,6 +78,7 @@ class NoviceExplanationTests(unittest.TestCase):
         for check in review["checks"]:
             check.update(status="pass", rationale="Synthetic editorial receipt, not learner evidence.")
         self.coverage["pages"][0]["comprehensionReview"] = review
+        self.attach_probe(review)
         return review
 
     def update_plan(self, changed, **kwargs):
@@ -313,6 +320,7 @@ class NoviceExplanationTests(unittest.TestCase):
                                  "question": "重试怎样找到原任务？", "expectedExplanation": basis,
                                  "excerpt": basis, "basisExcerpt": basis, "promiseIds": ["retry"],
                                  "rationale": "Synthetic local uniqueness example; external effects are outside this claim."})
+        self.attach_probe(review)
         self.assertEqual(self.content(), [])
 
     def test_changed_condition_alone_does_not_cover_the_normal_mechanism(self):
@@ -420,7 +428,33 @@ class NoviceExplanationTests(unittest.TestCase):
         review["promises"] = [{"id": "circular", "path": "lesson.md", "claim": sentence}]
         for check in review["checks"]:
             check.update(promiseIds=["circular"], excerpt=sentence, basisExcerpt=sentence)
+        self.attach_probe(review)
         self.assertEqual(self.content_report()["status"], "pass")
+
+    def test_new_approvals_need_prepared_material_not_only_self_reported_checks(self):
+        review = self.page_review()
+        review.pop("readerProbe")
+        self.assertEqual(self.content_report()["status"], "pass")  # Historical receipt read.
+        self.save()
+        errors = []
+        run_comprehension_gate(self.root, errors, {})
+        self.assert_error(errors, "reader-probe-required")
+        report = check_update(self.root, self.update_plan(["lesson.md"]))
+        self.assert_error(report["errors"], "reader-probe-required")
+        self.verdict["comprehensionReview"].pop("readerProbe")
+        self.assert_error(self.stage("pilot"), "reader-probe-required")
+
+    def test_copy_shortcuts_are_errors_in_editorial_scope_warnings_in_rendering_regression(self):
+        review = self.page_review()
+        second = copy.deepcopy(review["checks"][0])
+        second["dimension"] = "scenarioApplication"
+        review["checks"].append(second)
+        report = check_update(self.root, self.update_plan(["lesson.md"]))
+        self.assert_error(report["errors"], "comprehension-relabeled-check")
+        (self.root / "renderer.js").write_text("// Layout only")
+        report = check_update(self.root, self.update_plan(["renderer.js"], change_kind="rendering"))
+        self.assertEqual(report["errors"], [])
+        self.assertIn("comprehension-relabeled-check", {w["kind"] for w in report["warnings"]})
 
 
 if __name__ == "__main__":

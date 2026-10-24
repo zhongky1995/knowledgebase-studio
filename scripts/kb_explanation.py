@@ -1,6 +1,9 @@
 """Optional novice explanation contracts; receipts are not proof of learning."""
 
 import hashlib
+import unicodedata
+
+from kb_reader_probe import validate_probe
 
 EXAMPLE_FIELDS = {
     "judgment_revision": ("input", "firstAttempt", "judgment", "revision", "output", "transfer"),
@@ -13,6 +16,41 @@ COMPREHENSION_CHECKS = {
 
 def nonempty(value):
     return isinstance(value, str) and bool(value.strip())
+
+
+def review_signature(value):
+    """Catch copying with cosmetic punctuation/spacing changes, not semantic similarity."""
+    normalized = unicodedata.normalize("NFKC", value) if isinstance(value, str) else ""
+    # Keep decimals, operators and slashes: 1.5, 15 and 1/5 are different evidence.
+    punctuation = set('，,。!?;:！？；：“”‘’、"')
+    return "".join(c.casefold() for c in normalized if not c.isspace() and c not in punctuation)
+
+
+def review_shortcuts(review, errors, warnings=None):
+    checks = review.get("checks", []) if isinstance(review, dict) else []
+    if not isinstance(checks, list):
+        return
+    signatures, rationales = {}, {}
+    for index, check in enumerate(checks):
+        if not isinstance(check, dict):
+            continue
+        question, answer = review_signature(check.get("question")), review_signature(check.get("expectedExplanation"))
+        if question and answer and isinstance(check.get("path"), str):
+            key = (check["path"], question, answer)
+            signatures.setdefault(key, []).append((index, check.get("dimension")))
+        rationale = review_signature(check.get("rationale"))
+        if rationale:
+            rationales.setdefault(rationale, []).append(index)
+    for entries in signatures.values():
+        dimensions = {dimension for _, dimension in entries if isinstance(dimension, str)}
+        if {"causalContinuity", "scenarioApplication"}.issubset(dimensions):
+            issue(errors, "comprehension-relabeled-check", "comprehensionReview.checks",
+                  f"Checks {[i for i, _ in entries]} reuse the same question and answer for mechanism and changed-condition review. Actually test the changed input and resulting difference; relabeling is not another test.")
+    if warnings is not None:
+        for indices in rationales.values():
+            if len(indices) >= 3:
+                issue(warnings, "comprehension-repeated-rationale", "comprehensionReview.checks",
+                      f"Checks {indices} share one rationale. Inspect whether each conclusion has specific support; varied wording alone is not a repair.")
 
 
 def issue(errors, kind, path, detail):
@@ -41,11 +79,13 @@ def local_file(root, value, errors, label):
     return candidate
 
 
-def require_promise_review(review, errors, label):
+def require_promise_review(review, errors, label, *, root=None, pages=()):
     """New editorial approvals need v2; reading historical receipts remains compatible."""
     if isinstance(review, dict) and review.get("schemaVersion", 1) != 2:
         issue(errors, "comprehension-promises-required", label,
               "A new novice explanation approval needs a version 2 promise inventory, causal checks and basis excerpts. Reread the current prose; do not relabel an old receipt.")
+    if root is not None and isinstance(review, dict):
+        validate_probe(root, review.get("readerProbe"), pages, errors, required=True)
 
 
 def validate_explanation_design(root, design, units, errors):
@@ -90,13 +130,15 @@ def validate_explanation_design(root, design, units, errors):
             issue(errors, "scenario-unit", label, "Map the question to existing knowledge units.")
 
 
-def validate_comprehension(root, design, verdict, errors, *, required_dimensions=None):
+def validate_comprehension(root, design, verdict, errors, *, required_dimensions=None, warnings=None, strict_shortcuts=True):
     if design.get("explanationProfile") != "novice_mental_model":
         return
     review = verdict.get("comprehensionReview")
     if not isinstance(review, dict):
         issue(errors, "comprehension-review", "pilot-verdict", "The novice profile requires locatable comprehension evidence.")
         return
+    review_shortcuts(review, errors if strict_shortcuts else (warnings if warnings is not None else []), warnings)
+    validate_probe(root, review.get("readerProbe"), verdict.get("representativePaths") or [], errors)
     version = review.get("schemaVersion", 1)
     if type(version) is not int or version not in {1, 2}:
         issue(errors, "comprehension-version", "comprehensionReview", "Supported receipt versions are 1 (legacy) and 2 (promise coverage).")
@@ -199,7 +241,7 @@ def validate_comprehension(root, design, verdict, errors, *, required_dimensions
                   "Each declared promise needs a passed causal challenge; a changed-condition question alone cannot replace its mechanism.")
 
 
-def validate_page_comprehension(root, page, errors):
+def validate_page_comprehension(root, page, errors, warnings=None, *, strict_shortcuts=True):
     """Validate a declared page receipt, without deciding semantic adequacy."""
     review = page.get("comprehensionReview")
     value = page.get("path")
@@ -222,6 +264,8 @@ def validate_page_comprehension(root, page, errors):
         root, {"explanationProfile": "novice_mental_model"},
         {"representativePaths": [value], "comprehensionReview": review}, receipt_errors,
         required_dimensions={"causalContinuity", "scenarioApplication"},
+        warnings=warnings,
+        strict_shortcuts=strict_shortcuts,
     )
     for error in receipt_errors:
         # Reuse the pilot check format while keeping diagnostics page-specific.

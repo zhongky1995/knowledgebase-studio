@@ -450,9 +450,10 @@ def validate_pilot(root, errors, warnings, evidence):
         if item.get("result") != "pass" or not str(item.get("evidence", "")).strip():
             issue(errors, "pilot-assumption-result", f"assumptionsTested[{index}]", "Each assumption needs pass evidence.")
     design = read_json(control / "learning-design.json", errors, "learning design", required=False)
-    validate_comprehension(root, design, verdict, errors)
+    validate_comprehension(root, design, verdict, errors, warnings=warnings)
     if design.get("explanationProfile") == "novice_mental_model":
-        require_promise_review(verdict.get("comprehensionReview"), errors, "pilot-verdict")
+        require_promise_review(verdict.get("comprehensionReview"), errors, "pilot-verdict", root=root, pages=representative)
+    run_work_comparison_gate(root, errors, representative)
     counter = verdict.get("counterReview") or {}
     if counter.get("status") != "pass" or not (counter.get("reviewedRisks") or []):
         issue(errors, "pilot-counter-review", path, "A separate counter-review must challenge the pilot before scaling.")
@@ -511,8 +512,24 @@ def run_comprehension_gate(root, errors, evidence):
                   "Full novice content/QC readiness requires current page review evidence; pilot or structural passes alone are insufficient.")
         else:
             validate_page_comprehension(root, page, errors)
-            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"))
+            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"), root=root, pages=[page.get("path")])
     evidence["comprehensionReviewPages"] = [page.get("path") for page in required]
+
+
+def run_work_comparison_gate(root, errors, page_paths=None):
+    from kb_work_comparison import validate_work_comparison
+    coverage = read_json(root / "_kb-control/content-coverage.json", errors, "content coverage", required=False)
+    targets = [page for page in coverage.get("pages", []) if isinstance(page, dict)
+               and (page_paths is None or page.get("path") in page_paths)
+               and isinstance(page.get("workedExample"), dict) and "workComparison" in page["workedExample"]]
+    if not targets:
+        return
+    sources = read_json(root / "_kb-control/source-understanding.json", errors, "source understanding", required=False)
+    measurements = {f'{source.get("id")}#{claim.get("id")}': claim["measurement"]
+                    for source in sources.get("sources", []) or [] if isinstance(source, dict)
+                    for claim in source.get("coreClaims", []) or [] if isinstance(claim, dict) and "measurement" in claim}
+    for page in targets:
+        validate_work_comparison(root, page, errors, measurements)
 
 
 def validate_content(root, errors, warnings, evidence):
@@ -528,6 +545,7 @@ def validate_content(root, errors, warnings, evidence):
     for index, page in enumerate(pages):
         checked_project_path(root, page.get("path"), errors, f"pages[{index}]", require_file=True)
     run_comprehension_gate(root, errors, evidence)
+    run_work_comparison_gate(root, errors)
     activities = run_learning_gate(root, errors, warnings, evidence, "content")
     activity_manifest = read_json(control / "learning-activities.json", errors, "learning activities", required=False)
     for item in activity_manifest.get("items") or []:
@@ -638,6 +656,7 @@ def validate_app(root, errors, warnings, evidence):
 def validate_qc(root, errors, warnings, evidence):
     control = root / "_kb-control"
     run_comprehension_gate(root, errors, evidence)
+    run_work_comparison_gate(root, errors)
     read_text(control / "qc-report.md", errors, "QC report", minimum=500)
     path = control / "qc-verdict.json"
     verdict = read_json(path, errors, "QC verdict")
