@@ -45,6 +45,8 @@ New or semantically renewed novice reviews use the version 2 promise inventory, 
 
 For those new editorial approvals, follow `../../knowledgebase-content-builder/references/reader-task-review.md`: prepare current material with `kb_reader_probe.py`, actually attempt the promised task, and copy its returned `readerProbe` reference into the existing page review. Generate executable workload blocks before preparing review material. The plan fingerprints prepared materials too. A copied mechanism question relabeled as a changed-condition test fails in the editorial scope; on untouched rendering-regression pages it is reported as a warning rather than forcing historical content rewrites. Audience, relevant prerequisites and page/figure changes invalidate material; unrelated model additions and update bookkeeping do not.
 
+For novice semantic changes, complete the actual batches in `independent-execution.md` before creating the final update plan. Execution evidence is fingerprinted and the checker independently recomputes acceptance. A rendering label does not exempt changed prose or declared teaching figures; pure renderer-only pages retain their historical semantic evidence. New failed attempts invalidate the earlier accepted result until actually repaired and re-reviewed.
+
 ```sh
 python3 <plugin-root>/scripts/kb_update.py check --root <target> \
   --plan _kb-control/updates/<update-id>/plan.json \

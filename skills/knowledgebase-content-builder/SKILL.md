@@ -13,6 +13,8 @@ Read `references/readability-density.md` for every rewrite. Also read `reference
 
 For new pilots, renewed novice approvals, or recurring “cannot do it / cannot see the value” feedback, read `references/reader-task-review.md`. Choose the page's reader job, use the answer-free reader-probe tool before recording review answers, and inspect its actual figure pairs. For numeric AI workload comparisons, generate the checked table from `workedExample.workComparison`; do not mix ordinary software's contribution with AI's increment.
 
+Execute novice authoring/review batches through `../structured-knowledgebase-builder/references/independent-execution.md`. The runner applies scoped writer output, obtains two fresh reader judgments, and prevents continuing past an unresolved dependency. Read actual gaps before retrying; do not replace them with authored pass records.
+
 For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.
 
 For zero-prerequisite explanations of how a system works, read `references/novice-mental-model.md`. Select the worked-example pattern from the learning job, and preserve causal continuity before compressing prose.

@@ -758,6 +758,26 @@ VALIDATORS = {
 }
 
 
+def full_execution_scope(root, declared, errors):
+    """Full approvals cannot shrink their scope by editing coverage receipts."""
+    from kb_audit import load_config, scan_files
+    from kb_execution import STATE, batches
+    markdown, _ = scan_files(root, load_config(root))
+    pages = set(declared) | {str(path.relative_to(root)) for path in markdown}
+    if (root / STATE).exists():
+        try:
+            for batch in batches(root)['batches']:
+                values = batch.get('pages') if isinstance(batch, dict) else None
+                if not isinstance(values, list) or not values or any(not isinstance(p, str) or not p for p in values):
+                    raise ValueError('Every execution batch must declare its actual page scope.')
+                for value in values:
+                    checked_project_path(root, value, errors, 'execution batch page', require_file=True)
+                pages.update(values)
+        except (OSError, ValueError, TypeError, KeyError) as error:
+            issue(errors, 'execution-scope', STATE, str(error))
+    return sorted(pages)
+
+
 def validate_stage(root, stage):
     errors = []
     warnings = []
@@ -765,6 +785,23 @@ def validate_stage(root, stage):
     validator = VALIDATORS.get(stage)
     if validator:
         validator(root, errors, warnings, evidence)
+    if stage in {'pilot', 'content', 'qc', 'release'}:
+        from kb_execution import required, gate
+        coverage = read_json(root / '_kb-control/content-coverage.json', errors, 'coverage', required=False)
+        pages = [p['path'] for p in coverage.get('pages', []) if isinstance(p, dict) and p.get('path')]
+        if stage == 'pilot':
+            verdict = read_json(root / '_kb-control/pilot-verdict.json', errors, 'pilot', required=False)
+            pages = verdict.get('representativePaths', [])
+        if stage in {'qc', 'release'}:
+            pages = full_execution_scope(root, pages, errors)
+        # An active policy must not become optional when its page list is empty.
+        active = required(root, pages or ['<missing-page-scope>'])
+        if active and not pages:
+            issue(errors, 'execution-scope', '_kb-control/content-coverage.json', 'An independent approval requires a nonempty actual page scope.')
+        elif active:
+            execution_errors = gate(root, pages)
+            errors.extend(execution_errors)
+            evidence['independentReaderExecution'] = {'status': 'fail' if execution_errors else 'pass', 'pages': pages}
     return {
         "schemaVersion": 1,
         "stage": stage,

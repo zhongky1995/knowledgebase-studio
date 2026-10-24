@@ -282,8 +282,8 @@ class NoviceExplanationTests(unittest.TestCase):
         self.assert_error(report["errors"], "page-comprehension-required")
         self.page_review()
         report = check_update(self.root, self.update_plan(["lesson.md"]))
-        self.assertEqual(report["errors"], [])
-        self.assertEqual(report["status"], "pass")
+        self.assertEqual({e['kind'] for e in report['errors']}, {'execution-required'})
+        self.assertEqual(report["status"], "fail")  # Author-filled evidence is no longer enough.
 
     def test_renderer_only_novice_update_preserves_missing_editorial_evidence(self):
         (self.root / "renderer.js").write_text("// Synthetic presentation-only repair")

@@ -69,6 +69,8 @@ Distinguish deterministic integrity, editorial/simulated judgment, real browser 
 
 For new novice approvals or recurring task/value/diagram failures, use the content builder's `references/reader-task-review.md`: prepare current answer-free material with `kb_reader_probe.py`, actually attempt the task, and then record the existing review. Numeric AI workload examples can use `kb_work_comparison.py` to generate and verify their same-task comparison. These tools feed existing pilot/content/QC/update gates; they do not create another workflow or replace editorial judgment.
 
+For novice production or recurring reader failures, read `references/independent-execution.md`. Use `kb_execution.py` to dispatch bounded author/reader/counter-reader sessions and consume their actual results. Current novice stage/update approvals require these runs; a packet or author-filled pass cannot substitute. Failed dependencies stop later batches. Existing prose may use the explicit review-existing mode; this does not claim that a new writer produced it.
+
 Keep internal controls and archives out of the reader product. Package into an isolated release root when requested. A local release pass does not authorize repository creation, upload, hosting, sending or visibility changes; reuse any explicit destination authorization already given. Do not choose a license on the user's behalf.
 
 ## Completion And Continuity
