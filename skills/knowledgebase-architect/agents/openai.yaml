@@ -1,7 +1,7 @@
 interface:
   display_name: "Knowledgebase Architect"
-  short_description: "设计产品姿态、主路径、内容归属和迁移方案"
-  default_prompt: "Use $knowledgebase-architect to select the reader, course, workbench, operations, or reference posture and design the target architecture."
+  short_description: "围绕读者问题安排内容归属和阅读主线，在实际制作中完善结构"
+  default_prompt: "Use $knowledgebase-architect to develop the connected content structure and refine it alongside actual prose and presentation."
 
 policy:
   allow_implicit_invocation: true

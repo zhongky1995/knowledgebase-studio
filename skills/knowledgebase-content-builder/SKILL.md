@@ -1,80 +1,29 @@
 ---
 name: knowledgebase-content-builder
-description: Build or rewrite reader-facing knowledge-base content after architecture is locked. Use for pilot slices and full production across learning, operations, reference, or hybrid modes; minimum sufficient explanation; readability and cognitive load; SOPs, decisions, metrics, templates, examples, cases, practice, feedback, and content-build reporting.
+description: Write or revise useful, coherent knowledge-base prose, examples and connected explanations; diagnose feedback before choosing what to add, remove or restructure.
 ---
 
 # Knowledgebase Content Builder
 
-Produce the explanation the target reader needs, then remove unnecessary reading. Do not reopen approved architecture unless evidence makes it unworkable.
+The main author/editor owns content selection, explanation order, detail, diagrams and the connected reading experience. Read the current artifact yourself, including adjacent material and its real presentation where relevant. Integrate specialist findings; do not mechanically accumulate them.
 
-For conceptual explanations, evidence-heavy pages, or transferable judgment, read `references/evidence-to-judgment.md`. Go beyond source summaries: explain mechanisms, relevant competing explanations, and what the reader can decide next. Keep consequential uncertainty next to its claim. Scenes and predictive analogies are optional tools, not mandatory prose templates.
+Use `references/evidence-to-judgment.md` for source synthesis or reasoning-heavy content, `references/readability-density.md` for an actual readability problem, and `references/learning-mode.md` or `references/operations-mode.md` when the corresponding work needs them. Load only relevant guidance.
 
-Read `references/readability-density.md` for every rewrite. Also read `references/learning-mode.md` or `references/operations-mode.md` for the selected mode. For learning, obey the contract's product posture; do not treat “learning” as permission to require tasks or artifacts.
+Write toward the reader's question. Explain decisive mechanisms, use examples that support the actual claim, and distinguish evidence, inference and teaching assumptions. Source summaries and checklists do not automatically become useful explanations. Preserve uncertainty where it changes the reader's decision.
 
-For new pilots, renewed novice approvals, or recurring “cannot do it / cannot see the value” feedback, read `references/reader-task-review.md`. Choose the page's reader job, use the answer-free reader-probe tool before recording review answers, and inspect its actual figure pairs. For numeric AI workload comparisons, generate the checked table from `workedExample.workComparison`; do not mix ordinary software's contribution with AI's increment.
+For unfamiliar systems or suspected causal jumps, use `references/novice-mental-model.md`. Trace the relevant event and changed condition; do not impose operational steps, exceptions or exercises on every explanatory page. The remedy may be a clearer connection or a smaller claim rather than more detail.
 
-Execute novice authoring/review batches through `../structured-knowledgebase-builder/references/independent-execution.md`. The runner applies scoped writer output, obtains two fresh reader judgments, and prevents continuing past an unresolved dependency. Read actual gaps before retrying; do not replace them with authored pass records.
+For feedback, first inspect the actual passage and its place in the whole. Decide whether the problem lies in the question, structure, example, mechanism or expression, then add, delete, merge, move or replace as needed. Do not retain a weak passage simply because it has accumulated review evidence.
 
-For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.
+A sample can resolve uncertain voice, explanatory depth, structure or progression. Include adjacent content when continuity is the uncertainty. Already established choices need no ceremonial pilot or repeated user approval. Writing may expose a better architecture, teaching approach, diagram or interface; update the owning decision without discarding still-valid work.
 
-For zero-prerequisite explanations of how a system works, read `references/novice-mental-model.md`. Select the worked-example pattern from the learning job, and preserve causal continuity before compressing prose.
+Use `../structured-knowledgebase-builder/references/independent-execution.md` when a current doubt, consequence or explicit request calls for another reader. Give that reader actual content and the real reader need, not a suspected-defect list or expected answer. Read their attempt and reasons. The editor is responsible for the disposition; two model pass labels are not a substitute.
 
-Inventory the page's substantive explanation promises before drafting, including later guarantees. Explain the information and rule behind each decisive action, and test the promised result against a relevant changed condition. Use the novice reference's calibrated regressions for new pilots or recurring “话说一半” repairs; do not substitute a longer outline or more exceptions for the missing mechanism.
+Use the controller's `references/incremental-updates.md` to bind selected content and the actual editorial decision to current inputs. Ordinary work needs no separate per-page comprehension certificate, coverage/fidelity report or stage narrative. Existing source and ownership records remain useful; update them when the underlying decision changes. A current independent editorial decision is already the review record.
 
-## Pilot Stage
+Specialized declared assets keep their actual checks:
+- For a numeric AI work comparison, `kb_work_comparison.py` computes the same-task manual/software/AI comparison. Preserve provenance, measurement conditions and uncertainty; do not invent numbers to fill a template.
+- For a teaching interaction, consult the learning reviewer's `references/learning-activity-design.md` and maintain its shared activity manifest.
+- For a necessary explanatory visual, use the visual explainer and inspect the embedded result, including its fallback. A prompt or decorative diagram is not the asset.
 
-1. Build the representative slice selected by architecture.
-2. Include the hardest distinction and a cross-page transition when continuity matters. Test the actual connected slice, including embedded visuals and supported rendering, before scaling; use the comparisons in `references/novice-mental-model.md` when relevant.
-3. Trace the pilot from source claim → knowledge unit → page section. Compare essential points before and after rewriting; record preserved, intentionally changed, and unresolved meanings.
-4. Validate first-screen value, explanation budget, terminology, default action, pressure level, catalog exposure, task/ability output when applicable, navigation context, evidence treatment, and whether the page has a genuinely distinct reader job.
-   - When the pilot lesson requires a visual explanation, apply `knowledgebase-visual-explainer`, embed the real asset and fallback, and record its ID in the pilot verdict. Do not approve a prompt-only or decorative result.
-5. Write `_kb-control/pilot-review.md` with artifacts, source/knowledge-unit trace, fidelity comparison, decisions, checks, defects, repairs, and whether the sample is safe to scale.
-6. Write `_kb-control/pilot-verdict.json` from the plugin template. Run a separate counter-review that actively looks for abstract examples, terminology jumps, repeated legacy bodies, page-role confusion, exercise pressure, and inability to transfer. A rejected convention must be recalibrated on the reader's failed task before scaling it again. Do not scale while any required dimension fails.
-
-Do not scale a sample that still contains repeated setup, unclear canonical ownership, a page template forced onto every article, a customized opening pasted above a shared legacy body, or a default interaction that contradicts the intended product posture.
-
-## Content Stage
-
-1. Apply the accepted pilot conventions across the migration map.
-2. Rewrite high-value main-path pages first.
-3. Create `_kb-control/content-coverage.json` from `assets/control-templates/content-coverage.json`. Give every target page a primary question, reader change, owned knowledge units, essential preserved meanings, fidelity locations, distinctive value, and evidence status.
-4. Add only missing mechanisms, decisions, examples, tools, practice, evidence, and exceptions.
-   - When `learning-design.json` requires a worked example, follow its pattern: `judgment_revision` needs input, first attempt, judgment, revision, output and transfer; `mechanism_trace` needs input, participants, intermediate trace, output, boundary and transfer. Record the corresponding locations in coverage. Apply the promise to case/lab pages too. A template or principle list is not a worked example.
-   - Record example and practice locations plus realistic reading time in `content-coverage.json`. For novice explanations, follow the version 2 page-level comprehension review in `references/novice-mental-model.md`: connect the page's declared promises to specific causal checks and exact basis excerpts, then challenge a relevant changed condition. A pilot pass, two generic questions or populated location fields do not establish that later pages explain their conclusions.
-   - Record activity IDs in page coverage and the representative pilot verdict. Supply actual case material, evidence-based feedback, optional hints, and a readable fallback for interactions. Label scripted outcomes and fictional cases; keep first attempt and revised result distinguishable.
-   - Apply `knowledgebase-visual-explainer` for every required visual contract. Record IDs per page in `content-coverage.json` and maintain `_kb-control/visual-explanations.json`. Use no visual when the learning contract marks it unnecessary.
-5. Update cross-links and indexes as canonical pages move.
-6. Archive superseded material recoverably after replacements and routes exist.
-7. Run:
-
-   `python3 <plugin-root>/scripts/kb_content_check.py <target> --output <target>/_kb-control/content-integrity.json`
-
-   When visual explanations are required or the manifest exists, also run:
-
-   `python3 <plugin-root>/scripts/kb_visual_check.py <target> --output <target>/_kb-control/visual-check.json`
-
-8. Rerun `kb_audit.py` and inspect `near-duplicate-page`, `repeated-outline-pattern`, and shared-block warnings. Similar structure is allowed only when the reader job genuinely requires it; a common template is not evidence of consistency.
-9. Write `_kb-control/content-build-report.md` with files added/rewritten/merged/archived, knowledge-unit coverage, meanings preserved/changed/unresolved, gaps filled, assumptions, validation, and unresolved source risks.
-
-When activities are declared, run `python3 <plugin-root>/scripts/kb_learning_check.py <target>`. Record actual editorial/simulated review evidence; passing a structural checker does not validate learning efficacy. For a bounded lesson update, use the controller's `references/incremental-updates.md` instead of asserting a fresh full-corpus pass.
-
-## Universal Rules
-
-- One page answers one primary question, decision, or task.
-- Put a useful answer, model, action, or output in the opening section.
-- Give each important concept or rule one canonical home.
-- Use minimum sufficient explanation, not encyclopedic completeness.
-- Define terms before use and control simultaneous new relationships.
-- Attach practice and feedback to key abilities, not every article.
-- Use diagrams or animation only when they reduce the cognitive load of a real relationship or change. A prompt, storyboard, renderer source, or decorative motion is not a learner-facing asset.
-- Separate facts, inferences, internal defaults, and hypotheses.
-- Keep learner-facing source presentation separate from internal traceability. “Do not show sources to learners” never means deleting the evidence ledger.
-- Write for a reader who has not seen the authoring chat. Replace conversation callbacks and production/review commentary in body text, summaries, captions and glossary entries with self-contained explanations; keep provenance and factual qualifications that help the reader interpret the content.
-- Preserve the source's meaning, not its wording. A rewrite may compress language but must retain consequential mechanism, conditions, boundary, and uncertainty.
-- Synthesize disagreements explicitly. Do not flatten multiple sources into a false consensus.
-- Never fabricate cases, metrics, source behavior, or outcomes.
-- Label every case as real, anonymized, composite, or fictional. Fictional cases may teach a mechanism but cannot be presented as outcome evidence.
-
-## Gate
-
-Pass the pilot only after the representative slice survives comprehension, fidelity, usefulness, posture, and any required visual-explanation review. Pass content only when the migration map is accounted for, every knowledge unit has a canonical owner, every target page has traceable coverage and distinctive value, every required visual is an actual embedded and validated asset, public navigation points to canonical content, near-duplicate risks are resolved, and the build report identifies remaining evidence gaps.
+Legacy stage renewals still use their existing model, coverage and review contracts. The controller's workflow protocol describes that route; do not create those records merely because this writing skill was loaded.

@@ -88,10 +88,12 @@ def review_evidence(root, review, errors, label):
             file_in_root(root, value, errors, label)
 
 
-def activity_contracts(root, errors):
+def activity_contracts(root, errors, unit_ids=None):
     design = read_object(root / "_kb-control/learning-design.json", errors, optional=True)
     result = {}
     for lesson in records(design.get("lessons", []), errors, "lessons"):
+        if unit_ids is not None and lesson.get('unitId') not in unit_ids:
+            continue
         if not nonempty(lesson.get("unitId")):
             issue(errors, "learning-unit-id", "lessons", "Each lesson needs a unitId.")
             continue
@@ -217,10 +219,10 @@ def validate_activity(root, item, errors, *, phase):
 def check_learning(root, *, phase="content", required_ids=None, page_paths=None):
     root = Path(root).resolve()
     errors = []
-    contracts = activity_contracts(root, errors)
     scoped_pages = set(page_paths) if page_paths is not None else None
     model = read_object(root / "_kb-control/knowledge-model.json", errors, optional=True)
     owners = {unit.get("id"): unit.get("canonicalOwner") for unit in records(model.get("units", []), errors, "units") if nonempty(unit.get("id"))}
+    contracts = activity_contracts(root, errors, {u for u, p in owners.items() if p in scoped_pages} if scoped_pages is not None else None)
     required = set(required_ids) if required_ids is not None else {
         key for key, unit in contracts.items() if scoped_pages is None or owners.get(unit) in scoped_pages
     }
@@ -231,6 +233,8 @@ def check_learning(root, *, phase="content", required_ids=None, page_paths=None)
     items = records(manifest.get("items", []), errors, "items")
     valid_items = []
     for item in items:
+        if scoped_pages is not None and item.get('pagePath') not in scoped_pages and item.get('id') not in required:
+            continue
         if not all(nonempty(item.get(key)) for key in ("id", "unitId", "pagePath")):
             issue(errors, "learning-activity-id", manifest_path, "Activity id, unitId, and pagePath must be non-empty strings.")
         else:
@@ -260,6 +264,8 @@ def check_learning(root, *, phase="content", required_ids=None, page_paths=None)
     design = read_object(root / "_kb-control/learning-design.json", errors, optional=True)
     selected_ids = {item["id"] for item in selected}
     for lesson in records(design.get("lessons", []), errors, "lessons"):
+        if scoped_pages is not None and owners.get(lesson.get('unitId')) not in scoped_pages:
+            continue
         task = lesson.get("learningTaskType")
         lesson_ids = strings(lesson.get("activityIds", []), errors, "activityIds", required=False)
         relevant = set(lesson_ids) & (required | selected_ids)

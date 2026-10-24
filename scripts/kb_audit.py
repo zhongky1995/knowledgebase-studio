@@ -208,12 +208,17 @@ def scan_files(root, config):
     return sorted(markdown), sorted(app_files)
 
 
-def audit(root, strict=False, fail_severity="warning"):
+def audit(root, strict=False, fail_severity="warning", page_paths=None):
     config = load_config(root)
     long_paragraph_limit = int(config.get("longParagraphCharacters", 450))
     reading_characters_per_minute = int(config.get("readingCharactersPerMinute", 350))
     learner_forbidden_markers = [str(item) for item in config.get("learnerForbiddenMarkers", []) if str(item)]
     markdown_files, app_files = scan_files(root, config)
+    if page_paths is not None:
+        markdown_files = [(root / value).resolve() for value in page_paths]
+        if any(not path.is_relative_to(root) or not path.is_file() for path in markdown_files):
+            raise ValueError('Scoped audit pages must exist inside the knowledge base.')
+        app_files = []  # Shared app verification belongs to the declared delivery scope.
     errors = []
     warnings = []
     lengths = []

@@ -14,6 +14,10 @@ from kb_reader_probe import prepare, validate_probe, reader_probe_paths, sanitiz
 from kb_work_comparison import compute, render, validate_work_comparison
 from kb_workflow import stage_deliverable_digests
 from kb_update import plan_update
+from functools import partial
+
+# Preserve the original versioned contract in these compatibility regressions.
+plan_update = partial(plan_update, schema_version=2)
 
 
 class ReaderProbeTests(unittest.TestCase):

@@ -10,6 +10,10 @@ from kb_content_check import validate as check_content
 from kb_learning_check import check_learning
 from kb_stage_check import require_dimension, validate_learning_design
 from kb_update import check_update, plan_update
+from functools import partial
+
+# Preserve the original versioned contract in these compatibility regressions.
+plan_update = partial(plan_update, schema_version=2)
 from kb_workflow import stage_deliverable_digests
 from test_knowledgebase_studio import (
     SCRIPT_DIR, run, valid_content_coverage, valid_knowledge_model,

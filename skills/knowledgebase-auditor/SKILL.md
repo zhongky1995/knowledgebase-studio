@@ -9,6 +9,8 @@ Produce an evidence-backed baseline without rewriting public content.
 
 For empirical numbers or cross-source comparisons, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Add optional measurement context and actual verification records to the existing source ledger before drafting around those values. Distinguish original evidence from retellings, analysis levels, subgroup denominators, and unknown sample sizes. Do not require a quantitative contract for a non-quantitative claim.
 
+A full inventory and the report contracts below apply to an actual corpus audit or legacy staged renewal. For a local diagnosis, read the relevant sources and current passage, report consequential findings, and do not initialize a whole-product audit.
+
 ## Procedure
 
 1. Read root entry files, `AGENTS.md`, navigation, app routes, build scripts, archives summaries, planning/control files, and nearby truth sources.

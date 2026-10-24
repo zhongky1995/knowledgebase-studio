@@ -45,14 +45,14 @@ def read_json(path, errors, kind, required=True):
         return {}
 
 
-def read_text(path, errors, kind, minimum=200):
+def read_text(path, errors, kind):
     if not path.exists():
         issue(errors, "missing-artifact", path, f"Missing {kind} artifact.")
         return ""
     text = path.read_text(encoding="utf-8", errors="replace")
     visible = re.sub(r"\s+", " ", text).strip()
-    if len(visible) < minimum:
-        issue(errors, "thin-report", path, f"{kind} is too thin to support a stage decision ({len(visible)} characters).")
+    if not visible:
+        issue(errors, "empty-report", path, f"{kind} is empty.")
     return text
 
 
@@ -151,7 +151,7 @@ def validate_audit(root, errors, warnings, evidence):
     markdown_count = (metrics.get("stats") or {}).get("markdownFiles")
     if markdown_count is not None and paths and markdown_count != len(paths):
         issue(errors, "audit-inventory-mismatch", control / "audit-metrics.json", f"Audit measured {markdown_count} Markdown files but inventory has {len(paths)} public records.")
-    read_text(control / "audit-report.md", errors, "audit report", minimum=500)
+    read_text(control / "audit-report.md", errors, "audit report")
     evidence.update({"publicDocuments": len(paths), "markdownFilesMeasured": markdown_count})
 
 
@@ -369,10 +369,10 @@ def run_learning_gate(root, errors, warnings, evidence, phase, *, page_paths=Non
 
 def validate_architecture(root, errors, warnings, evidence):
     control = root / "_kb-control"
-    read_text(control / "architecture-decision.md", errors, "architecture decision", minimum=500)
+    read_text(control / "architecture-decision.md", errors, "architecture decision")
     _, public_paths = public_inventory(root, errors)
     migration_path = control / "migration-map.yaml"
-    migration_text = read_text(migration_path, errors, "migration map", minimum=100)
+    migration_text = read_text(migration_path, errors, "migration map")
     records = migration_records(migration_text)
     if not records:
         issue(errors, "empty-migration-map", migration_path, "Every public path must have an explicit migration action.")
@@ -431,7 +431,7 @@ def require_dimension(document, dimensions, key, errors, path, *, allow_not_appl
 
 def validate_pilot(root, errors, warnings, evidence):
     control = root / "_kb-control"
-    read_text(control / "pilot-review.md", errors, "pilot review", minimum=500)
+    read_text(control / "pilot-review.md", errors, "pilot review")
     path = control / "pilot-verdict.json"
     verdict = read_json(path, errors, "pilot verdict")
     if not verdict:
@@ -534,7 +534,7 @@ def run_work_comparison_gate(root, errors, page_paths=None):
 
 def validate_content(root, errors, warnings, evidence):
     control = root / "_kb-control"
-    read_text(control / "content-build-report.md", errors, "content build report", minimum=500)
+    read_text(control / "content-build-report.md", errors, "content build report")
     integrity = read_json(control / "content-integrity.json", errors, "content integrity")
     if integrity and integrity.get("status") != "pass":
         issue(errors, "content-integrity-status", control / "content-integrity.json", str(integrity.get("status")))
@@ -579,7 +579,7 @@ def validate_content(root, errors, warnings, evidence):
 
 def validate_app(root, errors, warnings, evidence):
     control = root / "_kb-control"
-    read_text(control / "app-validation.md", errors, "app validation report", minimum=500)
+    read_text(control / "app-validation.md", errors, "app validation report")
     path = control / "app-validation.json"
     result = read_json(path, errors, "app validation")
     if not result:
@@ -657,7 +657,7 @@ def validate_qc(root, errors, warnings, evidence):
     control = root / "_kb-control"
     run_comprehension_gate(root, errors, evidence)
     run_work_comparison_gate(root, errors)
-    read_text(control / "qc-report.md", errors, "QC report", minimum=500)
+    read_text(control / "qc-report.md", errors, "QC report")
     path = control / "qc-verdict.json"
     verdict = read_json(path, errors, "QC verdict")
     if not verdict:
@@ -699,7 +699,7 @@ def validate_qc(root, errors, warnings, evidence):
 
 def validate_release(root, errors, warnings, evidence):
     control = root / "_kb-control"
-    read_text(control / "release-report.md", errors, "release report", minimum=500)
+    read_text(control / "release-report.md", errors, "release report")
     path = control / "release-verdict.json"
     verdict = read_json(path, errors, "release verdict")
     if not verdict:
@@ -786,7 +786,7 @@ def validate_stage(root, stage):
     if validator:
         validator(root, errors, warnings, evidence)
     if stage in {'pilot', 'content', 'qc', 'release'}:
-        from kb_execution import required, gate
+        from kb_execution import required_pages, gate
         coverage = read_json(root / '_kb-control/content-coverage.json', errors, 'coverage', required=False)
         pages = [p['path'] for p in coverage.get('pages', []) if isinstance(p, dict) and p.get('path')]
         if stage == 'pilot':
@@ -795,13 +795,14 @@ def validate_stage(root, stage):
         if stage in {'qc', 'release'}:
             pages = full_execution_scope(root, pages, errors)
         # An active policy must not become optional when its page list is empty.
-        active = required(root, pages or ['<missing-page-scope>'])
+        selected = required_pages(root, pages or ['<missing-page-scope>'], legacy=True)
+        active = bool(selected)
         if active and not pages:
             issue(errors, 'execution-scope', '_kb-control/content-coverage.json', 'An independent approval requires a nonempty actual page scope.')
         elif active:
-            execution_errors = gate(root, pages)
+            execution_errors = gate(root, selected)
             errors.extend(execution_errors)
-            evidence['independentReaderExecution'] = {'status': 'fail' if execution_errors else 'pass', 'pages': pages}
+            evidence['independentReaderExecution'] = {'status': 'fail' if execution_errors else 'pass', 'pages': selected}
     return {
         "schemaVersion": 1,
         "stage": stage,

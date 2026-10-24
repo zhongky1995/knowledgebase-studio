@@ -15,7 +15,7 @@ For new or redesigned diagrams, follow `../knowledgebase-visual-explainer/refere
 
 ## Entry Decision
 
-- If no app exists and the project contract does not require one, skip the workflow stage with `kb_workflow.py skip --stage app --reason <reason>`.
+- If the requested deliverable needs no app, do not create one or initialize workflow state. Only an existing staged workflow needs `kb_workflow.py skip --stage app --reason <reason>`.
 - If an app exists or is required, inspect its routes, content generation, entrypoint, design system, and build/test commands before editing.
 
 ## Procedure

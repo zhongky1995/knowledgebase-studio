@@ -9,7 +9,7 @@ Turn one difficult relationship or change into one faithful visual explanation. 
 
 ## Entry Decision
 
-Use the visual contract in `_kb-control/learning-design.json`. If `required` is false, do not add an asset merely for visual variety. If it is true, keep the declared learning job, misconception, preferred mode, and success evidence.
+Use the current editorial need and any existing visual contract. Content and visual design may revise each other. A learning-design matrix is not required merely to draw a useful explanation. Do not add an asset for variety; a declared required asset still needs an actual, validated result.
 
 Prefer a static SVG or PNG when spatial arrangement can carry the explanation. Use animation only when time, flow, feedback, accumulation, transformation, or before/after state is part of the mechanism.
 

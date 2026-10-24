@@ -1,7 +1,7 @@
 interface:
   display_name: "Knowledgebase Content Builder"
-  short_description: "按样板批量生成少废话、可读、可执行的知识内容"
-  default_prompt: "Use $knowledgebase-content-builder to build the approved pilot or full knowledge-base content with minimum sufficient explanation."
+  short_description: "持续负责正文的取舍、解释顺序与连贯阅读，结合反馈进行修改"
+  default_prompt: "Use $knowledgebase-content-builder to write or revise connected explanations and choose what to keep, remove or restructure for the reader."
 
 policy:
   allow_implicit_invocation: true
