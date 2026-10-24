@@ -29,6 +29,8 @@ Prepare individual pages separately for maintenance; a connected pilot slice may
 
 Read the complete material and inspect relevant figures. Try the reader's task using only what the passage actually supplies. A changed condition can expose a missing premise, but first decide whether the question or example itself belongs in this chapter. Record the finding and editorial treatment in the current scoped decision or execution result. Do not supply missing steps only in an expected answer.
 
+When reading a solution would let the reviewer fill missing steps, use the executor's optional input-only trial described in `../../structured-knowledgebase-builder/references/independent-execution.md`. Select all published instructions and raw input for the actual task; keep the worked solution out of that first run. Inspect its concrete artifact or first blocked point, then compare against the complete page. Judge the argument separately with `evidence-to-judgment.md`: an executable example can still support an uninteresting or overstated conclusion.
+
 Legacy staged/schema 1–2 updates can retain their [comprehension receipt procedure](legacy-comprehension-records.md). Current schema 3 work does not copy a completed independent result into another page certificate.
 
 `kb_reader_probe.py check --root <target> --packet <packetPath> --page manuscript/page.md` checks material integrity. Its `readiness: not_assessed` is deliberate. A current packet plus completed fields still cannot establish good reasoning. If the reviewer already saw authoring context, label the review editorial/simulated; the packet does not make that person independent.

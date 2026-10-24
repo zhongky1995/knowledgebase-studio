@@ -5,7 +5,7 @@ description: Develop or revise the connected content structure, ownership and re
 
 # Knowledgebase Architect
 
-Start from the reader's situation and the questions worth answering. Explain how one part prepares for the next, what each part contributes, and which source supports consequential claims. Keep this in the existing design document; do not repeat it in multiple contracts.
+Start from the reader's situation and the questions worth answering. For explanatory work, develop a defensible central judgment before expanding its topics, then let each part supply a reason, mechanism, comparison or consequence. Explain how one part prepares for the next and which source supports consequential claims. Keep consequential choices in the existing design document.
 
 Read `references/architecture-modes.md` when selecting between reading, operations, reference or mixed use. For difficult explanatory or comparative material, consult the content builder's `references/evidence-to-judgment.md` or `references/novice-mental-model.md` as relevant.
 

@@ -17,6 +17,25 @@ python3 <plugin-root>/scripts/kb_execution.py run --root <target> --batch <id>
 
 The runner uses the authenticated modern local Codex CLI in fresh tool-free sessions. It preserves actual requests, response schemas, identities, events and results. A runtime error, missing evidence or stale material cannot be hand-filled into success. No new sidebar chat, API key setup, model pin or task-controller plugin is needed. This is bounded process execution, not a hostile-process filesystem security boundary.
 
+## Inspect reasoning and actual work
+
+New schema 2 batches use reading method 2: reconstruct the core judgment from its reasoning, test it against a plausible alternative or changed condition, then actually answer the reader request. The result uses the existing `attempt`, `basis`, `gaps` and `taskResults`; no additional argument report is required. Strong wording and a long list of good practices do not establish a useful viewpoint. References and direct instructions need no manufactured original claim. The main editor reads the argument as well as the attempt.
+
+When a worked answer could conceal missing material, add optional `trialInputs` to the relevant existing reader task. Select exact `{path, quote}` excerpts containing **all available task instructions and raw input**, omitting the worked solution and author verdict. Paths must belong to the assigned reader-facing pages; private sources cannot silently supply the reader's missing facts. For example:
+
+```json
+{
+  "id": "choose",
+  "request": "Choose an option from the supplied quotes and explain your calculation.",
+  "sourceQuote": "I need to compare these offers.",
+  "trialInputs": [{"path": "comparison.md", "quote": "The exact published instructions and quote data."}]
+}
+```
+
+This is a diagnostic option for the particular task, not an automatic extra reader for every page. The program first runs a fresh session with only the selected inputs and request, saves its actual output or blocked point, then passes that work to the independent full-text reader. It excludes the article, authoring task, sources, prior review and worked answer from this first prompt unless the editor mistakenly selected them as input. It verifies excerpt provenance, prompt/run identity and current material; it cannot decide whether the selected excerpts are complete or leak a solution. Inspect the selection and compare with the full page. Do not call a selection omission a manuscript defect.
+
+The first session can read, reason and calculate text; it uses explicitly supplied teaching assumptions for a simulation without demanding real customer records. It cannot operate external tools. A real software operation still needs the relevant authorized tool run and evidence. A successful model output also does not establish human comprehension or a sound chapter argument. Failed runtime evidence stops the declared work. A completed trial with missing material remains visible to the editor as `trial:task:<id>`, even if the full-text reader says pass; unresolved consequential findings cannot complete the scope. Refresh excerpts if edited prose changes their raw inputs.
+
 ## Read and decide
 
 A completed schema 2 review returns `awaiting_editor` (exit 1 until accepted), even when the reader says pass. Read the current manuscript and actual findings. Decide what the text needs, rather than adding every suggested paragraph. Do not rerun just to change a reader's label.
@@ -40,7 +59,7 @@ Attempts are bounded. Exhaustion stops dispatch. `replan --spec <changed-fields.
 
 ## Compatibility
 
-Unversioned/schema 1 batch specifications and existing batches retain their legacy writer/reader/counter-reader consensus semantics. The runner does not silently reinterpret their receipts. To change an existing batch to editorial decisions:
+Unversioned/schema 1 specifications retain their legacy writer/reader/counter-reader consensus semantics. Existing editorial batches without `methodVersion` retain reading method 1 and their exact prompts; new schema 2 batches record `methodVersion: 2`. Updating the plugin does not reinterpret old receipts. To move an existing legacy or method-1 editorial batch to the current reading method:
 
 ```sh
 python3 <plugin-root>/scripts/kb_execution.py migrate --root <target> --batch <id> --reason "Explain why this current scope needs editorial disposition"

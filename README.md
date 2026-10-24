@@ -12,6 +12,8 @@ Ordinary production uses the existing scoped planner/checker, not a mandatory ei
 
 Independent reading is selected for a current doubt, impact or explicit requirement. New batch specifications use one reader by default, optional further review and an accountable editor decision. The editor can question or decline suggestions without rewriting until two models agree. Findings can lead to deletion, merging, moving or replacement as well as additions. Actual runtime evidence and unresolved consequential findings remain visible.
 
+Explanatory writing starts with a defensible judgment that changes the reader's understanding or choice, developed through mechanisms, examples and meaningful comparisons. Review tests that reasoning before attempting the reader's task. When a worked solution could conceal missing input, an optional input-only text trial preserves actual work for the full-text reviewer to inspect.
+
 ## Included capabilities
 
 Eight skills cover coordination, source/corpus audit, content architecture, writing, learning review, explanatory visuals, local apps and delivery. Use the capability needed for the current question; loading a skill does not require the whole production sequence.
@@ -71,7 +73,7 @@ Use [independent execution](skills/structured-knowledgebase-builder/references/i
 
 ## Existing projects
 
-Existing eight-stage state, schema 1/2 scoped plans and old execution batches retain their original contracts. The [legacy protocol](skills/structured-knowledgebase-builder/references/workflow-protocol.md) explains continuing them. A new scoped check does not reset or promote a historical whole-product verdict. `kb_execution.py migrate` explicitly changes an old review batch to editorial decisions, preserves attempts and requires fresh evidence; it does not grant a pass.
+Existing eight-stage state, schema 1/2 scoped plans and old execution batches retain their original contracts. The [legacy protocol](skills/structured-knowledgebase-builder/references/workflow-protocol.md) explains continuing them. A new scoped check does not reset or promote a historical whole-product verdict. `kb_execution.py migrate` explicitly changes an old batch to the current reading method and editorial decisions, preserves attempts and requires fresh evidence; it does not grant a pass.
 
 ## Specialized tools
 

@@ -13,7 +13,9 @@ Reuse confirmed reader goals, product posture, sources and authorization. Diagno
 
 Develop the main line, test uncertain editorial choices where useful, write connected content, and inspect the result. These are related activities, not mandatory stages or approval checkpoints. Architecture, teaching, prose, diagrams and interface can inform each other during production. Use a sample only when it resolves a consequential uncertainty; a mature path can proceed directly. Keep valid work when revising a decision.
 
-Maintain the current editorial intent and content relationships in the existing brief/design document. Keep source evidence at its owning location; retain uncertainty and teaching assumptions. Load relevant sources and the accepted approach, not every historical complaint. Do not require separate model, learning, coverage, migration and self-review documents for an ordinary manuscript.
+Develop a defensible core judgment for explanatory work before expanding its topics. Ask what it explains or changes for this reader, what supports it and what would alter it. Let that judgment govern selection and progression; details and examples earn their place by developing it. The content builder's `references/evidence-to-judgment.md` shows the method. Direct reference and instructions need no manufactured thesis.
+
+Maintain the current editorial intent and content relationships in the existing brief/design document. Keep source evidence at its owning location; retain uncertainty and teaching assumptions. Load relevant sources and the accepted approach. Ordinary work needs no separate model, learning, coverage, migration or self-review documents.
 
 When feedback arrives, locate its cause in the question, structure, example, mechanism or expression before editing. Adding, deleting, merging, moving and replacing are all valid responses. Integrate advice rather than concatenating every suggestion. Material disagreements belong in the current editorial decision, not an endless loop seeking model consensus.
 
