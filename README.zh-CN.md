@@ -142,6 +142,8 @@ Knowledgebase Studio 使用 [MIT License](LICENSE) 开源。
 
 ### 用工具支持读者任务复核
 
+[独立执行程序](skills/structured-knowledgebase-builder/references/independent-execution.md)把小批写作、实际读者尝试和另一个新会话的复核接进现有门禁。`kb_execution.py init/run/check` 直接调用已认证的现代 Codex CLI，保存原始运行身份与结果。明确读者要求逐项产生实际答案；缺项、失败依赖、旧版本或手写通过回执都不能让新零基础审批继续。旧稿可选择只审读，纯排版更新保持原有范围。运行器需要现代 Codex CLI；校验本身仍只用 Python 标准库。新会话审读属于模型编辑判断，不能证明真人学会。
+
 [读者任务复核说明](skills/knowledgebase-content-builder/references/reader-task-review.md)区分理解、执行、判断和查用。`kb_reader_probe.py prepare --root <目标> --page <页面>` 从当前正文生成不含作者答案的材料、已有前提、后部片段及原图/去字图对照。新的零基础审批在既有评审中引用这些实际文件，完整流程与增量检查会核验其是否过期。复制同一问题和答案、仅更换检查类别会被拒绝。准备材料不等于完成审读，更不等于读者已经理解。
 
 对需要工时比较的 AI 案例，可在既有 `workedExample.workComparison` 中维护同一任务的数据，用 `kb_work_comparison.py <目标> --page <页面> --write` 生成正文里的人工、普通软件、AI 对照表。程序计算总人工作量、AI 增量与维护分摊，并拒绝正文表格漂移。教学假设保持明示，测量输入关联既有来源数据；任务是否可比、结果是否有经营价值仍需审读。两个工具均只依赖 Python 标准库。

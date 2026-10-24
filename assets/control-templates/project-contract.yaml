@@ -8,6 +8,7 @@ audiences: []
 reader_moment: ""
 default_user_action: ""
 first_success: ""
+reader_review_policy: auto  # novice approvals require independent runs; independent also enables them for other postures
 catalog_visibility: unresolved
 exercise_policy: unresolved
 progress_semantics: unresolved

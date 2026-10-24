@@ -326,6 +326,7 @@ def learning_asset_paths(root, page_paths=None):
 
 def stage_deliverable_paths(root, stage_id):
     from kb_reader_probe import reader_probe_paths
+    from kb_execution import evidence_paths
     paths = []
     if stage_id == "pilot":
         paths.extend(json_declared_paths(root, "pilot-verdict.json", "representativePaths"))
@@ -352,6 +353,10 @@ def stage_deliverable_paths(root, stage_id):
             candidate = scoped_deliverable(root, value)
             if candidate is not None:
                 paths.append(candidate)
+    if stage_id in {'pilot', 'content', 'qc', 'release'}:
+        selected = (read_json_if_possible(root / CONTROL_DIR / 'pilot-verdict.json').get('representativePaths', [])
+                    if stage_id == 'pilot' else [str(p.relative_to(root)) for p in public_content_paths(root)])
+        paths.extend(evidence_paths(root, selected))
     result = []
     seen = set()
     for candidate in paths:
@@ -486,13 +491,48 @@ def dependency_digests(root, state, stage):
     return result
 
 
+def execution_projection_issues(root, stage_id):
+    """Check live queue coherence without fingerprinting unrelated batch work."""
+    if stage_id not in {'pilot', 'content', 'qc', 'release'}:
+        return []
+    from kb_execution import STATE, BATCHES, batches, read, select
+    if not (root / STATE).exists():
+        return []
+    try:
+        queue = batches(root)
+        entries = queue['batches']
+        if any(not isinstance(b, dict) or not isinstance(b.get('id'), str)
+               or not re.fullmatch(r'[a-z0-9][a-z0-9-]{0,63}', b['id'])
+               or not isinstance(b.get('pages'), list) or not isinstance(b.get('after'), list)
+               for b in entries):
+            raise ValueError('Malformed execution batch identity or scope.')
+        if stage_id == 'pilot':
+            pages = read_json_if_possible(root / CONTROL_DIR / 'pilot-verdict.json').get('representativePaths', [])
+            selected = {b['id'] for b in entries if set(pages).intersection(b['pages'])}
+        else:
+            selected = {b['id'] for b in entries}
+        pending = list(selected)
+        while pending:
+            batch = select(queue, pending.pop())
+            for dependency in batch['after']:
+                if dependency not in selected:
+                    selected.add(dependency)
+                    pending.append(dependency)
+        for identity in sorted(selected):
+            if read(root / BATCHES / (identity + '.json')) != select(queue, identity):
+                raise ValueError(f'Execution queue differs from its batch projection: {identity}')
+        return []
+    except (OSError, ValueError, TypeError, KeyError) as error:
+        return [f'execution queue is inconsistent: {error}']
+
+
 def stale_stage_reasons(root, state):
     stale = []
     current_contract_digest = digest_path(contract_path(root))
     for stage in state.get("stages", []):
         if stage.get("status") != "pass":
             continue
-        reasons = []
+        reasons = execution_projection_issues(root, stage['id'])
         completed = completed_timestamp(stage)
         artifacts = stage.get("artifacts") or stage.get("required_artifacts", [])
         stored_artifacts = stage.get("artifact_digests", {})
@@ -542,7 +582,11 @@ def stale_stage_reasons(root, state):
             if not stored_deliverables:
                 reasons.append("stage lacks learner-facing deliverable fingerprints")
             else:
-                current_deliverables = stage_deliverable_digests(root, stage["id"])
+                try:
+                    current_deliverables = stage_deliverable_digests(root, stage["id"])
+                except (OSError, ValueError, KeyError, TypeError) as error:
+                    reasons.append(f'cannot verify current deliverables: {error}')
+                    current_deliverables = {}
                 for key in sorted(set(stored_deliverables) | set(current_deliverables)):
                     if stored_deliverables.get(key) != current_deliverables.get(key):
                         reasons.append(f"learner-facing deliverable changed after pass: {key}")
@@ -745,6 +789,7 @@ audiences: []
 reader_moment: ""
 default_user_action: ""
 first_success: ""
+reader_review_policy: auto
 catalog_visibility: unresolved
 exercise_policy: unresolved
 progress_semantics: unresolved
@@ -963,6 +1008,11 @@ def command_complete(args):
         print(json.dumps({"status": "needs-work", "next": action}, ensure_ascii=False, indent=2))
         return
 
+    if not dependencies_pass(state, stage):
+        fail('Cannot complete a stage before its dependencies pass.')
+    stale = stale_stage_reasons(root, state)
+    if stale:
+        fail('Cannot complete against stale upstream evidence; reconcile first: ' + stale[0]['stage'])
     generated_artifacts = validate_semantic_stage(root, args.stage)
     artifacts = validate_required_artifacts(root, stage, [*args.artifact, *generated_artifacts])
     stage["status"] = "pass"

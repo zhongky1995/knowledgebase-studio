@@ -1,0 +1,26 @@
+{
+  "batches": [
+    {
+      "id": "pilot",
+      "pages": ["manuscript/01-introduction.md"],
+      "briefPath": "_kb-control/reader-brief.md",
+      "task": "Revise this representative explanation for the confirmed reader and promised task.",
+      "sourcePaths": ["_kb-control/selected-source-excerpts.md"],
+      "authoringMode": "rewrite",
+      "after": [],
+      "maxAttempts": 3,
+      "maxInputChars": 60000
+    },
+    {
+      "id": "first-content-batch",
+      "pages": ["manuscript/02-method.md", "manuscript/03-case.md"],
+      "briefPath": "_kb-control/reader-brief.md",
+      "task": "Develop the next connected slice using the accepted pilot and relevant sources.",
+      "sourcePaths": ["_kb-control/selected-source-excerpts.md", "manuscript/01-introduction.md"],
+      "authoringMode": "rewrite",
+      "after": ["pilot"],
+      "maxAttempts": 3,
+      "maxInputChars": 60000
+    }
+  ]
+}

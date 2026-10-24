@@ -34,6 +34,8 @@ Prepare individual pages separately for maintenance; a connected pilot slice may
 
 `kb_reader_probe.py check --root <target> --packet <packetPath> --page manuscript/page.md` checks material integrity. Its `readiness: not_assessed` is deliberate. A current packet plus completed fields still cannot establish good reasoning. If the reviewer already saw authoring context, label the review editorial/simulated; the packet does not make that person independent.
 
+New novice approvals additionally require actual runs through `../../structured-knowledgebase-builder/references/independent-execution.md`. The executor prepares the same material, runs a fresh reader attempt and a separate counter-reader, and binds both to the exact input. Existing same-author receipts remain historical evidence. The executor's second judgment challenges the attempt itself so that a fluent reconstruction does not silently supply missing premises.
+
 ## Calibrate against an operational failure
 
 Weak version: “明确负责人和权限，安排经验维护时间，把团队贡献计入评价。” These may be sound principles, but a manager cannot inspect a completed arrangement or see why a specific decision was made.

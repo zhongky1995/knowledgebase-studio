@@ -9,6 +9,7 @@ from pathlib import Path
 from kb_content_check import validate as check_content
 from kb_explanation import require_promise_review
 from kb_reader_probe import reader_probe_paths
+from kb_execution import evidence_paths as execution_paths, required as execution_required, gate as execution_gate
 from kb_learning_check import check_learning, file_in_root, issue, read_object, records, strings
 from kb_workflow import read_json_if_possible, stale_stage_reasons, learning_asset_paths, visual_asset_paths
 
@@ -137,6 +138,8 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
         tracked.add(normalize(root, str(path)))
     for path in reader_probe_paths(root, affected):
         tracked.add(normalize(root, str(path)))
+    for path in execution_paths(root, reviewed):
+        tracked.add(normalize(root, str(path)))
     required = ["editor-review"] if reviewed or schema_version == 1 else []
     if structure_changed:
         required.append("architecture-review")
@@ -155,6 +158,7 @@ def plan_update(root, changed_paths, *, pages=(), delivery_paths=(), release_pat
         result.update(changeKind=change_kind, requestedPages=sorted(requested), reviewPages=sorted(reviewed),
                       regressionPages=sorted(affected),
                       checkScopes={kind: sorted(reviewed if kind == "editor-review" else affected) for kind in required})
+    result['independentReaderRequired'] = execution_required(root, reviewed)
     return result
 
 
@@ -190,6 +194,8 @@ def check_update(root, plan):
     if set(expected["affectedPages"]) != set(pages):
         issue(errors, "update-scope-gap", "affectedPages", "The changed dependencies affect additional pages.")
     checks = records(plan.get("checks", []), errors, "checks")
+    if expected['independentReaderRequired']:
+        errors.extend(execution_gate(root, expected.get('reviewPages', pages)))
     for kind in expected["requiredChecks"]:
         receipt = next((item for item in checks if item.get("kind") == kind), {})
         if receipt.get("status") != "pass":
@@ -202,7 +208,7 @@ def check_update(root, plan):
             file_in_root(root, value, errors, kind)
     control = root / "_kb-control"
     content = check_content(root, control / "source-understanding.json", control / "knowledge-model.json", control / "content-coverage.json", page_paths=pages,
-                            review_page_paths=expected.get("reviewPages", pages) if change_kind != "rendering" else [])
+                            review_page_paths=expected.get("reviewPages", pages))
     errors.extend(content["errors"])
     missing_reviews = set(content["comprehensionEvidence"]["missingPages"])
     for value in sorted(missing_reviews & set(expected.get("reviewPages", pages))):
@@ -212,8 +218,7 @@ def check_update(root, plan):
     coverage = read_json_if_possible(control / "content-coverage.json")
     for page in coverage.get("pages", []):
         if isinstance(page, dict) and page.get("path") in editorial_novice_pages:
-            if change_kind != "rendering":
-                require_promise_review(page.get("comprehensionReview"), errors, page.get("path"), root=root, pages=[page.get("path")])
+            require_promise_review(page.get("comprehensionReview"), errors, page.get("path"), root=root, pages=[page.get("path")])
     learning = check_learning(root, phase="app" if "browser" in expected["requiredChecks"] else "content", page_paths=pages)
     errors.extend(learning["errors"])
     visual_manifest = read_json_if_possible(control / "visual-explanations.json")
