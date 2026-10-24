@@ -1,67 +1,20 @@
 ---
 name: knowledgebase-learning-reviewer
-description: Design and audit the learning-product layer of a knowledge base. Use for prerequisite order, terminology, lesson outcomes, operational walkthroughs, worked examples, heuristic learning, evidence-based feedback, optional hints, transfer cases, and visual-explanation contracts; produce learning-design.json and shared learning-activities.json contracts without equating interaction completion with mastery.
+description: Help resolve learning, progression, examples, practice or transfer problems in a knowledge product, with source-grounded review of actual reader material.
 ---
 
 # Knowledgebase Learning Reviewer
 
-Prevent a technically complete content repository from being mistaken for a coherent course or learning manual.
+Use for a current teaching question or an explicitly requested learning review. Read the actual connected material from the target reader's starting point. Evaluate whether the sequence builds understanding, examples support the intended distinction, and important prerequisites appear before they are needed. A readable paragraph can still leave its promised mechanism unexplained.
 
-For evidence-based explanations or transferable judgment, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Review whether the learner can ask useful questions of the next claim, not just repeat today's answer. Test analogies by a new inference and their failure boundary; allow prediction and revision without forcing errors, hiding necessary help, or requiring a toolkit chapter.
+The main author/editor owns the integrated product. Explain findings with actual passages and likely causes; question chapter responsibilities or examples when warranted. Suggest deletion, merging, moving or replacement as well as additions. Do not impose one lesson template or turn every reading task into an exercise. The editor decides how findings affect the whole.
 
-For unfamiliar-system explanations, apply the shared [novice explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md) to the connected reader path.
+Use the content builder's `references/novice-mental-model.md` for a causal-continuity question, and `references/evidence-to-judgment.md` for transferable reasoning. A relevant changed condition can reveal a gap; repeating a definition cannot establish transfer. Do not equate a click, filled field or model answer with human understanding.
 
-## Architecture Review
+For operations, troubleshooting or teaching interactions, read `references/learning-activity-design.md`. A text walkthrough may be sufficient. Where an interaction is part of the product, maintain the existing shared activity manifest with actual feedback, recovery and accessible fallback. Respect the requested exercise/pressure policy.
 
-1. Read the project contract, inventory, knowledge model, architecture decision, and migration map.
-2. Separate orientation, core path, advanced path, reference, lab, workbook, and compatibility routes. Report source-file count and learner-visible unit count separately.
-3. For every main-path unit define:
-   - the learner's starting state and one observable learning result (inherit the model reader change unless it differs);
-   - prerequisite units and terms already introduced (inherit model dependencies unless the teaching path needs an explicit distinction);
-   - new terms and relationships introduced here;
-   - the likely misconception and consequential boundary;
-   - whether a worked example is required;
-   - whether a visual explanation is required, and why prose or a table is insufficient;
-   - transfer evidence and realistic reading time;
-   - exercise policy consistent with the product posture.
-4. Sequence units from prerequisites and conceptual load. Every main-path unit appears exactly once and after its dependencies.
-5. Create `_kb-control/learning-design.json` from `../../assets/control-templates/learning-design.json`. Use schema version 3: declare a learning task type, explicit visual decision, and activity IDs (empty when unnecessary). Include elective cases/labs that promise an example or activity, not only the core path. Existing schema 1/2 designs remain compatible.
+A visual is useful when it carries a relationship, flow, comparison or change that prose does not carry well. Coordinate with the visual explainer while developing the content; it need not wait for an architecture stage. Judge the actual embedded asset, not the presence of a diagram requirement.
 
-## Operational And Interactive Learning
+Record only the consequential teaching choices and findings in the existing editorial decision. Use a separate `learning-design.json` when the product's complexity or existing staged contract needs it; do not require a full lesson-by-lesson matrix for ordinary prose. Existing contracts keep their original validation when renewing a legacy stage. Reuse unit outcomes/prerequisites rather than repeating them.
 
-Read `references/learning-activity-design.md` when designing or reviewing operations, troubleshooting, or teaching interactions. Choose the learning action before a widget. A text walkthrough is sufficient when it connects concrete actions to observable results, checks, and continuation/recovery.
-
-For teaching interactions, share `_kb-control/learning-activities.json` with content, app, and QC. Define the learning goal, misconception, evidence-dependent feedback, optional support, changed transfer material, and a readable fallback. Context → prediction → consequence → explanation → revision → transfer is an optional pattern, not a universal lesson template. Allow novices a worked demonstration before independent attempts. Reader-led practice must remain skippable.
-
-Do not count a filled field, click, or correct guess as understanding. Distinguish editor review, simulated walkthrough, and real learner studies in the review evidence; never invent learner observations.
-
-## Visual-Explanation Contract
-
-Do not request a diagram merely to vary the page. Require one when relationship, flow, hierarchy, comparison, feedback, or state change is difficult to hold in prose. Prefer static for stable spatial structure and animation only when time or change carries part of the mechanism.
-
-When required, define a stable visual ID, the cognitive reason, preferred mode, likely misconception, and observable success evidence. The content stage must apply `knowledgebase-visual-explainer` and deliver the real embedded asset; a prompt or storyboard cannot satisfy the contract.
-
-## Worked Examples
-
-Choose the example pattern from the learning job using the content builder's [shared explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md). Record the teaching intention here and actual locations in coverage. Review the intermediate process and case provenance, not the presence of headings.
-
-## Pilot Counter-Review
-
-After the pilot is built, review it again from the position of a representative novice. Look specifically for:
-
-- an answer that is readable but still not learnable;
-- undefined terms or dependencies introduced out of order;
-- examples that omit the process promised by their pattern: first attempt, judgment and revision for judgment/creation; concrete participants, intermediate actions and changed conditions for mechanism explanations;
-- operations that jump from a request to success without observable results and recovery;
-- interactions that give generic feedback, repeat identical transfer material, hide necessary help, or require practice before reading;
-- visuals that decorate the page, flatten source boundaries, or stop at an unrendered prompt;
-- one lesson template forced onto different page jobs;
-- exercises or progress language that contradict the approved pressure policy;
-- navigation that names a route but does not let the reader enter it directly;
-- reading-time labels that ignore tables, decisions, and practice.
-
-Record the result in `_kb-control/pilot-verdict.json`. Do not approve scaling while posture, fidelity, usefulness, page-job distinctiveness, example depth, progression, transfer, or navigation fails.
-
-## Gate
-
-Pass only when the learning path is coherent independently of folder order, learner-visible units have distinct jobs, prerequisites precede use, required worked examples are concrete and locatable, every lesson has a justified visual decision, and practice matches the promised posture. Review at least one changed case against its evidence and rubric; only claim observed learner transfer when a real learner study supports it.
+Independent review, when needed, uses the controller's `references/independent-execution.md`. Distinguish editor judgments, model walkthroughs and actual learner observations. Report scope and uncertainty; never invent learner outcomes.

@@ -10,6 +10,10 @@ from pathlib import Path
 from kb_content_check import validate as check_content
 from kb_stage_check import validate_learning_design, validate_pilot, validate_content, validate_qc, run_comprehension_gate
 from kb_update import check_update, plan_update
+from functools import partial
+
+# Preserve the original versioned contract in these compatibility regressions.
+plan_update = partial(plan_update, schema_version=2)
 from kb_reader_probe import prepare
 from test_knowledgebase_studio import (
     SCRIPT_DIR, valid_content_coverage, valid_knowledge_model, valid_learning_design,

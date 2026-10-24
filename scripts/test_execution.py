@@ -795,7 +795,8 @@ class ExecutionTests(unittest.TestCase):
     def test_required_review_policy_and_no_page_scope(self):
         self.assertFalse(execution.required(self.root, ["one.md"]))
         execution.save(self.control / "learning-design.json", {"explanationProfile": "novice_mental_model"})
-        self.assertTrue(execution.required(self.root, ["one.md"]))
+        self.assertFalse(execution.required(self.root, ["one.md"]))
+        self.assertTrue(execution.required(self.root, ["one.md"], legacy=True))
         (self.control / "learning-design.json").unlink()
         self.write("_kb-control/project-contract.yaml", "reader_review_policy: independent\n")
         self.assertTrue(execution.required(self.root, ["one.md"]))
@@ -870,7 +871,7 @@ class ExecutionTests(unittest.TestCase):
         learning = {"errors": [], "warnings": [], "validatedIds": []}
 
         def manual_plan():
-            plan = kb_update.plan_update(self.root, ["one.md"], pages=["one.md"])
+            plan = kb_update.plan_update(self.root, ["one.md"], pages=["one.md"], schema_version=2)
             plan["checks"] = [{"kind": kind, "status": "pass", "pagePaths": plan["checkScopes"][kind],
                                "inputDigests": plan["inputDigests"], "evidencePaths": ["one.md"]}
                               for kind in plan["requiredChecks"]]

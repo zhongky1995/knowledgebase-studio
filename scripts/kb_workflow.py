@@ -289,7 +289,7 @@ def visual_asset_paths(root, visual_ids=None, include_manifest=False):
     if include_manifest and manifest.is_file():
         paths.append(manifest)
     for item in document.get("items") or []:
-        if selected and item.get("id") not in selected:
+        if visual_ids is not None and item.get("id") not in selected:
             continue
         for key in ("assetPath", "fallbackPath"):
             value = item.get(key)

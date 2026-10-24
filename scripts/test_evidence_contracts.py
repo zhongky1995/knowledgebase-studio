@@ -9,6 +9,10 @@ from pathlib import Path
 from kb_content_check import validate
 from kb_evidence import check_measurement
 from kb_update import plan_update
+from functools import partial
+
+# Preserve the original versioned contract in these compatibility regressions.
+plan_update = partial(plan_update, schema_version=2)
 from test_knowledgebase_studio import (
     valid_content_coverage, valid_knowledge_model, valid_learning_design,
     valid_source_understanding, write_locked_contract, write_valid_audit_artifacts,

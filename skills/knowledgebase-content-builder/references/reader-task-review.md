@@ -1,10 +1,10 @@
 # Review the reader's actual task
 
-Use for a new pilot, a renewed novice explanation approval, or feedback that a reader still cannot act, judge the value, follow a case or understand a figure. Reuse the current contract, page coverage, comprehension review and update/workflow gates. Do not create another stage or approval system.
+Use to investigate a current difficulty following a case, making a judgment, acting or understanding a figure. Read the whole selected passage and its role before treating the problem as a missing step. This is an optional diagnostic aid, not an automatic novice approval procedure.
 
 ## Choose the promise before the prose
 
-Set the owning coverage page's `readerJob` to `understand`, `perform`, `judge` or `retrieve`. Decide from the title, promised takeaway and actual reader situation, rather than calling every handbook chapter a conceptual explanation.
+Use the existing reader purpose or choose `--job` from `understand`, `perform`, `judge` or `retrieve`. Decide from the title, promised takeaway and actual reader situation, rather than calling every handbook chapter a conceptual explanation.
 
 | Job | Evidence the reader needs |
 | --- | --- |
@@ -27,16 +27,15 @@ The tool uses `readerJob` in coverage; `--job perform` is an explicit override f
 
 Prepare individual pages separately for maintenance; a connected pilot slice may use repeated `--page`. Any changed input invalidates a packet containing it. The whole-packet invalidation is conservative; it does not renew unrelated pages.
 
-1. Read `reader.md` and the actual figures. Reconstruct the explanation, complete the example or make the choice **before** consulting the author's promise/check list. Challenge the selected later passage as well as the primary task; the tool cannot know which passage is most consequential, so add a harder one when needed.
-2. Write the resulting answer/worked output and its published basis into the existing review checks. Record missing information in `unresolvedGaps`, repair the page, then prepare new material and actually retry. Do not supply missing steps only in an expected answer.
-3. Compare the result with the page's full promises. A mechanism question cannot become a changed-condition test by copying it and changing `dimension`. A valid second test supplies a specific changed condition and derives its different result. A common excerpt may legitimately support both.
-4. Copy the tool's returned `readerProbe` reference into that existing `comprehensionReview`. New novice pilot/content/QC and scoped editorial approvals require it. Historical receipts without it remain readable; rendering-only and unedited regression pages do not acquire that requirement. Existing stage/update fingerprints bind the actual prepared files too.
+Read the complete material and inspect relevant figures. Try the reader's task using only what the passage actually supplies. A changed condition can expose a missing premise, but first decide whether the question or example itself belongs in this chapter. Record the finding and editorial treatment in the current scoped decision or execution result. Do not supply missing steps only in an expected answer.
+
+Legacy staged/schema 1–2 updates can retain their [comprehension receipt procedure](legacy-comprehension-records.md). Current schema 3 work does not copy a completed independent result into another page certificate.
 
 `kb_reader_probe.py check --root <target> --packet <packetPath> --page manuscript/page.md` checks material integrity. Its `readiness: not_assessed` is deliberate. A current packet plus completed fields still cannot establish good reasoning. If the reviewer already saw authoring context, label the review editorial/simulated; the packet does not make that person independent.
 
-New novice approvals additionally require actual runs through `../../structured-knowledgebase-builder/references/independent-execution.md`. The executor prepares the same material, runs a fresh reader attempt and a separate counter-reader, and binds both to the exact input. Existing same-author receipts remain historical evidence. The executor's second judgment challenges the attempt itself so that a fluent reconstruction does not silently supply missing premises.
+When an independent review is currently needed, use `../../structured-knowledgebase-builder/references/independent-execution.md`. The current executor prepares material, runs an independent reader and records the main editor’s disposition. A further reviewer is optional for a remaining question. Legacy batch semantics are preserved until explicitly migrated.
 
-## Calibrate against an operational failure
+## Optional diagnostic example: an operational failure
 
 Weak version: “明确负责人和权限，安排经验维护时间，把团队贡献计入评价。” These may be sound principles, but a manager cannot inspect a completed arrangement or see why a specific decision was made.
 
@@ -85,8 +84,8 @@ Open the generated figure sheet as review material. For SVGs the program removes
 
 If a figure only repeats paragraphs in boxes, use a table/prose or redesign the actual relation. The source figure sheet is not the delivered app; retain real desktop/mobile inspection in the existing visual/app review. Do not require a diagram on every page or replace explanatory relationships with decorative icons.
 
-## Turn rejected output into a replayable check
+## Learn from a specific rejected output
 
-When feedback contradicts a previous pass, record the concrete reader failure and reproduce it with the current passage before editing. A good failure question asks for an output or prediction that the old version cannot support. Repair it, rerun it, then inspect other pages using the same failed method. If the sample convention itself failed, recalibrate the pilot before scaling that convention. Use existing workflow feedback/invalidation or the scoped update path; do not renew hashes to preserve an obsolete claim or add routine user approvals.
+When feedback contradicts a previous pass, record the concrete reader failure and reproduce it with the current passage before editing. A good failure question asks for an output or prediction that the old version cannot support. First diagnose whether the question, structure, example, mechanism or expression is wrong; then choose an appropriate treatment and inspect materially affected content. Do not automatically add detail to every page. If a shared editorial choice failed, reconsider that choice and its affected uses before repeating it. Use existing workflow feedback/invalidation or the scoped update path; do not renew hashes to preserve an obsolete claim or add routine user approvals.
 
 Keep structural integrity, arithmetic, editorial task review, actual UI behavior and observed learner outcomes separate in the final report. The tools make evidence inspectable and catch specific shortcuts; they cannot certify comprehension, narrative quality, visual effectiveness or real business returns.

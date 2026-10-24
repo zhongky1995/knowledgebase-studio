@@ -1,53 +1,20 @@
 ---
 name: knowledgebase-architect
-description: Design the target information architecture and migration plan for a knowledge base after audit. Use to select learning/operations/reference/hybrid mode, define capability or task paths, assign canonical homes, separate main-path/reference/tool/case material, decide merges/splits/archives, and produce `_kb-control/architecture-decision.md` plus `_kb-control/migration-map.yaml`.
+description: Develop or revise the connected content structure, ownership and reading routes of a knowledge product; plan migration when an existing corpus actually needs it.
 ---
 
 # Knowledgebase Architect
 
-Turn audit evidence into a connected knowledge product before dividing it into pages. Do not rewrite the corpus in this stage. For a design-only request, the architecture is the deliverable: proposed paths, source candidates and untested assumptions may remain explicitly provisional; production gates apply when production is requested.
+Start from the reader's situation and the questions worth answering. Explain how one part prepares for the next, what each part contributes, and which source supports consequential claims. Keep this in the existing design document; do not repeat it in multiple contracts.
 
-Read `references/architecture-modes.md`.
+Read `references/architecture-modes.md` when selecting between reading, operations, reference or mixed use. For difficult explanatory or comparative material, consult the content builder's `references/evidence-to-judgment.md` or `references/novice-mental-model.md` as relevant.
 
-For evidence-heavy learning or comparative units, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Design for the reader's intended use and one restatable idea. Connect evidence to mechanisms and usable judgments; retain uncertainty and counterexamples where they change the decision. Record quantitative comparisons on existing units only when needed, not in a parallel knowledge model.
+A useful structure distinguishes the connected main path from optional examples, tools and reference material. Concepts can have one canonical home and be linked from several routes. Page counts follow the explanation, not source-file counts or symmetrical modules. Preserve necessary connecting sentences instead of sending readers through an index for every prerequisite.
 
-For unfamiliar-system explanations, apply the shared [novice explanation standard](../knowledgebase-content-builder/references/novice-mental-model.md) to the connected reader path.
+Develop structure alongside actual prose and visuals. If an example cannot support a chapter's claim, reconsider the example or chapter responsibility. A directory approved earlier is useful context, not a reason to retain a weak chapter. Consult learning or interface specialists for a current problem, not as an automatic sequence.
 
-## Procedure
+Identify a representative slice only when it will settle a consequential uncertainty. Existing strong examples or a mature path may already supply the needed basis. A sample is not a new approval requirement when the user has already supplied direction and authorization.
 
-1. Read the project contract, inventory, audit report, and canonical sources.
-2. Choose primary and secondary modes plus an explicit product posture from the reader's actual moment and desired default action.
-3. Define:
-   - main entry and shortest useful path;
-   - capability, task, stage, or taxonomy structure;
-   - public sections and internal-only areas;
-   - canonical home for each important concept, rule, metric, tool, and case;
-   - page types and expected outputs;
-   - navigation and app consequences.
-   - default visible scope, pressure policy, exercise role, progress truth, and source presentation;
-   - an intent mirror describing the practical consequence of the chosen posture;
-   - when an app exists, a machine-readable `_kb-control/navigation-contract.json` defining the primary path, every intended visible direct entry, destination, and maximum click depth;
-4. Convert understood source claims into `_kb-control/knowledge-model.json` using `assets/control-templates/knowledge-model.json`. Each knowledge unit must own one reader question, core answer, reader change, necessary mechanism, boundary, source reference, prerequisites, role, and canonical page.
-5. Define progression from dependencies and reader difficulty, not from the old folder order or a desire for visually balanced modules.
-   - For any learning posture, apply `knowledgebase-learning-reviewer` and create `_kb-control/learning-design.json` from the plugin template.
-   - In schema version 3, identify each lesson's learning task type and activity IDs. Operations/troubleshooting need a text walkthrough or appropriate interaction. Include elective cases/labs with promised examples; do not impose interactions on reference pages.
-   - Domains check coverage; units define meaningful reader changes; routes organize entry and sequence; pages present connected material. Several units may share a page, and one unit may be referenced by several routes without copying its explanation. Keep necessary connecting sentences on the reading path.
-   - Every main-path unit must be covered. Reuse across progressions is valid; duplicate occurrences within one progression are not. Put required prerequisites before use, or identify what readers must already know at entry. Page/unit counts follow cognitive steps, not a quota.
-   - Count learner-visible units separately from source files, compatibility routes, wrappers, references, labs, and workbooks.
-   - For every main-path lesson, record whether a visual explanation is required. Require one only when a mechanism, relationship, flow, hierarchy, comparison, or state change is materially harder to understand in prose or a table. Declare its ID, reason, static/animated preference, misconception, and success evidence before production.
-6. Map every old public file to a target action and path. For new sources, use the existing source ledger and architecture/migration decision to identify the reader gap, affected canonical units, replacement/deepening/reference disposition and material not absorbed. A good source may improve explanation without adding a page or expanding the main path.
-7. Identify a representative pilot slice that tests the hardest architecture, source-synthesis, progression, and writing assumptions.
+For an actual migration, inventory the affected old paths and preserve or explicitly relocate their meanings and links before removing them. Ordinary new writing needs no fictional migration map. For a design-only request, unresolved implementation choices can remain labeled; do not demand finished prose, an app or release evidence.
 
-## Required Artifacts
-
-`architecture-decision.md` must state mode, product posture, users/tasks, reader moment, default action, first success, main path, target tree, canonical allocation rules, knowledge progression, pressure/progress/source policies, anti-goals, app impact, pilot scope, evidence gaps, and acceptance checks.
-
-`knowledge-model.json` must trace every important unit to understood source claims or an explicitly labeled internal standard. It must record mechanisms and boundaries, not only topic labels. One unit has one canonical owner even when it is referenced from many pages.
-
-`migration-map.yaml` must map each old path to an action, target path, canonical owner, dependencies, and preservation status. Do not delete superseded material before the replacement and route changes are validated.
-
-For learning products, `learning-design.json` must define route roles, learner-visible unit count, lesson starting state, one learning result, prerequisite units, new terms, likely misconception, worked-example requirement, visual-explanation decision, transfer evidence, and realistic reading time.
-
-## Gate
-
-Pass only when the pilot can be built without inventing page ownership, claims, mechanisms, prerequisites, or boundaries, and when the chosen posture does not contradict the contract's default action or anti-goals. Do not create pages solely to make every module visually symmetrical.
+Existing staged projects may own `knowledge-model.json`, `learning-design.json` and `migration-map.yaml`. Reuse their canonical decisions rather than duplicating them. Their legacy validation applies when renewing a whole-stage claim; a scoped editorial change does not silently renew it. See the controller's `references/workflow-protocol.md` for that compatibility route.

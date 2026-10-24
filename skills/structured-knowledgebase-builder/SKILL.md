@@ -1,80 +1,41 @@
 ---
 name: structured-knowledgebase-builder
-description: Design, build, diagnose, or update a coherent knowledge product from sources. Choose the requested endpoint—diagnosis, overall design, sample, local release, or scoped update—and coordinate the existing domain skills without expanding that scope.
+description: Design, build, diagnose, or update a coherent knowledge product from sources, keeping a responsible editor and work proportional to the requested outcome.
 ---
 
 # Structured Knowledgebase Builder
 
-Build a coherent, source-grounded knowledge product for a defined reader and situation. Success is the promised understanding, judgment, action or retrieval supported by a usable deliverable. File counts, polished pages and passed structural checks are supporting evidence, not that outcome.
+Own the reader's actual experience: useful understanding, judgment, action or retrieval, grounded in sources. A responsible author/editor reads and uses the current deliverable, chooses what belongs, and integrates specialist advice. Reports and model passes cannot take that responsibility.
 
-## Choose The Delivery Endpoint First
+## Work at the requested endpoint
 
-Reuse the user's confirmed decisions and inspect existing project artifacts before asking questions. Record `delivery_target` in the existing project contract or design brief; do not create a second control system. This is the endpoint of the current assignment, not the product posture.
+Reuse confirmed reader goals, product posture, sources and authorization. Diagnose or design without starting production state. A sample stays a sample; a local package does not authorize external publication. Do not ask again for an already settled direction.
 
-| Endpoint | Work and completion boundary |
-| --- | --- |
-| `diagnosis` | Inspect the relevant sources and deliver prioritized findings with evidence, uncertainty and recommended scope. Do not modify the knowledge product or initialize its workflow. |
-| `design` | Use audit, architect and relevant learning review guidance. Deliver reader goals, boundaries, connected content map, routes, presentation responsibilities, source allocation and unresolved decisions sufficient for the next step. Proposed paths and untested ideas stay labeled. Do not require finished lessons, app/browser evidence, packaging decisions or a release pass. |
-| `sample` | Make the explicitly requested representative slice and review its real content and presentation using the scoped route below. Do not silently scale it to a full corpus. |
-| `release` | Run the full production workflow below to a validated local entrypoint/package. |
-| `update` | Change and verify the selected content/app/package through the scoped route below; retain the truth of older whole-product evidence. |
+Develop the main line, test uncertain editorial choices where useful, write connected content, and inspect the result. These are related activities, not mandatory stages or approval checkpoints. Architecture, teaching, prose, diagrams and interface can inform each other during production. Use a sample only when it resolves a consequential uncertainty; a mature path can proceed directly. Keep valid work when revising a decision.
 
-A design assignment may finish with open implementation choices; that is not a blocked release. Save its decisions and next step in the existing architecture/design document. Do not initialize, advance or reset `workflow.json` for diagnosis/design, including when it already exists. When production is requested later, reuse the design and validate it through the normal stages. An absent `delivery_target` in an older contract keeps existing full-workflow behavior; current user scope always wins.
+Maintain the current editorial intent and content relationships in the existing brief/design document. Keep source evidence at its owning location; retain uncertainty and teaching assumptions. Load relevant sources and the accepted approach, not every historical complaint. Do not require separate model, learning, coverage, migration and self-review documents for an ordinary manuscript.
 
-Overall design precedes a pilot in a new or restructured product. A sample tests the hardest assumptions of that design; it cannot substitute for deciding the whole. Routine updates preserve the approved whole rather than reopening it.
+When feedback arrives, locate its cause in the question, structure, example, mechanism or expression before editing. Adding, deleting, merging, moving and replacing are all valid responses. Integrate advice rather than concatenating every suggestion. Material disagreements belong in the current editorial decision, not an endless loop seeking model consensus.
 
-## Route Only The Needed Guidance
+## Use only the relevant capability
 
-Use the stage skills below for their responsibilities. The shared artifact ownership map is in `references/workflow-protocol.md`; keep decisions at their owning location and reference them elsewhere.
+- `knowledgebase-auditor`: source comprehension or an existing corpus problem; a full inventory is for an actual corpus audit/migration.
+- `knowledgebase-architect`: connected questions, ownership and routes; adapt them when the actual content reveals a better structure.
+- `knowledgebase-content-builder`: clear, substantive prose and examples, with the main author retaining continuity.
+- `knowledgebase-learning-reviewer`: a current learning/progression/transfer question, not every article labeled for beginners.
+- `knowledgebase-visual-explainer` and `knowledgebase-app-builder`: required explanatory assets and the requested presentation.
+- `knowledgebase-qc-release`: current reading, functional and delivery checks at the requested scope.
 
-For `sample` or `update`, read `references/incremental-updates.md`. Use `kb_update.py plan/check`, not a new full workflow or automatic `reconcile --apply`. Inspect the affected reader path and new-source allocation before editing. A changed audience or product posture requires design reconsideration, not a silently broadened incremental pass.
+For system explanations, the content builder's `references/novice-mental-model.md` helps diagnose causal jumps. For evidence-heavy material, use its `references/evidence-to-judgment.md`. These are editorial tools, not universal page templates.
 
-For unfamiliar-system explanations, read `../knowledgebase-content-builder/references/novice-mental-model.md` in architecture and pilot. For explanation depth and source synthesis, the content builder owns the shared editorial guidance. Learning review sets learning intent, visual explanation makes required assets, app builds the experience, and QC challenges the delivered result. Do not add a second model, extra stage or universal lesson template for a project-specific technique.
+## Execution and evidence
 
-When the confirmed audience wants a zero-prerequisite system explanation, activate `explanationProfile: novice_mental_model` in a new design and carry its review into content/QC. Reuse the same reference for “话说一半” or incomplete-scene feedback during updates. Older designs may lack the profile even when their prose says “零基础”: inspect the audience and actual passages before choosing the review, and record page comprehension evidence for the selected explanation rewrite. Do not silently label legacy coverage as reviewed or force a whole-design migration for a rendering-only repair.
+Use [scoped work](references/incremental-updates.md) for ordinary production and maintenance. `kb_update.py plan/check` schema 3 works with actual manuscript, existing intent/sources and one current editorial decision. It does not initialize or advance an eight-stage workflow. Completed independent editorial execution supplies its own decision; do not duplicate it in a page self-certificate or stage report.
 
-## Full Production Workflow
+Arrange [independent execution](references/independent-execution.md) when a current doubt, impact or explicit request warrants it. Beginner status and historical feedback are not permanent triggers. A reader can challenge the chapter's value, premise, examples and progression as well as missing steps. The editor decides what to adopt using the current artifact. Further review is for a remaining question, not to force two models to agree.
 
-Locate the plugin root via `../../` from this skill directory. Read `references/workflow-protocol.md` before the first full run.
+Declared independent work must actually run. Relevant source/text/intent changes invalidate its evidence; missing or incomplete runs cannot be replaced by authored pass records. A consequential unresolved finding stops completion of its scope and dependent work. Unrelated work may continue. Program checks protect actual execution, version binding, arithmetic, local links, declared visual/interaction integrity and release hygiene; they do not certify useful writing or observed learning.
 
-1. If `_kb-control/workflow.json` is absent, run `python3 <plugin-root>/scripts/kb_workflow.py init --root <target> --goal <goal> --mode auto --app auto`.
-2. Reconcile existing evidence with `kb_workflow.py reconcile --root <target> --apply`, then `next --root <target> --claim`.
-3. Apply the returned stage skill, produce its required artifacts, and run `complete --root <target> --stage <stage> --artifact <path> ...` only after the work is actually reviewed.
-4. Continue with the automatically claimed stage. Run `check --root <target>` before reporting full completion.
+Existing staged projects remain readable under their old contract. Continue the [legacy staged workflow](references/workflow-protocol.md) only when it serves the assignment or is explicitly requested. A scoped change can coexist with a stale global verdict without claiming a global pass. Review-policy migration is explicit and never grants completion to old content.
 
-| Stage | Skill | Main responsibility |
-| --- | --- | --- |
-| intake | this controller | Reader/product/distribution contract |
-| audit | `knowledgebase-auditor` | Source understanding and current-product baseline |
-| architecture | `knowledgebase-architect` | Knowledge ownership, content relationships, routes and migration |
-| pilot | `knowledgebase-content-builder` | Representative slice and counter-review before scaling |
-| content | `knowledgebase-content-builder` | Complete, traceable reader-facing content |
-| app | `knowledgebase-app-builder` | Actual navigation/rendering/interaction, or an explicit skip |
-| qc | `knowledgebase-qc-release` | Current semantic and functional evidence |
-| release | `knowledgebase-qc-release` | Clean, validated local package or entrypoint |
-
-Learning-oriented postures use `knowledgebase-learning-reviewer` in architecture and pilot. Required visuals use `knowledgebase-visual-explainer` inside pilot/content. Neither adds a stage. An optional technique does not become compulsory merely because a template contains an example of it.
-
-## Lock Consequential Choices, Reuse Existing Authorization
-
-For production, resolve the product-experience and distribution fields of `assets/control-templates/project-contract.yaml`: audience and reader moment, default action and first success, posture, catalog visibility, exercise/pressure/progress policies, source presentation, anti-goals, distribution and license. Explain consequential unresolved choices in plain language before scaling. Approval must cover what the reader will do or see, not just a screenshot. Do not request the same decision again when the user has already made it.
-
-Continue ordinary reversible decisions within the requested endpoint. “Do it all” authorizes the safe in-scope stages, not a new product direction or external destination. Stop only for an indispensable missing source, contradictory scope, destructive work outside authorization, required authentication/permission, or repeated gate failure after the retry limit. Use `kb_workflow.py block` for a full-workflow blocker; diagnosis/design record the missing decision in their own deliverable.
-
-## Evidence And Correction
-
-Full-workflow transitions are controlled by `kb_workflow.py`, including stage checks and deliverable fingerprints. Never hand-edit workflow state or renew evidence by copying digests into old reports. Use `invalidate` from the earliest affected stage, or `feedback --kind <kind> --reason <reason>` for changed intent or rejected output. Missing system relationships return to architecture, failed explanation to pilot/content, rendering defects to app. See the protocol for state and retry semantics.
-
-Distinguish deterministic integrity, editorial/simulated judgment, real browser checks and observed learner evidence. A source, screenshot or report must support the actual claim; none alone proves comprehension. QC remains logically separate from production even when performed sequentially by one agent.
-
-For new novice approvals or recurring task/value/diagram failures, use the content builder's `references/reader-task-review.md`: prepare current answer-free material with `kb_reader_probe.py`, actually attempt the task, and then record the existing review. Numeric AI workload examples can use `kb_work_comparison.py` to generate and verify their same-task comparison. These tools feed existing pilot/content/QC/update gates; they do not create another workflow or replace editorial judgment.
-
-For novice production or recurring reader failures, read `references/independent-execution.md`. Use `kb_execution.py` to dispatch bounded author/reader/counter-reader sessions and consume their actual results. Current novice stage/update approvals require these runs; a packet or author-filled pass cannot substitute. Failed dependencies stop later batches. Existing prose may use the explicit review-existing mode; this does not claim that a new writer produced it.
-
-Keep internal controls and archives out of the reader product. Package into an isolated release root when requested. A local release pass does not authorize repository creation, upload, hosting, sending or visibility changes; reuse any explicit destination authorization already given. Do not choose a license on the user's behalf.
-
-## Completion And Continuity
-
-Report the requested endpoint and what was actually established. Diagnosis/design finish against their scoped deliverables; samples/updates require a current scoped check and retain global status separately; a full release requires `check` status `ok`, completed workflow, current QC/release evidence and validated deliverables. Never describe a bounded or structural pass as overall quality or learning efficacy.
-
-Save evidence and the next action before a context boundary. Resume full production by reconciling its checkpoint; resume scoped work from its saved plan and current inputs. Runtime goals or wakeups may continue an explicitly requested persistent task; the plugin state alone cannot self-wake. An external controller references this domain state, never duplicates it.
+Report the requested outcome, the actual editor judgment, checks performed and material limits. Preserve the current decision, relevant sources and unfinished work for continuation; do not make the reader product display internal controls.

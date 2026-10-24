@@ -129,10 +129,12 @@ def unsafe_css(value):
     return "@import" in value.lower() or any(not url.strip().strip("\"'").startswith("#") for url in urls)
 
 
-def prepare(root, pages, *, job=None):
+def prepare(root, pages, *, job=None, default_job=None):
     root = Path(root).resolve()
     if job is not None and job not in JOBS:
         raise ValueError("Choose understand, perform, judge or retrieve.")
+    if default_job is not None and default_job not in JOBS:
+        raise ValueError('Unknown default reader job.')
     if not pages:
         raise ValueError("Select the actual reader-facing pages.")
     control = root / "_kb-control"
@@ -156,7 +158,7 @@ def prepare(root, pages, *, job=None):
         relative = include(page)
         text = page.read_text(encoding="utf-8")
         row = by_path.get(relative, {})
-        selected_job = job or row.get("readerJob")
+        selected_job = job or row.get("readerJob") or default_job
         if selected_job not in JOBS:
             raise ValueError(f"State this page's readerJob in coverage or pass --job: {relative}")
         if job and row.get("readerJob") and job != row["readerJob"]:

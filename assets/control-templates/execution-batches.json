@@ -1,24 +1,16 @@
 {
+  "schemaVersion": 2,
   "batches": [
     {
-      "id": "pilot",
-      "pages": ["manuscript/01-introduction.md"],
+      "id": "selected-reading",
+      "pages": [
+        "manuscript/chapter.md"
+      ],
       "briefPath": "_kb-control/reader-brief.md",
-      "task": "Revise this representative explanation for the confirmed reader and promised task.",
-      "sourcePaths": ["_kb-control/selected-source-excerpts.md"],
-      "authoringMode": "rewrite",
+      "task": "Read the selected connected material for the confirmed reader and report what matters.",
+      "authoringMode": "review_existing",
       "after": [],
-      "maxAttempts": 3,
-      "maxInputChars": 60000
-    },
-    {
-      "id": "first-content-batch",
-      "pages": ["manuscript/02-method.md", "manuscript/03-case.md"],
-      "briefPath": "_kb-control/reader-brief.md",
-      "task": "Develop the next connected slice using the accepted pilot and relevant sources.",
-      "sourcePaths": ["_kb-control/selected-source-excerpts.md", "manuscript/01-introduction.md"],
-      "authoringMode": "rewrite",
-      "after": ["pilot"],
+      "counterReview": false,
       "maxAttempts": 3,
       "maxInputChars": 60000
     }

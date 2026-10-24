@@ -1,60 +1,26 @@
 ---
 name: knowledgebase-qc-release
-description: Validate and release a completed knowledge base. Use for semantic and deterministic QC, representative learning/task scenarios, readability sampling, evidence and source checks, link/route/build verification, package cleanliness, `_kb-control/qc-report.md`, `_kb-control/release-report.md`, and final share packages.
+description: Inspect current knowledge content and requested delivery, preserving factual, execution and version integrity without treating reports or model agreement as overall quality.
 ---
 
-# Knowledgebase QC And Release
+# Knowledgebase QC and Release
 
-Keep QC logically separate from implementation. Read `references/qc-checklist.md`.
+Read the current product along the intended reader path. Judge whether it answers worthwhile questions, advances understanding, uses examples that support its claims, and avoids both gaps and unnecessary reading. The responsible editor integrates findings and explains consequential choices; specialist pass labels do not discharge that responsibility.
 
-For novice approvals or rejected task/value explanations, use `../knowledgebase-content-builder/references/reader-task-review.md`. Prepare the actual answer-free material, attempt the reader's promised task, and inspect the figure pairs before consulting author answers. Record current `readerProbe` references in existing comprehension reviews. The gate rejects relabeled duplicate tests and stale materials; a prepared packet is not a performed review.
+Choose review work for current uncertainty, consequences or explicit requirements. Use `../structured-knowledgebase-builder/references/independent-execution.md` for an actual independent reader. That reader may challenge chapter value, sequence and examples, as well as causal jumps. The editor can accept or decline advice with current evidence. Do not keep changing content solely to obtain consensus.
 
-Use `../structured-knowledgebase-builder/references/independent-execution.md` for actual author/reader/counter-reader dispatch. The stage/update gates require current accepted runtime evidence for novice semantic approvals, independently of authored QC fields. Missing runs, unresolved reader gaps and stale inputs prevent completion; retain separate browser, graphic and learner-evidence claims.
+Use `../structured-knowledgebase-builder/references/incremental-updates.md` for current scoped checks. Reuse an unchanged, valid result. Recheck changed content, shared dependencies and the actual affected presentation, not unrelated chapters. An incomplete required review or unresolved consequential finding blocks the affected claim and its dependencies. Historical evidence remains historical when its inputs change.
 
-For evidence-heavy or judgment-oriented content, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Challenge causal overclaims, incomparable numbers, hidden uncertainty, unverified measurements labeled verified, and analogies that imply false mechanisms. Rerun `kb_content_check.py` for current quantitative contracts; structural presence does not prove source accuracy. Inspect the risky component families and final outputs affected by a repair, not only the edited example.
+Apply deterministic checks where their subject exists: local links and files, source/measurement consistency, computed comparisons, declared learning/visual assets, navigation/rendering and the requested package. Treat stylistic metrics as clues for reading, not automatic rewriting commands. A short manuscript does not need a model, coverage inventory, two stage reports and a duplicate self-review to be inspected.
 
-For declared teaching activities, read `../knowledgebase-learning-reviewer/references/learning-activity-design.md` and run `python3 <plugin-root>/scripts/kb_learning_check.py <target> --phase qc`. Review operational continuity, case provenance, evidence-dependent feedback, optional support, changed transfer material, and the component/fallback agreement. Record `learningActivities` as a separate verdict dimension when activities exist.
+For actual web/app delivery, inspect the final entrypoint and relevant reader actions in a real browser, including supported narrow/desktop layouts and meaningful failure states. Plain manuscript delivery does not imply an application or browser requirement. If a required check cannot run, report it accurately.
 
-For novice mental-model projects, use the comprehension checks in `../knowledgebase-content-builder/references/novice-mental-model.md` during final editorial review. Challenge the delivered pages' decisive mechanisms and later substantive sections, not just their opening scenes. Check whether the published text actually supports the review's expected explanation; missing steps supplied only in the review are defects. Inspect the content checker's separate comprehension coverage and the current page receipts for the claimed editorial scope. Recheck the full scenario, weak cross-page transitions, concrete sentence subjects and mobile visual meaning. Distinguish content review, rendering checks and real reader observations; increased page/word/image counts do not establish learning quality.
+For a requested package:
+- Confirm the actual destination format, audience and rights using existing authorization.
+- Build into an isolated release root. Exclude private controls, archives, caches, secrets, local paths and test traces.
+- Use `kb_release_check.py` with the existing release config; retain exact file-specific exclusions.
+- Check the packaged result, not just its editable source. Publishing/uploading requires authorization for that destination.
 
-Find the page's explanation promises from the actual title, answer and later sections before consulting the author's promise list. Compare the two, work backward from each promised result to its published basis, and test the relevant interruption, simultaneous request, late reply, first use or external participant. New semantic reviews use version 2 promise-to-check evidence; legacy receipt integrity does not establish that inventory. For recurring gaps, calibrate against the linked regression comparisons, including concise complete and reference examples. Do not approve by matching words such as “ID”, “transaction”, “encryption” or “mapping”.
+Report content judgment, deterministic checks, actual UI observations and observed learner evidence separately. Model review cannot establish that real people learned or that a business benefit occurred. Name the inspected scope and outstanding limitations.
 
-For new or redesigned diagrams, follow `../knowledgebase-visual-explainer/references/diagram-design-system.md` and complete schema 2 visual design receipts against the actual embedded files. Inspect arrow endpoints, grouping, color-independent meaning, clipping and rendered labels; preserve desktop/mobile figure screenshots and file hashes. A legacy schema 1 pass does not establish these checks.
-
-## QC Stage
-
-1. Run `kb_audit.py` in strict mode after resolving intentionally allowed patterns through configuration.
-2. Inspect representative pages of every major page type.
-3. Test the primary reading, learning transfer, work task, or lookup scenario using only published material, according to the product posture.
-4. Check intent invariants, first-screen orientation, pressure policy, catalog visibility, exercise/progress boundaries, evidence labels, source presentation/freshness, internal defaults, terminology, canonical links, navigation, and app/build behavior.
-   - If visual explanations are required or declared, run `kb_visual_check.py`, inspect the actual embedded assets, and verify learning job, misconception correction, source fidelity, readability, alternative text, and animated fallback/reduced-motion behavior as a separate QC dimension.
-5. Reconcile the migration map and public file tree.
-6. Write `_kb-control/qc-report.md` with pass/fail evidence and required repairs.
-7. Write `_kb-control/qc-verdict.json` from the plugin template. Report corpus integrity, product architecture, content quality, evidence, learning transfer when applicable, and app experience when applicable as separate dimensions with evidence. `checksNotRun` and critical issues must be empty for a pass.
-
-Required dimensions cannot pass as `not_applicable`. Distinguish required checks from optional learner studies: an editor review or simulated walkthrough can support local readiness, while `learnerStudyStatus: not_run` must remain explicit and cannot support claims of learning gains. If the user requires learner testing, it becomes a required check and cannot be waived by this distinction.
-
-Return failed items to the earliest affected stage. Do not repair silently and claim independent review; record what changed and rerun QC.
-
-## Release Stage
-
-1. Confirm QC passed for the current workflow revision.
-2. Read the distribution contract: `distribution_mode`, `audience_scope`, `release_root`, `external_publish_authorized`, and `license_policy`.
-3. Build the requested local package or identify the validated local entrypoint. For `static_site`, `single_file`, or `archive`, use an isolated release root rather than copying the working repository wholesale.
-4. Exclude `_kb-control`, `_task-control`, `_meta`, archives, internal planning, caches, test traces, secret-like files, local absolute paths, and irrelevant repositories.
-5. Copy `../../assets/control-templates/knowledgebase-release.json` into the internal control area, adjust it to the approved contract, and run:
-
-   `python3 <plugin-root>/scripts/kb_release_check.py <release-root> --config <release-config> --output <release-check-report>`
-
-   Keep marker-scan exclusions exact and file-specific. A validator may contain forbidden strings as test patterns; learner content, runtime files, and whole directories must not receive blanket exclusions.
-
-6. Verify the package in a real browser after packaging. At minimum cover the entrypoint, first reading path, Markdown tables, images, relative article links, search scope, optional-practice state, desktop/mobile overflow, and console errors.
-7. If the audience is public, require an explicit `all_rights_reserved` or `explicit_files` license decision. Do not infer CC, MIT, or another license from the content type.
-8. Write `_kb-control/release-report.md` with scope, changes, validation, package/entrypoint, audience, license decision, external-publication status, remaining risks, and maintenance triggers.
-9. Write `_kb-control/release-verdict.json`. `kb_workflow.py complete` will rerun the release package checker, write `_kb-control/release-check.json`, require real-browser evidence for the final entrypoint, and fingerprint the release root.
-
-Release readiness ends at the validated local package or entrypoint by default. Do not create a repository, push code, enable hosting, upload files, send the package, or change external visibility without separate explicit authorization for that named destination.
-
-## Gate
-
-QC passes only with evidence bound to the current contract and learner-facing deliverable fingerprints. A link/build-only pass is not a content-quality, learning-transfer, or visual-explanation pass. Required visuals must be real, embedded, source-faithful, accessible assets. Release passes only when the local package or entrypoint is usable and clean, not merely when source files or a Markdown report exist. A successful external upload cannot substitute for local release checks. Any newer contract, architecture, content, app, visual, or validation artifact makes QC and release stale.
+Existing eight-stage workflows retain their legacy QC/release verdicts and gates when those whole-stage conclusions are renewed; see the controller's `references/workflow-protocol.md`. A schema 3 scoped check never promotes those old conclusions or silently clears a failed review.

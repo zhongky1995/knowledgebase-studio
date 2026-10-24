@@ -437,6 +437,53 @@ def validate(root, source_path, model_path, coverage_path, phase="content", page
     }
 
 
+def check_manuscript(root, page_paths):
+    """Check actual scoped content without requiring duplicate author self-reviews.
+
+    This does not establish the legacy model/coverage contract or renew an old
+    comprehension receipt. Existing declared calculations remain enforceable.
+    """
+    from kb_audit import audit
+    root = Path(root).resolve()
+    errors, warnings = [], []
+    report = audit(root, page_paths=page_paths)
+    errors.extend(report['errors'])
+    warnings.extend(report['warnings'])
+    control = root / '_kb-control'
+    coverage = read_json(control / 'content-coverage.json', errors, 'coverage') if (control / 'content-coverage.json').exists() else {}
+    sources = read_json(control / 'source-understanding.json', errors, 'sources') if (control / 'source-understanding.json').exists() else {}
+    model = read_json(control / 'knowledge-model.json', errors, 'knowledge model') if (control / 'knowledge-model.json').exists() else {}
+    units = model.get('units', [])
+    selected = {u.get('id') for u in units if u.get('canonicalOwner') in page_paths}
+    while True:
+        dependencies = {v for u in units if u.get('id') in selected for v in u.get('dependencies', [])}
+        if dependencies.issubset(selected):
+            break
+        selected.update(dependencies)
+    source_ids = {s.get('id'): {c.get('id') for c in s.get('coreClaims', [])} for s in sources.get('sources', [])}
+    referenced = {str(ref) for u in units if u.get('id') in selected for ref in u.get('sourceRefs', [])}
+    for ref in referenced:
+        source_id, separator, claim_id = ref.partition('#')
+        if source_id not in source_ids or (separator and claim_id not in source_ids[source_id]):
+            issue(errors, 'unknown-source-ref', ref, 'An existing declared source/claim must still resolve; a scoped editorial judgment cannot replace it.')
+    measurements = {f'{s.get("id")}#{c.get("id")}': c['measurement']
+                    for s in sources.get('sources', []) for c in s.get('coreClaims', []) if 'measurement' in c}
+    for ref, measurement in measurements.items():
+        if ref in referenced or ref.split('#')[0] in referenced:
+            check_measurement(measurement, errors, warnings, ref)
+    for page in coverage.get('pages', []):
+        if page.get('path') not in page_paths:
+            continue
+        validate_work_comparison(root, page, errors, measurements)
+        if 'comprehensionReview' in page:
+            issue(warnings, 'historical-self-review', page['path'],
+                  'Author-filled comprehension evidence is retained as history, not renewed or claimed by this scoped editorial check.')
+    return {'status': 'fail' if errors else 'pass', 'validationKind': 'scoped-manuscript-integrity',
+            'comprehensionEvidence': {'status': 'not_assessed', 'missingPages': [], 'requiredPages': [],
+                                      'limitation': 'Current editorial judgment is in the scoped decision or actual execution result, not a per-page self-certificate.'},
+            'errors': errors, 'warnings': warnings}
+
+
 def main():
     parser = argparse.ArgumentParser(description="Validate source understanding, knowledge units, and page-level fidelity coverage.")
     parser.add_argument("root", help="Knowledge-base root")

@@ -1,62 +1,49 @@
-# Scoped lesson and interaction updates
+# Scoped production and updates
 
-Use for a bounded change to existing lessons, examples, operations, or teaching interactions. A different audience/product posture or course-wide redesign first returns to overall design; a requested full release then uses the production workflow. This route records current evidence for selected work; it never resets or promotes `_kb-control/workflow.json`.
+Use the existing `kb_update.py` planner/checker for ordinary manuscript production, samples, maintenance and requested local delivery. This is an extension of the incremental route, not a new workflow state machine. It never initializes, advances or resets `workflow.json`.
 
-An explicitly requested standalone lesson sample can also use this limited route without initializing a full-course workflow. First lock the sample's audience/posture and establish only the baseline the checks need: project contract, understood source/claim ledger, knowledge model, learning design, and page coverage; add the activity manifest only when needed. Label authored teaching assumptions as internal standards rather than pretending they came from research. Leave global workflow status uninitialized and report a sample-only claim. For audit scans, use `.knowledgebase-audit.json` to declare public roots and internal/raw-material directories; an underscore-prefixed directory is not automatically excluded. File counts do not establish learner-visible unit counts.
+## Current route (plan schema 3)
 
-## Scope and implementation
+Work from the actual manuscript, the existing reader brief/design and relevant sources. Maintain source provenance and uncertainty where they belong. Ordinary prose needs no separate knowledge model, learning design, coverage inventory, migration map or page self-review. Existing structured records remain available for complex products and declared assets.
 
-1. Inspect the project contract and existing source, knowledge-model, learning-design, coverage, navigation, activity, and app contracts. Respect existing product posture. If the user asks only for diagnosis, report findings without implementing this workflow.
-2. Identify changed pages and shared dependencies. Use the learning reviewer for teaching decisions, content builder for examples/operations, and app builder for actual interactions. Read the shared `learning-activity-design.md` reference under the learning-reviewer skill when applicable.
-   Treat “话说一半”“场景不详尽” as possible missing reasoning, not automatically as a wording issue. Inspect the cited passage and analogous mechanisms within the requested scope; repair the existing explanation using the novice reference when relevant. For “箭头压字” or Markdown defects, establish the presentation defect first and check its affected consumers; do not infer that the user requested a conceptual rewrite from a screenshot alone.
-3. Update source/claim understanding, unit ownership, examples, activity IDs, and page coverage as needed. Keep old schema 1/2 designs supported; when adopting schema 3, fill its required fields consistently across the design. This metadata migration does not require rewriting unrelated lesson bodies.
-4. Build the actual requested deliverables, including generated content, search/navigation, assets, and any separately requested local release. Inspect source-to-app-to-package consistency. Do not publish externally without authorization for the destination.
-
-## Bind checks to this update
-
-After the files/build outputs to be checked exist, create a plan with every changed input. Repeat `--path` for additional files or scoped directories. Declare generated app/delivery directories explicitly if `app-validation.json.appPaths` does not already name them; use `--release-path` for a requested packaged output. Never pass the whole knowledge-base root as a tracked directory.
+After the candidate files exist, select the changed inputs and reading scope:
 
 ```sh
 python3 <plugin-root>/scripts/kb_update.py plan --root <target> \
-  --path lessons/example.md --page lessons/example.md \
-  --delivery-path app/dist \
-  --output _kb-control/updates/<update-id>/plan.json
+  --path manuscript/chapter.md --page manuscript/chapter.md \
+  --context _kb-control/reader-brief.md --context sources/relevant.md \
+  --output _kb-control/updates/current/plan.json
 ```
 
-Omit `--delivery-path` for text-only work without an app. The planner includes declared activity assets, prerequisites, and control contracts, infers page references, and expands shared app or structural-contract changes to coverage pages. For lesson-level metadata edits, give explicit `--page` values; without them, changed control files conservatively include all coverage pages. A declared activity asset maps to its owning page rather than automatically treating it as shared app code. Review scope yourself: arbitrary build/runtime dependencies cannot always be inferred. Add `--page` for other affected learner pages and record missing baseline contracts instead of fabricating a pass.
+Repeat `--path`/`--page`/`--context` as needed. An existing project contract or `_kb-control/reader-brief.md` can supply intent without a second brief. Relevant supporting sources must be included as context; the program cannot discover evidence omitted by the editor. Do not track the whole project root. Declare app outputs with `--delivery-path` and requested packages with `--release-path`.
 
-Schema 2 separates `reviewPages` (content/meaning to reread) from `regressionPages` / `affectedPages` (all impacted pages to check for consistency and behavior). `requestedPages` preserves the explicit `--page` selection so broad generated/app effects do not silently become a claim of full editorial review. `checkScopes` gives the page list for each required receipt. Use `--change-kind rendering` only after establishing that a shared app change is purely presentation/rendering: it needs browser regression across its consumers, not a new explanation review. Unclassified shared app changes retain conservative editorial scope because code can also contain teaching content or feedback; edited lessons, declared media and activities retain editorial review. Structural changes still need architecture review. Include additional semantic dependents with `--page`; automatic file inference cannot judge whether a changed explanation affects another lesson.
+The planner separates changed editorial pages from rendering regression pages. Changed prose or declared explanatory assets still carry semantic consequences even if a shared renderer changes at the same time. It projects existing structured contracts onto the relevant content and prerequisites; unrelated contract rows and unrelated review queues do not stale this work.
 
-All affected pages still undergo content/learning integrity checks, with prerequisites and actual outputs fingerprinted. Old schema 1 plans remain readable with their conservative scope; do not relabel historical receipts as schema 2.
+Perform the required checks on those current inputs, then record the actual observation in the same plan:
 
-The plan contains input fingerprints and required checks. Run the actual editorial review and, when required, architecture review, browser tests, and release checks on those exact inputs. Record evidence under `_kb-control/updates/<update-id>/` outside tracked deliverable directories. Each entry in `checks` has:
+```sh
+python3 <plugin-root>/scripts/kb_update.py record --root <target> \
+  --plan _kb-control/updates/current/plan.json --kind editor-review \
+  --summary "Describe the actual reading/use judgment and consequential dispositions." \
+  --output _kb-control/updates/current/plan.json
+```
 
-- `kind`: one of the plan's required checks;
-- `status`: `pass` only after performing the check;
-- `inputDigests`: the exact plan fingerprints that the check actually inspected;
-- `pagePaths` (schema 2): the exact list from `checkScopes[kind]`, reviewed before marking the check passed;
-- `evidencePaths`: non-empty report/trace paths inside the knowledge base.
+The program binds the observation to current scope and input/contract fingerprints; no hand-copied hashes or separate editor report is needed. Use `--status needs_work` for unresolved work. Browser/release checks additionally name actual files with `--evidence`. Recording an observation does not perform the check: stale plans are rejected, and an authored summary cannot stand in for a declared independent run.
 
-Do not copy fingerprints into an old report to relabel it as current. Evidence must describe the affected pages, checks actually run, observed results, defects/rechecks, and limitations. Browser evidence must include real interaction checks when applicable. The updater validates receipt binding and file existence; it does not itself run a browser or prove a report's claims.
-
-For novice explanation changes, record current page `comprehensionReview` evidence in existing content coverage for `reviewPages` as described in `novice-mental-model.md` under the content-builder skill. Missing legacy receipts on other regression pages are a coverage limitation, not permission to expand the editorial claim or force an unrelated rewrite. If a rendering-only repair changes page bytes with an existing receipt, retain its now-stale receipt as historical evidence and refresh it only after rereading; never update its hash alone to obtain a pass.
-
-New or semantically renewed novice reviews use the version 2 promise inventory, check references and basis excerpts from that same reference. Discover the actual promises before filling the receipt; adding fields to an old pass is not a new review. The updater requires version 2 only for novice main-path/case pages in `reviewPages`; schema 1 evidence remains readable and is reported as legacy promise coverage on other regression pages. Do not backfill unrelated pages during a rendering repair or claim semantic completeness from keyword scans or declared coverage alone.
-
-For those new editorial approvals, follow `../../knowledgebase-content-builder/references/reader-task-review.md`: prepare current material with `kb_reader_probe.py`, actually attempt the promised task, and copy its returned `readerProbe` reference into the existing page review. Generate executable workload blocks before preparing review material. The plan fingerprints prepared materials too. A copied mechanism question relabeled as a changed-condition test fails in the editorial scope; on untouched rendering-regression pages it is reported as a warning rather than forcing historical content rewrites. Audience, relevant prerequisites and page/figure changes invalidate material; unrelated model additions and update bookkeeping do not.
-
-For novice semantic changes, complete the actual batches in `independent-execution.md` before creating the final update plan. Execution evidence is fingerprinted and the checker independently recomputes acceptance. A rendering label does not exempt changed prose or declared teaching figures; pure renderer-only pages retain their historical semantic evidence. New failed attempts invalidate the earlier accepted result until actually repaired and re-reviewed.
+If current independent review is required, declare the selected batch using `independent-execution.md`. An editorial batch stores the main editor's decision with the actual run, so the updater does not demand another editor receipt for those same pages. Pending, failed or stale declared execution still blocks the scoped check. A beginner label or an old feedback event alone does not require new independent runs.
 
 ```sh
 python3 <plugin-root>/scripts/kb_update.py check --root <target> \
-  --plan _kb-control/updates/<update-id>/plan.json \
-  --output _kb-control/updates/<update-id>/check.json
+  --plan _kb-control/updates/current/plan.json \
+  --output _kb-control/updates/current/check.json
 ```
 
-Changed source, contracts, assets, or delivery files invalidate the plan. Rebuild affected outputs, create a fresh plan, and rerun the affected checks. Do not edit away `requiredChecks` to skip checks: the checker re-derives them from the current scope.
+The checker recomputes required checks and affected inputs. Changed relevant evidence requires rereading/rechecking; deleting a required check from the plan does not bypass it. Local links and declared calculations/assets remain checked. Deterministic success does not establish useful prose or real learner outcomes.
 
-## Completion boundary
+## Existing projects
 
-The result is explicitly `selected-update-only`. Report the affected lessons/deliverables, current checks, any learner study not run, and `globalWorkflow` separately. A historical global pass may remain stale; explain that without turning the bounded update into an unsolicited whole-course rebuild. A scoped pass is not a global quality certificate or external publication approval.
+Plans with schema 1/2 retain their legacy coverage, comprehension and evidence contracts; use `--schema-version 2` to continue that route. Do not relabel old receipts as schema 3. A newly generated schema 3 plan is an explicit scoped editorial check, not an upgrade of prior whole-product evidence. Old per-page self-reviews stay historical; they are not silently refreshed.
 
-Save the plan, evidence, and check result before a context/turn boundary. Resume by checking the same inputs and scope, not by trusting the previous prose summary.
+Existing execution batches keep their original consensus rule until explicitly migrated with `kb_execution.py migrate --batch <id> --reason <reason>`. Migration preserves attempts and scope, invalidates the prior acceptance and requires a fresh run plus a current editor decision. It cannot turn an unresolved old failure into completion.
+
+The result remains `selected-update-only`, even if all current manuscript pages were selected. Report the actual inspected deliverables and `globalWorkflow` separately. A stale old global pass is not an instruction to rebuild unrelated work, nor permission to claim the whole workflow passed. Local readiness does not authorize external publication.
