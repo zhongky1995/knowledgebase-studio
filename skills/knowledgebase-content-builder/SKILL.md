@@ -11,6 +11,8 @@ For conceptual explanations, evidence-heavy pages, or transferable judgment, rea
 
 Read `references/readability-density.md` for every rewrite. Also read `references/learning-mode.md` or `references/operations-mode.md` for the selected mode. For learning, obey the contract's product posture; do not treat “learning” as permission to require tasks or artifacts.
 
+For new pilots, renewed novice approvals, or recurring “cannot do it / cannot see the value” feedback, read `references/reader-task-review.md`. Choose the page's reader job, use the answer-free reader-probe tool before recording review answers, and inspect its actual figure pairs. For numeric AI workload comparisons, generate the checked table from `workedExample.workComparison`; do not mix ordinary software's contribution with AI's increment.
+
 For operational lessons or teaching interactions, also read `../knowledgebase-learning-reviewer/references/learning-activity-design.md`. Maintain the shared `_kb-control/learning-activities.json`; do not invent a second interaction specification. Preserve prerequisite → action/input → observable result → check → continuation/recovery even while shortening prose. Screen recordings are not mandatory.
 
 For zero-prerequisite explanations of how a system works, read `references/novice-mental-model.md`. Select the worked-example pattern from the learning job, and preserve causal continuity before compressing prose.
@@ -25,7 +27,7 @@ Inventory the page's substantive explanation promises before drafting, including
 4. Validate first-screen value, explanation budget, terminology, default action, pressure level, catalog exposure, task/ability output when applicable, navigation context, evidence treatment, and whether the page has a genuinely distinct reader job.
    - When the pilot lesson requires a visual explanation, apply `knowledgebase-visual-explainer`, embed the real asset and fallback, and record its ID in the pilot verdict. Do not approve a prompt-only or decorative result.
 5. Write `_kb-control/pilot-review.md` with artifacts, source/knowledge-unit trace, fidelity comparison, decisions, checks, defects, repairs, and whether the sample is safe to scale.
-6. Write `_kb-control/pilot-verdict.json` from the plugin template. Run a separate counter-review that actively looks for abstract examples, terminology jumps, repeated legacy bodies, page-role confusion, exercise pressure, and inability to transfer. Do not scale while any required dimension fails.
+6. Write `_kb-control/pilot-verdict.json` from the plugin template. Run a separate counter-review that actively looks for abstract examples, terminology jumps, repeated legacy bodies, page-role confusion, exercise pressure, and inability to transfer. A rejected convention must be recalibrated on the reader's failed task before scaling it again. Do not scale while any required dimension fails.
 
 Do not scale a sample that still contains repeated setup, unclear canonical ownership, a page template forced onto every article, a customized opening pasted above a shared legacy body, or a default interaction that contradicts the intended product posture.
 

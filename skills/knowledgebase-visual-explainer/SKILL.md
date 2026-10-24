@@ -21,6 +21,7 @@ If changing a condition or judging evidence is the learning action, coordinate w
 2. Identify the entities, relationship or change, one consequential misconception, and one to five source-grounded facts.
 3. Prefer recognizable domain objects and one clear visual relationship. Use a metaphor only when it helps, then reconnect it to the real mechanism; do not assemble a collage of icons.
 4. Design one to four reading beats for a static visual, or four to six beats for animation. Give every beat one explanatory job.
+   - For new/revised novice figures, use `../knowledgebase-content-builder/references/reader-task-review.md` and `kb_reader_probe.py` to inspect actual original/masked SVG pairs. Check what relationship the geometry contributes; the tool cannot judge that contribution, remove outlined glyphs or replace embedded desktop/mobile review. A text comparison may be clearer as a table.
 5. Produce the actual asset. A prompt, storyboard, or renderer source without the exported file is not a deliverable.
 6. Embed the asset in its canonical page and add alternative text that explains the mechanism rather than repeating the title.
 7. For animation, provide an SVG or PNG fallback and test reduced-motion behavior. Require a seamless loop only when repetition improves understanding.

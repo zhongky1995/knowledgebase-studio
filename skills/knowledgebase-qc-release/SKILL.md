@@ -7,6 +7,8 @@ description: Validate and release a completed knowledge base. Use for semantic a
 
 Keep QC logically separate from implementation. Read `references/qc-checklist.md`.
 
+For novice approvals or rejected task/value explanations, use `../knowledgebase-content-builder/references/reader-task-review.md`. Prepare the actual answer-free material, attempt the reader's promised task, and inspect the figure pairs before consulting author answers. Record current `readerProbe` references in existing comprehension reviews. The gate rejects relabeled duplicate tests and stale materials; a prepared packet is not a performed review.
+
 For evidence-heavy or judgment-oriented content, read `../knowledgebase-content-builder/references/evidence-to-judgment.md`. Challenge causal overclaims, incomparable numbers, hidden uncertainty, unverified measurements labeled verified, and analogies that imply false mechanisms. Rerun `kb_content_check.py` for current quantitative contracts; structural presence does not prove source accuracy. Inspect the risky component families and final outputs affected by a repair, not only the edited example.
 
 For declared teaching activities, read `../knowledgebase-learning-reviewer/references/learning-activity-design.md` and run `python3 <plugin-root>/scripts/kb_learning_check.py <target> --phase qc`. Review operational continuity, case provenance, evidence-dependent feedback, optional support, changed transfer material, and the component/fallback agreement. Record `learningActivities` as a separate verdict dimension when activities exist.

@@ -43,6 +43,8 @@ For novice explanation changes, record current page `comprehensionReview` eviden
 
 New or semantically renewed novice reviews use the version 2 promise inventory, check references and basis excerpts from that same reference. Discover the actual promises before filling the receipt; adding fields to an old pass is not a new review. The updater requires version 2 only for novice main-path/case pages in `reviewPages`; schema 1 evidence remains readable and is reported as legacy promise coverage on other regression pages. Do not backfill unrelated pages during a rendering repair or claim semantic completeness from keyword scans or declared coverage alone.
 
+For those new editorial approvals, follow `../../knowledgebase-content-builder/references/reader-task-review.md`: prepare current material with `kb_reader_probe.py`, actually attempt the promised task, and copy its returned `readerProbe` reference into the existing page review. Generate executable workload blocks before preparing review material. The plan fingerprints prepared materials too. A copied mechanism question relabeled as a changed-condition test fails in the editorial scope; on untouched rendering-regression pages it is reported as a warning rather than forcing historical content rewrites. Audience, relevant prerequisites and page/figure changes invalidate material; unrelated model additions and update bookkeeping do not.
+
 ```sh
 python3 <plugin-root>/scripts/kb_update.py check --root <target> \
   --plan _kb-control/updates/<update-id>/plan.json \

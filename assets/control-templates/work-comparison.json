@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "order-preparation",
+  "basisKind": "teaching_assumption",
+  "basis": "同一笔订单的四条变更消息；三种做法都完成需求整理、交接和专业确认。",
+  "period": "周",
+  "volume": 60,
+  "sensitivityVolumes": [10],
+  "limitations": "只比较人工作量，不含模型费用、一次连接与培训成本，也不把自然等待算成人工作业。省下的时间能否形成经营收益仍需实际试用。",
+  "activities": [
+    {"id": "changes", "label": "找单和比对变更"},
+    {"id": "handoff", "label": "准备各岗问题和交接材料"},
+    {"id": "confirm", "label": "专业与客户确认"},
+    {"id": "correction", "label": "新增的AI纠错"}
+  ],
+  "methods": [
+    {"id": "manual", "label": "原人工做法", "fixedHumanMinutes": 0, "allocations": [
+      {"activityId": "changes", "handler": "human", "humanMinutes": 6},
+      {"activityId": "handoff", "handler": "human", "humanMinutes": 4},
+      {"activityId": "confirm", "handler": "human", "humanMinutes": 5},
+      {"activityId": "correction", "handler": "not_needed", "humanMinutes": 0, "reason": "原做法没有AI输出；原有核对已在前两项计入"}
+    ]},
+    {"id": "software", "label": "仅用普通软件", "fixedHumanMinutes": 0, "allocations": [
+      {"activityId": "changes", "handler": "software", "humanMinutes": 4, "reason": "程序按客户关联旧单，人员仍比对原话"},
+      {"activityId": "handoff", "handler": "human", "humanMinutes": 4},
+      {"activityId": "confirm", "handler": "human", "humanMinutes": 5},
+      {"activityId": "correction", "handler": "not_needed", "humanMinutes": 0, "reason": "没有AI输出；原有核对已计入"}
+    ]},
+    {"id": "ai", "label": "软件加AI", "fixedHumanMinutes": 60, "allocations": [
+      {"activityId": "changes", "handler": "ai", "humanMinutes": 1, "reason": "AI合并变更，人核数量和颜色依据"},
+      {"activityId": "handoff", "handler": "ai", "humanMinutes": 2, "reason": "AI起草各岗材料，人核缺项与问题"},
+      {"activityId": "confirm", "handler": "human", "humanMinutes": 5},
+      {"activityId": "correction", "handler": "human", "humanMinutes": 1}
+    ]}
+  ]
+}

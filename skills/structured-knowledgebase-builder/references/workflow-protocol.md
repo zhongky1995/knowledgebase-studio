@@ -79,6 +79,7 @@ The plugin must remain correct under the fourth option; higher layers improve li
 - A changed stage artifact invalidates that stage and every dependent stage.
 - QC and release cannot remain passed when content, app validation, architecture, or the contract is newer than their evidence.
 - Pilot, content, app, QC, and release record fingerprints for their actual learner-facing pages, app paths, and release root. Editing only the deliverable, without editing a report, still makes the relevant stage stale.
+- New novice editorial approvals also reference tool-prepared reader material inside the existing comprehension review. Pilot/content/QC and scoped-update fingerprints include those packets and actual material files. This derivative material is not another verdict or source of content truth; use the content builder's `reader-task-review.md` for preparation, review and limits.
 - `check` reports stale evidence; `reconcile --apply` records the invalidation and resumes from the earliest affected stage.
 - External task controllers may reference Knowledgebase Studio state but may not replace its contract, revision, or QC truth.
 

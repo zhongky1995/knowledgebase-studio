@@ -370,6 +370,17 @@ def check_visuals(root, manifest_path=None, required_ids=None):
         media_format = item.get("format")
         stats["formats"][media_format] = stats["formats"].get(media_format, 0) + 1
 
+    for dimension in ("mechanismVisibility", "sourceBoundary"):
+        observations = {}
+        for item in selected:
+            value = (((item.get("designReview") or {}).get("dimensions") or {}).get(dimension) or {}).get("observation")
+            if isinstance(value, str) and value.strip():
+                observations.setdefault(" ".join(value.split()), []).append(item.get("id"))
+        for identities in observations.values():
+            if len(identities) >= 3:
+                issue(warnings, "visual-repeated-observation", dimension,
+                      f"Visuals {identities} reuse one observation. Inspect the actual relationship/source boundary of each figure; rewriting the sentence is not a repair.")
+
     return {
         "schemaVersion": 1,
         "status": "fail" if errors else "pass",
