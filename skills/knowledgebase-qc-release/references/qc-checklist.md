@@ -1,4 +1,6 @@
-# Knowledge Base QC Checklist
+# Legacy full-workflow QC checklist
+
+Use only when renewing the existing staged workflow's whole-product claim. Current scoped manuscript/preview work follows the QC skill and `incremental-updates.md`; it does not inherit per-page certificates, lesson matrices or mandatory visual decisions from this historical checklist. Retain requirements for assets and delivery actually promised by the selected project.
 
 ## Architecture And Allocation
 

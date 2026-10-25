@@ -79,7 +79,7 @@ Repair allocation before polishing prose.
 
 ## Product-Posture Checks
 
-Before architecture passes, state:
+When shaping a reading or application path, resolve the relevant product choices in the existing design:
 
 - what the user sees and does in the first 30 seconds;
 - whether any output is required before reading or retrieval;
@@ -88,4 +88,4 @@ Before architecture passes, state:
 - how evidence and sources appear to learners;
 - which polished outcome would still violate the user's intent.
 
-For learning products, also report source files, learner-visible continuous units, advanced units, references, labs, workbooks, and compatibility routes separately. A filesystem count is never a course-size claim. When an app is planned, freeze primary and visible direct-entry destinations plus maximum click depth in `navigation-contract.json`; one visually dominant action does not require other visible routes to be inert.
+When counts matter, distinguish learner-visible continuous units from sources, references, labs and compatibility routes. A filesystem count is never a course-size claim. Reuse the existing navigation design for an app; a complex or legacy staged app may need `navigation-contract.json` to preserve direct-entry destinations and click depth. A simple reading preview does not. One visually dominant action does not require other visible routes to be inert.

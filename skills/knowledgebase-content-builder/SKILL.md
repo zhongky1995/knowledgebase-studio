@@ -7,15 +7,15 @@ description: Write or revise useful, coherent knowledge-base prose, examples and
 
 The main author/editor owns content selection, explanation order, detail, diagrams and the connected reading experience. Read the current artifact yourself, including adjacent material and its real presentation where relevant. Integrate specialist findings; do not mechanically accumulate them.
 
-Use `references/evidence-to-judgment.md` for source synthesis or reasoning-heavy content, `references/readability-density.md` for an actual readability problem, and `references/learning-mode.md` or `references/operations-mode.md` when the corresponding work needs them. Load only relevant guidance.
+Read [the shared editorial method](references/editorial-method.md) for actual writing and revision. It connects the reader's important question, a defensible judgment, explanation level and continuous reading. The executor sends this same text to its workers; it is not a second checklist. For uncertain selection or depth, read [the continuous comparisons](references/editorial-examples.md), including an accurate but misdirected article and an operation whose details must remain.
 
-For explanatory or argumentative writing, begin with a defensible core judgment that changes how the reader understands or chooses. Work out why it holds, what plausible alternative it defeats, and what would change it. Use `references/evidence-to-judgment.md` to develop that substance before expanding an outline. A topic, forceful slogan or inventory of correct advice is not yet a viewpoint; a factual reference or direct instruction need not manufacture one.
-
-Build the explanation around that judgment. Walk the example through with actual participants, available material and tools before writing its conclusion. Separate evidence, inference and teaching assumptions. Use familiar words and complete actions to explain professional mechanisms and consequential tradeoffs; readability comes from making these connections visible.
+Use `references/evidence-to-judgment.md` for source synthesis and quantitative evidence, `references/readability-density.md` for sentence/paragraph editing, and `references/learning-mode.md` or `references/operations-mode.md` when those modes need them. System-level detail is useful when it develops this reader's promised understanding; an introductory business argument need not become an implementation walkthrough.
 
 For unfamiliar systems or suspected causal jumps, use `references/novice-mental-model.md`. Resolve what the reader needs at the earliest unclear transition. The remedy may be a better example, a clearer connection or a smaller claim rather than more detail.
 
-For feedback, first inspect the actual passage and its place in the whole. Decide whether the problem lies in the question, structure, example, mechanism or expression, then add, delete, merge, move or replace as needed. Do not retain a weak passage simply because it has accumulated review evidence.
+Keep current editorial choices and unresolved questions in the existing authoring task/design. A new chapter or conversation inherits those questions, not a conclusion that the previous check settled them. Apply the editor's dispositions when revising; preserve rejected reviewer suggestions as history rather than treating them as work still to do.
+
+For connected chapters, read their responsibilities and adjacent text before filling an inherited outline. Use the architect's [structural method](../knowledgebase-architect/references/structure-method.md) when the opening, order or chapter division is in doubt. Develop enough continuous prose to test that choice; fixing a chapter's sentences cannot settle whether the chapter belongs here.
 
 A sample can resolve uncertain voice, explanatory depth, structure or progression. Include adjacent content when continuity is the uncertainty. Already established choices need no ceremonial pilot or repeated user approval. Writing may expose a better architecture, teaching approach, diagram or interface; update the owning decision without discarding still-valid work.
 

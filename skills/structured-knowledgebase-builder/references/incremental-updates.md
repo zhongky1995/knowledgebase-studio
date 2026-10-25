@@ -38,7 +38,7 @@ python3 <plugin-root>/scripts/kb_update.py check --root <target> \
   --output _kb-control/updates/current/check.json
 ```
 
-The checker recomputes required checks and affected inputs. Changed relevant evidence requires rereading/rechecking; deleting a required check from the plan does not bypass it. Local links and declared calculations/assets remain checked. Deterministic success does not establish useful prose or real learner outcomes.
+The checker recomputes required checks and affected inputs. Changed relevant evidence requires rereading/rechecking; deleting a required check from the plan does not bypass it. Local links and declared calculations/assets remain checked. Its result names `validationKind: scoped-integrity-and-review-records`; `editorialEvidence` separates editor-reported and independent-review scopes, and explicitly leaves content quality, source truth and observed learning outside automatic certification. The page lists describe evidence requirements, not approvals. A current unresolved editorial question stays in the existing intent/decision even if file and record checks pass.
 
 ## Existing projects
 

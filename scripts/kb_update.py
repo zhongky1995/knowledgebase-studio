@@ -345,6 +345,15 @@ def check_update(root, plan):
                 evidence_digests[value] = fingerprint(root, normalize(root, value))
     return {
         "schemaVersion": 1, "status": "fail" if errors else "pass", "scope": "incremental",
+        "validationKind": "scoped-integrity-and-review-records",
+        "editorialEvidence": {
+            "independentReviewPages": expected['independentReaderPages'],
+            "editorReportedPages": expected.get('checkScopes', {}).get('editor-review', []),
+            "meaning": "Page lists identify required evidence scopes, not quality approvals. Check status and errors for completion.",
+            "contentQuality": "editor-judgment-not-automatically-assessed",
+            "sourceTruth": "not-established-by-file-or-quote-validation",
+            "observedLearning": "not-assessed",
+        },
         "claim": "selected-update-only", "affectedPages": pages,
         "reviewPages": expected.get("reviewPages", pages),
         "regressionPages": expected.get("regressionPages", pages),

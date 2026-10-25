@@ -138,7 +138,7 @@ class ReaderTrialTests(unittest.TestCase):
         original = copy.deepcopy(self.batch()['attempts'])
         kb.migrate_review(self.root, 'one', 'Investigate the actual argument with the current method.')
         self.assertEqual(self.batch()['attempts'], original)
-        self.assertEqual(self.batch()['methodVersion'], 2)
+        self.assertEqual(self.batch()['methodVersion'], 3)
         self.assertEqual(self.status(), 'blocked')
         self.runtime.enqueue('reader', self.verdict())
         self.assertEqual(kb.run_batch(self.root, 'one')['status'], 'awaiting_editor')
