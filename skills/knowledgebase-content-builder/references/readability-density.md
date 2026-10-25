@@ -1,5 +1,7 @@
 # Readability And Density
 
+Use after checking the connected article's purpose with [the shared method](editorial-method.md). If the wrong question or explanation level dominates, replace or restructure it before sentence editing. [Continuous comparisons](editorial-examples.md) show this difference; shortening and adding steps are both conditional remedies.
+
 ## Understand Before Compressing
 
 Before shortening or reorganizing a source, state its main claim, necessary mechanism, conditions, boundary, and uncertainty in your own words. Compression is valid only when those consequential meanings remain traceable. Do not equate fluent paraphrase with understanding, and do not infer content from a title, repository name, abstract, or earlier summary when the full relevant source is available.

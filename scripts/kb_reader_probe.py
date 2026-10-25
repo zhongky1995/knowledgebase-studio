@@ -129,7 +129,7 @@ def unsafe_css(value):
     return "@import" in value.lower() or any(not url.strip().strip("\"'").startswith("#") for url in urls)
 
 
-def prepare(root, pages, *, job=None, default_job=None):
+def prepare(root, pages, *, job=None, default_job=None, include_prerequisites=True):
     root = Path(root).resolve()
     if job is not None and job not in JOBS:
         raise ValueError("Choose understand, perform, judge or retrieve.")
@@ -164,7 +164,7 @@ def prepare(root, pages, *, job=None, default_job=None):
         if job and row.get("readerJob") and job != row["readerJob"]:
             raise ValueError("Update the owning readerJob before reviewing a different promise.")
         model_context = unit_context(row, units)
-        prereqs, pending, seen = [], list(row.get("knowledgeUnitIds", [])), set()
+        prereqs, pending, seen = [], list(row.get("knowledgeUnitIds", [])) if include_prerequisites else [], set()
         while pending:
             identity = pending.pop()
             if identity in seen:

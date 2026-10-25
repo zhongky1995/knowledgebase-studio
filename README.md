@@ -14,6 +14,21 @@ Independent reading is selected for a current doubt, impact or explicit requirem
 
 Explanatory writing starts with a defensible judgment that changes the reader's understanding or choice, developed through mechanisms, examples and meaningful comparisons. Review tests that reasoning before attempting the reader's task. When a worked solution could conceal missing input, an optional input-only text trial preserves actual work for the full-text reviewer to inspect.
 
+The [shared editorial method](skills/knowledgebase-content-builder/references/editorial-method.md) is used by both skills and execution. [Continuous comparisons](skills/knowledgebase-content-builder/references/editorial-examples.md) calibrate necessary depth against misdirected detail. New runs snapshot and transmit the actual method text; rewrite attempts receive the editor's latest dispositions while independent readers remain isolated. Scoped results distinguish editor-reported and independent-review scopes from unassessed learner outcomes; passing the checker does not establish article quality.
+
+## How the work proceeds
+
+The plugin combines skills and local programs. The main agent remains the responsible author/editor and invokes relevant capabilities; the plugin is not a background service watching every conversation. These activities inform one another, rather than forming compulsory stages:
+
+1. Reuse the reader's starting point, desired understanding or work, sources and requested deliverable.
+2. Develop a defensible judgment from evidence, distinguishing facts, interpretations and teaching assumptions.
+3. For courses and connected long-form work, use the [structural method](skills/knowledgebase-architect/references/structure-method.md) to choose the entry, consequential transitions and division of responsibilities. Test disputed choices with actual opening and cross-chapter prose before treating chapter boundaries as settled.
+4. Write and integrate connected prose, examples and useful visuals. Delegated writers receive the actual method, selected sources and current editorial choices; material may prompt a revision to the design.
+5. Review the current uncertainty at its real scope. Overall structure reading uses an ordered `readingPath` plus selected full texts and returns `structureReview` separately from page verdicts in the same record. The editor makes and communicates dispositions, without requiring model consensus.
+6. Verify the relevant artifact, execution and delivery. Missing required work, stale evidence and unresolved consequential findings block the affected scope and real dependents. Report what was actually read and tested.
+
+Reuse existing intent, sources, design and manuscript files. A reading route adds context to the current execution batch, not another approval workflow. An outline-only view cannot establish full-book prose quality; a better standalone chapter does not prove that it belongs at the course entry.
+
 ## Included capabilities
 
 Eight skills cover coordination, source/corpus audit, content architecture, writing, learning review, explanatory visuals, local apps and delivery. Use the capability needed for the current question; loading a skill does not require the whole production sequence.
