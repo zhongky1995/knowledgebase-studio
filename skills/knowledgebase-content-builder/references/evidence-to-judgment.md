@@ -1,6 +1,28 @@
 # From evidence to transferable judgment
 
-Use for evidence-heavy explanations, conceptual lessons, research-backed comparisons, or learning pages whose reader must make a judgment. This extends existing source, unit, activity, and coverage contracts; it does not add a workflow stage or require a report format.
+Use when an explanation, argument or lesson needs substance. Develop the reasoning in the existing draft or editorial notes; there is no new stage, required form or separate argument certificate. Quantitative source records later in this guide apply only to their declared use.
+
+## Find a judgment worth developing
+
+A subject tells you what to cover. A core judgment says what the reader should now understand differently, and why. “AI changes enterprise work” names a subject. “Evaluate AI at the level of a completed business task: a faster draft can increase total work when preparation and checking remain” gives the reader a consequential distinction. It still needs support.
+
+Read the material and develop the strongest judgment it can sustain. Ask which tempting interpretation or plausible alternative would lead this reader to a different decision. Trace the mechanism or evidence that distinguishes them. If both interpretations fit the same evidence, keep the uncertainty or narrow the conclusion. If the material supports only a catalogue of familiar advice, choose a more consequential question, obtain relevant evidence or reduce the promised scope before expanding prose.
+
+Depth comes from explaining a real tension, mechanism or tradeoff, not from a provocative tone, jargon or the number of topics. A useful established idea can be the core; novelty is not required. Factual references and direct procedures may simply give the accurate answer or working method.
+
+## Work it out before telling it
+
+For an example, first follow the people, material and decisions until you can account for the result. Which tool is actually in use? What has it received? What must someone still obtain or decide? Then write that movement so the reader can reconstruct it. Put needed teaching assumptions into the scenario before deriving its result; draft-repair history is not part of the reader's case. Fictional facts may establish a teaching situation when clearly labeled; they cannot establish measured savings or a universal causal claim.
+
+Consider the judgment above. “AI made a draft, therefore sales is more efficient” leaves the decisive work unknown. Compare the same task with the same input and quality requirement. If the salesperson still selects records, copies the draft and rereads every line, explain why those actions remain and which action, if any, stops. If a shared record removes retyping, separate that software benefit from the model's reading or drafting contribution. If no benefit is yet established, the defensible conclusion is a trial and a comparison, not proven efficiency. Do not manufacture timings to make the claim look complete.
+
+Now change something consequential: standard inputs already fit a form, or professional checking dominates the task. Does the same recommendation survive? The resulting distinction decides which details belong in the article. Delete, merge, move or replace material that does not help develop it; do not attach every possible caveat to the end.
+
+## Read the argument as a reader
+
+Read the whole connected passage without treating the author's opening or conclusion as an answer key. Restate the judgment it has actually earned, connect its evidence to the consequence, and try a plausible alternative or boundary condition. Report the reasoning and any point where it stops. A chapter full of true statements can still lack a useful explanation; a clear sentence cannot repair an unsupported inference.
+
+Then do the promised reader work. For explanation, give a prediction and why; for judgment, make the choice from the supplied comparison; for operations, produce the artifact. Keep the first missing condition visible. `reader-task-review.md` and the executor's optional input-only trial help when a published worked answer would otherwise let the reviewer silently fill the gap. Actual model work is diagnostic evidence, not a substitute for editorial judgment or learner observation.
 
 ## Start from the reader's use
 

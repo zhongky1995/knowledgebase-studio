@@ -9,15 +9,17 @@ The main author/editor owns content selection, explanation order, detail, diagra
 
 Use `references/evidence-to-judgment.md` for source synthesis or reasoning-heavy content, `references/readability-density.md` for an actual readability problem, and `references/learning-mode.md` or `references/operations-mode.md` when the corresponding work needs them. Load only relevant guidance.
 
-Write toward the reader's question. Explain decisive mechanisms, use examples that support the actual claim, and distinguish evidence, inference and teaching assumptions. Source summaries and checklists do not automatically become useful explanations. Preserve uncertainty where it changes the reader's decision.
+For explanatory or argumentative writing, begin with a defensible core judgment that changes how the reader understands or chooses. Work out why it holds, what plausible alternative it defeats, and what would change it. Use `references/evidence-to-judgment.md` to develop that substance before expanding an outline. A topic, forceful slogan or inventory of correct advice is not yet a viewpoint; a factual reference or direct instruction need not manufacture one.
 
-For unfamiliar systems or suspected causal jumps, use `references/novice-mental-model.md`. Trace the relevant event and changed condition; do not impose operational steps, exceptions or exercises on every explanatory page. The remedy may be a clearer connection or a smaller claim rather than more detail.
+Build the explanation around that judgment. Walk the example through with actual participants, available material and tools before writing its conclusion. Separate evidence, inference and teaching assumptions. Use familiar words and complete actions to explain professional mechanisms and consequential tradeoffs; readability comes from making these connections visible.
+
+For unfamiliar systems or suspected causal jumps, use `references/novice-mental-model.md`. Resolve what the reader needs at the earliest unclear transition. The remedy may be a better example, a clearer connection or a smaller claim rather than more detail.
 
 For feedback, first inspect the actual passage and its place in the whole. Decide whether the problem lies in the question, structure, example, mechanism or expression, then add, delete, merge, move or replace as needed. Do not retain a weak passage simply because it has accumulated review evidence.
 
 A sample can resolve uncertain voice, explanatory depth, structure or progression. Include adjacent content when continuity is the uncertainty. Already established choices need no ceremonial pilot or repeated user approval. Writing may expose a better architecture, teaching approach, diagram or interface; update the owning decision without discarding still-valid work.
 
-Use `../structured-knowledgebase-builder/references/independent-execution.md` when a current doubt, consequence or explicit request calls for another reader. Give that reader actual content and the real reader need, not a suspected-defect list or expected answer. Read their attempt and reasons. The editor is responsible for the disposition; two model pass labels are not a substitute.
+Use `../structured-knowledgebase-builder/references/independent-execution.md` when a current doubt, consequence or explicit request calls for another reader. Give actual content and the reader need. Review whether the argument survives a meaningful comparison, then inspect the actual reader work. For a doubtful worked task, an optional input-only trial exposes missing material before the reviewer sees the solution. Read the result yourself and choose the repair; model agreement is not the editing objective.
 
 Use the controller's `references/incremental-updates.md` to bind selected content and the actual editorial decision to current inputs. Ordinary work needs no separate per-page comprehension certificate, coverage/fidelity report or stage narrative. Existing source and ownership records remain useful; update them when the underlying decision changes. A current independent editorial decision is already the review record.
 
