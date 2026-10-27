@@ -4,9 +4,9 @@ Arrange a review for a current doubt, significant consequence or explicit reques
 
 ## Current batch specification (schema 2)
 
-Reuse the existing reader brief and select a connected reading scope. The brief contains the reader's actual starting knowledge and intended use, not expected answers, a suspected-defect list or a pass request. `readerTasks` can identify concrete requests with exact supporting `sourceQuote` text from that brief; omission uses the brief itself. Source selection and full-product completeness remain editorial responsibilities.
+Reuse the existing reader brief and select the complete prose unit needed for the current question, following the argument across necessary adjacent chapters. The brief contains actual starting knowledge and intended use, not expected answers, a suspected-defect list or a pass request. Use `readerTasks` for concrete explanatory, comparative or operational work, with exact supporting `sourceQuote` text from the brief. Ordinary batches retain the brief fallback; new batches with `intentSources` require explicit tasks so the fallback cannot silently replace the work. The program does not judge whether a task is intellectually useful or the chosen scope is sufficient.
 
-For delegated writing, put the current claim, chapter responsibility, accepted choices and unresolved editorial questions in the writer `task` or an existing design file selected through `sourcePaths`. When reconceiving a product, include the user's actual current thinking and relevant original sources instead of supplying only the old manuscript. Those sources go to the writer, not the independent reader. A design merely read by the coordinator is not automatically present in a worker's context; keep the reader brief focused on the actual current reader need, including an entry-point requirement if it is part of the task. Updating that brief also requires updating the requests grounded in it; old source quotes cannot silently stand for new intent.
+For delegated writing, put the current claim, chapter responsibility, accepted choices and unresolved editorial questions in the writer `task` or an existing design file selected through `sourcePaths`. These authoring choices stay private to the writer. When developing or substantially revising the content core, also carry the user's relevant original questions and thoughts through `intentSources` below, so both writer and reader can distinguish them from the editor's interpretation. A design merely read by the coordinator is not automatically present in a worker's context. Keep the brief focused on the actual reader need; changing it also requires updating requests grounded in it. Old source quotes cannot silently stand for new intent.
 
 Start from `assets/control-templates/execution-batches.json`. Existing prose is reviewed in place by default (`authoringMode: review_existing`). Use `rewrite` only when intentionally delegating a bounded writing task; the coordinator preserves preimages and checks concurrent edits before applying its exact output. The main author retains continuity and personally inspects the result.
 
@@ -18,6 +18,27 @@ python3 <plugin-root>/scripts/kb_execution.py run --root <target> --batch <id>
 ```
 
 The runner uses the authenticated modern local Codex CLI in fresh tool-free sessions. It preserves actual requests, response schemas, identities, events and results. A runtime error, missing evidence or stale material cannot be hand-filled into success. No new sidebar chat, API key setup, model pin or task-controller plugin is needed. This is bounded process execution, not a hostile-process filesystem security boundary.
+
+## Keep the original question available
+
+When developing a core argument or examining whether a rewrite still answers the user's problem, select relevant original excerpts from existing input records in the same schema 2 batch:
+
+```json
+{
+  "intentSources": [{"path": "sources/original-question.md", "quote": "The exact original question or thought being developed."}],
+  "readerTasks": [{
+    "id": "explain-change",
+    "request": "Using the selected complete explanation, compare how the two arrangements could change the outcome, and what happens when a relevant condition changes. Distinguish text, inference and extra assumptions.",
+    "sourceQuote": "The exact reader need from the existing brief that makes this comparison relevant."
+  }]
+}
+```
+
+Use one contiguous excerpt per source file, containing the relevant qualifications and context. Do not label an author-written summary as the user's original words. Selected excerpts go to both writer and reader; the rest of the source file, author rationale and repair history do not. The input is a question or proposition to examine, not a proved fact, mandatory conclusion or expected answer. A sound article may qualify or reject it while still addressing the problem. Ordinary reference edits need no separate original-intent review.
+
+The existing reader run adds `intentReview`: what the manuscript actually answers, how its reasoning and allocation of attention respond to that original problem within the assigned scope, and any consequential mismatch. Its `basis` must quote both a supplied original excerpt and selected manuscript text. Those original inputs cannot stand in for missing published evidence in page reviews or reader-task answers. Its findings use the existing editor decision and failure handling, without another reviewer or approval stage.
+
+The program checks exact excerpts, binds source files and selected scope to the attempt, and preserves them in evidence. A substantive `replan` can revise the selection but cannot silently drop it with an empty list. It cannot authenticate a local file as user-authored or establish that the editor selected the complete problem; inspect provenance and selection in the current task. Claims of fidelity apply only to the selected excerpts and supplied prose.
 
 ## An actual structure question
 
@@ -44,7 +65,7 @@ Use this when structure is actually in question. A normal page revision needs no
 
 New schema 2 batches use method 3. The runner reads and sends the content builder's shared `editorial-method.md` as actual text; writers also receive `editorial-examples.md`. Every attempt saves the exact method files in `method.json`, binds their digest to the actual prompts and includes the snapshot in its evidence. Updating the plugin does not rewrite an earlier attempt's method or approval. Missing or changed snapshots cannot pass. The bounded input budget includes these resources and still rejects oversized work without truncation.
 
-The reader assesses the whole connected article before attempting its tasks: whether it develops something worth understanding, whether its explanation level and progression serve this audience, and where local correctness still fails the article. The existing `attempt`, `basis`, `gaps` and `taskResults` carry that judgment; no extra argument form is required. This reader sees the manuscript and reader need, not the author's sources, choices or repair answers. It cannot certify external source truth.
+The reader first does the requested work in `taskResults.answer`, using `basis` for text evidence and distinguishing stated facts, valid inference and extra assumptions in the answer. It then forms page and overall judgments from that work and the whole argument's purpose, development and emphasis. Task success alone is not article value; finding related phrases is not an explanation. At a stuck point, check the rest of the supplied unit and distinguish a content gap from a scope omission, a reader error or a justified unknown. Exploratory reasoning need not have a mature success case. The existing fields carry this work; there is no extra scorecard or review phase. The reader cannot certify external source truth or see private authoring choices and repair answers.
 
 A rewrite retry receives actual prior review results and the most recent editor decision, including the editor's own findings and declined suggestions. The current task takes precedence when the assignment has changed; rejected review suggestions are not outstanding requirements. Independent readers never receive this decision. Keep current intent and unresolved questions in the existing authoring task/design when handing work to another conversation or capability.
 
@@ -65,7 +86,7 @@ The first session can read, reason and calculate text; it uses explicitly suppli
 
 ## Read and decide
 
-A completed schema 2 review returns `awaiting_editor` (exit 1 until accepted), even when the reader says pass. Read the current manuscript and actual findings. Decide what the text needs, rather than adding every suggested paragraph. Do not rerun just to change a reader's label.
+A completed schema 2 review returns `awaiting_editor` (exit 1 until accepted), even when the reader says pass. Inspect the actual answers, their evidence and the current complete prose unit against the original problem. Trace a suspected gap to the relationship the reader could not explain; check adjacent material before editing. Neither the reader's label nor the editor's disagreement establishes correctness. Preserve sound content and justified uncertainty, and repair the owning relationship or scope rather than adding every suggestion. Do not rerun just to change a label.
 
 Record the editor decision with `kb_execution.py decide --root <target> --batch <id> --spec <decision.json>`. It lives in the existing execution record; the input JSON can be temporary. It contains:
 
