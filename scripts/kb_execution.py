@@ -19,6 +19,7 @@ from kb_reader_probe import prepare, validate_probe, file_inside, contract_conte
 from kb_editorial import current_method, validate_method, render_method
 from kb_editorial import STRUCTURE_METHOD
 import kb_structure as structure
+import kb_intent as intent
 
 STATE = Path('_kb-control/execution.json')
 RUNS = Path('_kb-control/execution-runs')
@@ -116,6 +117,8 @@ def init(root, specification):
                     raise ValueError('Select reader-facing Markdown pages.')
             brief = item.get('briefPath')
             brief_text = file_inside(root, brief).read_text(encoding='utf-8')
+            if 'intentSources' in item and 'readerTasks' not in item:
+                raise ValueError('Original-intent reading needs explicit readerTasks; a reader brief cannot silently replace actual reader work.')
             tasks = item.get('readerTasks', [{'id': 'reader-task', 'request': brief_text.strip(), 'sourceQuote': brief_text.strip()}])
             if not isinstance(tasks, list) or not tasks or len({t.get('id') for t in tasks if isinstance(t, dict)}) != len(tasks):
                 raise ValueError('readerTasks must have distinct IDs and requests grounded in the reader brief.')
@@ -160,6 +163,9 @@ def init(root, specification):
             if 'readingPath' in item:
                 state['batches'][-1]['readingPath'] = item['readingPath']
                 structure.validate_reading_path(root, state['batches'][-1])
+            if 'intentSources' in item:
+                state['batches'][-1]['intentSources'] = item['intentSources']
+                intent.validate(root, state['batches'][-1])
             ids.add(identity)
         save_state(root, state)
     return {'status': 'planned', 'batches': [b['id'] for b in state['batches']]}
@@ -208,9 +214,9 @@ def replan(root, identity, changes, reason):
     root = Path(root).resolve()
     if not isinstance(reason, str) or not reason.strip():
         raise ValueError('Replanning requires a concrete reason; it is not automatic retry.')
-    allowed = {'task', 'briefPath', 'sourcePaths', 'readerTasks', 'readingPath', 'maxAttempts', 'maxInputChars'}
+    allowed = {'task', 'briefPath', 'sourcePaths', 'readerTasks', 'readingPath', 'intentSources', 'maxAttempts', 'maxInputChars'}
     if not isinstance(changes, dict) or set(changes) - allowed:
-        raise ValueError('Replan may revise task, brief, sources, reader tasks, reading path and budgets only; keep scope, mode and dependencies.')
+        raise ValueError('Replan may revise task, brief, sources, reader tasks, reading path, original intent and budgets only; keep scope, mode and dependencies.')
     with locked(root):
         state = batches(root)
         batch = select(state, identity)
@@ -218,6 +224,7 @@ def replan(root, identity, changes, reason):
             raise ValueError('Run the planned task before replanning it.')
         candidate = dict(batch, **changes)
         structure.validate_reading_path(root, candidate)
+        intent.validate(root, candidate)
         brief = file_inside(root, candidate['briefPath']).read_text(encoding='utf-8')
         if not isinstance(candidate['task'], str) or not candidate['task'].strip():
             raise ValueError('A concrete revised writer task is required.')
@@ -235,9 +242,9 @@ def replan(root, identity, changes, reason):
         if type(candidate['maxAttempts']) is not int or not 1 <= candidate['maxAttempts'] <= 5 or type(candidate['maxInputChars']) is not int or not 2000 <= candidate['maxInputChars'] <= 120000:
             raise ValueError('Revised budgets must remain within the bounded execution limits.')
         prior = batch['attempts'][-1]
-        changed = any(candidate.get(k) != batch.get(k) for k in ('task', 'briefPath', 'sourcePaths', 'readerTasks', 'readingPath'))
+        changed = any(candidate.get(k) != batch.get(k) for k in ('task', 'briefPath', 'sourcePaths', 'readerTasks', 'readingPath', 'intentSources'))
         old_context = prior.get('contextDigests', {})
-        paths = [candidate['briefPath'], *candidate['sourcePaths']]
+        paths = [candidate['briefPath'], *candidate['sourcePaths'], *intent.materials(root, candidate)]
         changed = changed or any(old_context.get(p) != digest(file_inside(root, p)) for p in paths)
         if not changed:
             raise ValueError('Replan needs a substantive task, brief, source or reader-request change; increasing budgets is insufficient.')
@@ -259,6 +266,7 @@ def inputs(root, batch):
     paths = [batch['briefPath'], *batch.get('sourcePaths', [])]
     structure.validate_reading_path(root, batch)
     paths += [p for p in batch.get('readingPath', []) if p not in batch['pages']]
+    paths += list(intent.materials(root, batch))
     contract = root / '_kb-control/project-contract.yaml'
     if contract.exists() and batch.get('reviewMode') != 'editorial':
         paths.append(str(contract.relative_to(root)))
@@ -368,9 +376,16 @@ def validate_trial(root, batch, attempt):
 
 
 def review_schema(batch):
-    if 'readingPath' in batch:
-        return STRUCTURE_SCHEMA
-    return EDITORIAL_SCHEMA if batch.get('reviewMode') == 'editorial' else READER_SCHEMA
+    schema = STRUCTURE_SCHEMA if 'readingPath' in batch else (EDITORIAL_SCHEMA if batch.get('reviewMode') == 'editorial' else READER_SCHEMA)
+    if 'intentSources' in batch:
+        schema = json.loads(json.dumps(schema))
+        schema['properties']['intentReview'] = STRUCTURE_SCHEMA['properties']['structureReview']
+        schema['required'].append('intentReview')
+    return schema
+
+
+def overall_reviews(batch):
+    return [name for key, name in [('readingPath', 'structureReview'), ('intentSources', 'intentReview')] if key in batch]
 
 
 def review_materials(root, batch, packet):
@@ -395,6 +410,8 @@ def review_verdict(root, batch, output, packet):
         raise ValueError('Actual reader attempts must answer every confirmed task exactly once.')
     materials = review_materials(root, batch, packet)
     allowed_inputs = set(materials)
+    intent.validate(root, batch, allowed_inputs)
+    intent_materials = intent.materials(root, batch)
     for task in tasks:
         if task.get('status') not in {'supported', 'missing'} or not str(task.get('answer', '')).strip() or not isinstance(task.get('basis'), list):
             raise ValueError('Reader task needs an actual answer or an explicit missing condition.')
@@ -408,10 +425,19 @@ def review_verdict(root, batch, output, packet):
     finding_ids = set()
     reviews = [(row, {row['path'], *next(p for p in packet['pages'] if p['path'] == row['path']).get('prerequisitePaths', [])}) for row in rows]
     if 'readingPath' in batch:
-        if not isinstance(output.get('structureReview'), dict):
-            raise ValueError('A structure reading needs its overall structureReview, not only page verdicts.')
         reviews = [(row, allowed_inputs) for row, _ in reviews]
-        reviews.append((output['structureReview'], allowed_inputs))
+    for name in overall_reviews(batch):
+        row = output.get(name)
+        if not isinstance(row, dict):
+            raise ValueError(f'A reading needs its overall {name}, not only page verdicts.')
+        allowed = allowed_inputs
+        if name == 'intentReview':
+            cited = {b.get('path') for b in row.get('basis', []) if isinstance(b, dict)}
+            if not cited.intersection(intent_materials) or not cited.intersection(batch['pages']):
+                raise ValueError('intentReview must compare original-intent excerpts with selected manuscript text.')
+            allowed = allowed_inputs | set(intent_materials)
+        reviews.append((row, allowed))
+    materials = {**materials, **intent_materials}
     for row, allowed in reviews:
         if row.get('status') not in {'pass', 'needs_work'} or not str(row.get('attempt', '')).strip():
             raise ValueError('Reader must return an actual attempted result and verdict.')
@@ -545,7 +571,7 @@ def editor_acceptance(root, batch, attempt, outputs, packet, trial_output=None):
         if task['status'] == 'blocked':
             findings[f'trial:task:{task["id"]}'] = True
     for role, output in zip(review_roles(batch), outputs):
-        for page in [*output['pages'], *([output['structureReview']] if 'readingPath' in batch else [])]:
+        for page in [*output['pages'], *(output[name] for name in overall_reviews(batch))]:
             for gap in page['gaps']:
                 findings[f'{role}:{gap["id"]}'] = gap['blocking']
         for task in output['taskResults']:
@@ -642,7 +668,7 @@ def batch_status(root, state, identity, visiting=None):
         if attempt.get('dependencies') != expected_deps:
             raise ValueError('Dependency was reworked after this batch started.')
         status = 'accepted' if accepted else ('awaiting_editor' if batch.get('reviewMode') == 'editorial' and 'editorDecision' not in attempt else 'needs_work')
-        return {'status': status, 'agentId': agent, **structure.coverage(batch)}
+        return {'status': status, 'agentId': agent, **structure.coverage(batch), **intent.coverage(batch)}
     except (OSError, ValueError, KeyError, TypeError) as error:
         return {'status': 'blocked', 'reason': str(error)}
 
@@ -678,6 +704,8 @@ def batch_method(batch):
 
 def reader_prompt(root, batch, reference, trial_output=None, *, method=None):
     packet_path = file_inside(root, reference['packetPath'])
+    if 'intentSources' in batch:
+        intent.validate(root, batch, review_materials(root, batch, read(packet_path)))
     material = (packet_path.parent / 'reader.md').read_text(encoding='utf-8')
     brief = file_inside(root, batch['briefPath']).read_text(encoding='utf-8')
     if batch.get('reviewMode') == 'editorial':
@@ -692,6 +720,8 @@ def reader_prompt(root, batch, reference, trial_output=None, *, method=None):
                     'proposal为keep/add/delete/merge/move/replace。实质影响当前读者目的的问题标blocking。'
                     '逐项回答taskResults，必要材料不足则missing；指出模型试做错误与正文缺口的区别。最终取舍由主编负责。\n'
                     f'读者要求：\n{brief}\n读者请求：\n{json.dumps(batch["readerTasks"], ensure_ascii=False)}'
+                    + intent.context(root, batch)
+                    + ('\nintentReview对照原始问题与正文，说明实际回答了什么、核心论证及分量是否回应当前范围；basis同时引用所选原话和实际全文。问题先于练习是否完成。' if 'intentSources' in batch else '')
                     + structure.context(root, batch)
                     + ('\nstructureReview单独给出整体编排判断、正文与标题依据及待处理问题；各页通过不能替代它。' if 'readingPath' in batch else '')
                     + f'{trial}\n本次连续片段：{json.dumps(structure.fulltext_order(batch), ensure_ascii=False)}\n正文：\n{material}')
@@ -749,8 +779,8 @@ def auditor_prompt(root, batch, reference, attempted, trial_output=None, *, meth
     # Hide the prior verdict to reduce anchoring, but retain observable work/gaps.
     work = {'pages': [{k: p[k] for k in ('path', 'attempt', 'basis', 'gaps')} for p in attempted['pages']],
             'taskResults': [{k: t[k] for k in ('id', 'answer', 'basis')} for t in attempted['taskResults']]}
-    if 'readingPath' in batch:
-        work['structureReview'] = {k: attempted['structureReview'][k] for k in ('attempt', 'basis', 'gaps')}
+    for name in overall_reviews(batch):
+        work[name] = {k: attempted[name][k] for k in ('attempt', 'basis', 'gaps')}
     return (reader_prompt(root, batch, reference, trial_output, method=method) + '\n\n你在本次运行承担独立核验职责。'
             '下面是另一位读者做出的推演，不是标准答案。不要继承其自信程度。逐项核对：'
             '哪些前提来自正文，哪些只是把“系统会做”改写了一遍，哪些能力来源或关键中间动作被自行补全。'
@@ -768,6 +798,8 @@ def writer_prompt(root, batch, page_contents=None, *, method=None):
              '任务：' + batch['task'], '读者要求：' + file_inside(root, batch['briefPath']).read_text(encoding='utf-8')]
     if batch.get('methodVersion', 1) >= 3:
         parts.insert(1, render_method(batch_method(batch) if method is None else method, 'writer'))
+        if 'intentSources' in batch:
+            parts.append(intent.context(root, batch))
         if 'readingPath' in batch:
             parts.append(structure.context(root, batch, page_contents))
     elif batch.get('methodVersion', 1) == 2:
@@ -903,7 +935,7 @@ def run_batch(root, identity, *, review_only=False, executable=None, timeout=300
         return {'batch': identity, 'status': batch_status(root, state, identity)['status'],
                 'attempt': attempt['id'], 'error': attempt.get('error'),
                 'readerRun': attempt.get('readerRun'), 'attemptsRemaining': batch['maxAttempts'] - used_attempts(batch),
-                **structure.coverage(batch)}
+                **structure.coverage(batch), **intent.coverage(batch)}
 
 
 def gate(root, pages):
@@ -975,7 +1007,7 @@ def evidence_paths(root, pages=None):
         if b['id'] not in selected:
             continue
         paths.append(root / BATCHES / (b['id'] + '.json'))
-        paths += [file_inside(root.resolve(), p) for p in [b['briefPath'], *b.get('sourcePaths', []), *b.get('readingPath', [])]]
+        paths += [file_inside(root.resolve(), p) for p in [b['briefPath'], *b.get('sourcePaths', []), *b.get('readingPath', []), *intent.materials(root.resolve(), b)]]
         for attempt in b['attempts']:
             if attempt.get('methodSnapshot'):
                 paths.append(file_inside(root.resolve(), attempt['methodSnapshot']['path']))
